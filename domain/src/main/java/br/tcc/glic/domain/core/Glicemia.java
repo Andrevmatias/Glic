@@ -6,15 +6,15 @@ import java.util.Date;
  * Created by André on 25/01/2016.
  */
 public class Glicemia {
-    private int codigo;
+    private Long codigo;
     private int valor;
     private Date hora;
 
-    public int getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 
