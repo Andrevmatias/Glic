@@ -23,7 +23,7 @@ import java.util.List;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.RegistrarDadosService;
 
-public class PrincipalActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
 
     private static final int RC_SIGN_IN = 1;

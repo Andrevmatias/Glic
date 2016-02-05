@@ -3,10 +3,10 @@ package br.tcc.glic;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-public class RegistrarDadosActivity extends AppCompatActivity {
+public class RegisterDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registrar_dados);
+        setContentView(R.layout.activity_register_data);
     }
 }

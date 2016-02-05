@@ -26,4 +26,8 @@
     </string>
     <string name="title_activity_principal">Principal</string>
     <string name="title_activity_registrar_dados">Registrar Dados</string>
+    <string name="user_config_file_key">br.tcc.glic.USER_CONFIG_FILE</string>
+    <string name="app_configured_config">app_configured_config</string>
+    <string name="login_error">Não foi possível fazer login</string>
+    <string name="google_api_connect_error">Não foi possível se conectar ao GoogleAPI</string>
 </resources>
