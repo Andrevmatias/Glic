@@ -1,33 +1,23 @@
 <resources>
     <string name="app_name">Glic</string>
     <string name="app_id">382658412434</string>
-    <string name="action_settings">Configurações</string>
-    <string name="edit_message">Digite uma mensagem</string>
-    <string name="button_send">Enviar</string>
-    <string name="title_activity_display_message">Mensagem</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="button_map">Mapa</string>
-    <string name="button_contact">Contato</string>
     <string name="title_activity_login">Entrar</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="title_activity_principal">Principal</string>
-    <string name="title_activity_registrar_dados">Registrar Dados</string>
+    <string name="title_activity_register_data">Registrar Dados</string>
     <string name="user_config_file_key">br.tcc.glic.USER_CONFIG_FILE</string>
     <string name="app_configured_config">app_configured_config</string>
     <string name="login_error">Não foi possível fazer login</string>
     <string name="google_api_connect_error">Não foi possível se conectar ao GoogleAPI</string>
+    <string name="what_is_your_treatment_type">Qual o seu tipo de tratamento?</string>
+    <string name="conventional_treatment">Convencional</string>
+    <string name="intensive_treatment">Intensivo</string>
+    <string name="continue_configuration">Continuar</string>
+    <string name="conventional_treatment_explanation">1 ou 2 doses de insulina por dia</string>
+    <string name="intensive_treatment_explanation">Ao menos 3 doses de insulina por dia ou uso de bomba de insulina</string>
+    <string name="tipo_terapia_config">tipo_terapia_config</string>
 </resources>

@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.tcc.glic.fragments.configuration.TreatmentTypeConfigurationFragment">
+
+    <TextView
+        android:id="@+id/titulo_configuracao_tipo_tratamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/what_is_your_treatment_type"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="5dp">
+            <ToggleButton android:id="@+id/btn_select_conventional"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/img_conventional_treatment"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textOn="@string/conventional_treatment"
+                android:textOff="@string/conventional_treatment"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conventional_treatment_explanation"
+                android:textAlignment="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:onClick="">
+            <ToggleButton android:id="@+id/btn_select_intensive"
+                android:drawableTop="@drawable/img_intensive_treatment"
+                android:drawablePadding="10dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:textOn="@string/intensive_treatment"
+                android:textOff="@string/intensive_treatment"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/intensive_treatment_explanation"
+                android:textAlignment="center" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button android:id="@+id/btn_treatment_type_configuration_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="@string/continue_configuration" />
+</RelativeLayout>
