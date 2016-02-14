@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.tcc.glic.fragments.configuration.AgeConfigurationFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/what_is_your_age"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <EditText
+        android:id="@+id/edt_age_configuration"
+
+        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+
+        android:textAlignment="center"
+
+        android:inputType="number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/edt_age_configuration"
+        android:layout_centerVertical="true"
+        android:text="@string/years_old"/>
+
+    <Button android:id="@+id/btn_age_configuration_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="@string/save" />
+
+</RelativeLayout>

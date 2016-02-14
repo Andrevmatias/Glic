@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import br.tcc.glic.fragments.configuration.AgeConfigurationFragment;
 import br.tcc.glic.fragments.configuration.OnConfigurationSelectedListener;
 import br.tcc.glic.fragments.configuration.TreatmentTypeConfigurationFragment;
 
@@ -27,6 +28,7 @@ public class FirstConfigurationActivity extends AppCompatActivity
     private void initConfigFragments() {
         configFragments = new LinkedList<>();
         configFragments.add(new TreatmentTypeConfigurationFragment());
+        configFragments.add(new AgeConfigurationFragment());
     }
 
     @Override
@@ -49,7 +51,7 @@ public class FirstConfigurationActivity extends AppCompatActivity
     private void showFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.first_config_container, fragment)
+                .replace(R.id.first_config_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }

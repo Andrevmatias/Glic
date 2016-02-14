@@ -20,4 +20,8 @@
     <string name="conventional_treatment_explanation">1 ou 2 doses de insulina por dia</string>
     <string name="intensive_treatment_explanation">Ao menos 3 doses de insulina por dia ou uso de bomba de insulina</string>
     <string name="tipo_terapia_config">tipo_terapia_config</string>
+    <string name="age_config">age_config</string>
+    <string name="what_is_your_age">Qual a sua idade?</string>
+    <string name="save">Salvar</string>
+    <string name="years_old">anos</string>
 </resources>
