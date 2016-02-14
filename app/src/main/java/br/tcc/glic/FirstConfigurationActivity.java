@@ -81,14 +81,17 @@ public class FirstConfigurationActivity extends AppCompatActivity
         saveAgeConfigurations(sharedPreferencesEditor);
         saveTreatmentConfigurations(sharedPreferencesEditor);
 
-        sharedPreferencesEditor.putBoolean(getString(R.string.app_configured_config), true);
         sharedPreferencesEditor.commit();
+
+        ConfigUtils.getSystemConfigurationFile(this)
+                .edit()
+                .putBoolean(getString(R.string.app_configured_config), true)
+                .commit();
     }
 
     private void saveTreatmentConfigurations(SharedPreferences.Editor sharedPreferencesEditor) {
         String key = getString(R.string.therapy_type_config);
         TipoTerapia value = (TipoTerapia) configurations.get(key);
-        sharedPreferencesEditor.putString(key, value.toString());
 
         CampoRegistro[] campos = CampoRegistro.getByTipoTerapia(value);
 
@@ -103,7 +106,6 @@ public class FirstConfigurationActivity extends AppCompatActivity
     private void saveAgeConfigurations(SharedPreferences.Editor sharedPreferencesEditor) {
         String key = getString(R.string.age_config);
         int value = (Integer)configurations.get(key);
-        sharedPreferencesEditor.putInt(key, value);
 
         IntervaloGlicemia intervaloPre =
                 IntervaloGlicemia.getByIdade(value, TipoGlicemia.PrePrandial);
@@ -111,13 +113,17 @@ public class FirstConfigurationActivity extends AppCompatActivity
                 IntervaloGlicemia.getByIdade(value, TipoGlicemia.PosPrandial);
 
         sharedPreferencesEditor
-                .putInt(getString(R.string.min_pre_glycemia_config), intervaloPre.getLimiteMinimo());
+                .putString(getString(R.string.min_pre_glycemia_config),
+                        String.valueOf(intervaloPre.getLimiteMinimo()));
         sharedPreferencesEditor
-                .putInt(getString(R.string.max_pre_glycemia_config), intervaloPre.getLimiteMaximo());
+                .putString(getString(R.string.max_pre_glycemia_config),
+                        String.valueOf(intervaloPre.getLimiteMaximo()));
 
         sharedPreferencesEditor
-                .putInt(getString(R.string.min_pos_glycemia_config), intervaloPos.getLimiteMinimo());
+                .putString(getString(R.string.min_pos_glycemia_config),
+                        String.valueOf(intervaloPos.getLimiteMinimo()));
         sharedPreferencesEditor
-                .putInt(getString(R.string.max_pos_glycemia_config), intervaloPos.getLimiteMaximo());
+                .putString(getString(R.string.max_pos_glycemia_config),
+                        String.valueOf(intervaloPos.getLimiteMaximo()));
     }
 }

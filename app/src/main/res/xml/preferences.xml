@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--
+    <MultiSelectListPreference
+        android:key="@string/fields_to_show_config"
+        android:title="@string/fields_to_show_by_default"/>
+-->
+    <PreferenceCategory
+        android:title="@string/glycemic_objectives_premeal">
+
+        <EditTextPreference
+            android:title="@string/Minimum"
+            android:key="@string/min_pre_glycemia_config"
+            android:inputType="number"/>
+
+        <EditTextPreference
+            android:title="@string/Maximum"
+            android:key="@string/max_pre_glycemia_config"
+            android:inputType="number"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/glycemic_objectives_pos_prandial">
+
+        <EditTextPreference
+            android:title="@string/Minimum"
+            android:key="@string/min_pos_glycemia_config"
+            android:inputType="number"/>
+
+        <EditTextPreference
+            android:title="@string/Maximum"
+            android:key="@string/max_pos_glycemia_config"
+            android:inputType="number"/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

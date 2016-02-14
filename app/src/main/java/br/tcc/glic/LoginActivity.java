@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void startNextActivity() {
         Class<? extends Activity> activity =
-                ConfigUtils.getUserConfigurationFile(this).getBoolean(getString(R.string.app_configured_config), false) ?
+                ConfigUtils.getSystemConfigurationFile(this).getBoolean(getString(R.string.app_configured_config), false) ?
                         MainActivity.class : FirstConfigurationActivity.class;
         Intent nextIntent = new Intent(this, activity);
         startActivity(nextIntent);

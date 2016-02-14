@@ -21,4 +21,14 @@ public enum CampoRegistro {
                 return new CampoRegistro[] { Glicemia };
         }
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case InsulinaAplicada:
+                return "Insulina Aplicada";
+            default:
+                return super.toString();
+        }
+    }
 }

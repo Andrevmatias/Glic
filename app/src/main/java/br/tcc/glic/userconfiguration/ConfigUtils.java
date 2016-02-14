@@ -2,6 +2,7 @@ package br.tcc.glic.userconfiguration;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import br.tcc.glic.R;
 
@@ -10,8 +11,12 @@ import br.tcc.glic.R;
  */
 public final class ConfigUtils {
     public static SharedPreferences getUserConfigurationFile(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static SharedPreferences getSystemConfigurationFile(Context context){
         return context.getSharedPreferences(
-                context.getString(R.string.user_config_file_key),
+                context.getString(R.string.system_config_file_key),
                 Context.MODE_PRIVATE
         );
     }
