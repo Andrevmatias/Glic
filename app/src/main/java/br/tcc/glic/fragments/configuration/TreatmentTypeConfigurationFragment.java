@@ -70,7 +70,7 @@ public class TreatmentTypeConfigurationFragment extends Fragment {
             TipoTerapia tipoTerapia =
                     btnIntensive.isChecked() ? TipoTerapia.Intensiva : TipoTerapia.Convencional;
 
-            selectionListener.onConfigurationSelected(getString(R.string.tipo_terapia_config), tipoTerapia);
+            selectionListener.onConfigurationSelected(getString(R.string.therapy_type_config), tipoTerapia);
         }
     }
 
