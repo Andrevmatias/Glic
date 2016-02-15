@@ -19,8 +19,8 @@ import br.tcc.glic.domain.enums.TipoTerapia;
 import br.tcc.glic.fragments.configuration.AgeConfigurationFragment;
 import br.tcc.glic.fragments.configuration.OnConfigurationSelectedListener;
 import br.tcc.glic.fragments.configuration.TreatmentTypeConfigurationFragment;
-import br.tcc.glic.userconfiguration.CampoRegistro;
 import br.tcc.glic.userconfiguration.ConfigUtils;
+import br.tcc.glic.userconfiguration.RegisterDataField;
 
 public class FirstConfigurationActivity extends AppCompatActivity
     implements OnConfigurationSelectedListener {
@@ -93,10 +93,10 @@ public class FirstConfigurationActivity extends AppCompatActivity
         String key = getString(R.string.therapy_type_config);
         TipoTerapia value = (TipoTerapia) configurations.get(key);
 
-        CampoRegistro[] campos = CampoRegistro.getByTipoTerapia(value);
+        RegisterDataField[] campos = RegisterDataField.getByTipoTerapia(value);
 
         Set<String> camposString = new HashSet<>();
-        for(CampoRegistro campo : campos)
+        for(RegisterDataField campo : campos)
             camposString.add(campo.toString());
 
         sharedPreferencesEditor

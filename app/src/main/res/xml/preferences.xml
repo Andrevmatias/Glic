@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--
     <MultiSelectListPreference
         android:key="@string/fields_to_show_config"
-        android:title="@string/fields_to_show_by_default"/>
--->
+        android:title="@string/fields_to_show_by_default" />
+
     <PreferenceCategory
         android:title="@string/glycemic_objectives_premeal">
 
