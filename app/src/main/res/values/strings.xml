@@ -75,4 +75,6 @@
     <string name="glycemia">Glicemia</string>
     <string name="hba1c">HbA1c</string>
     <string name="injected_insulins">Insulinas Aplicadas</string>
+    <string name="now">Agora</string>
+    <string name="result_saved">Dados salvos</string>
 </resources>

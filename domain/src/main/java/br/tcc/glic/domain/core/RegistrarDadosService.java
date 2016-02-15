@@ -18,6 +18,10 @@ public class RegistrarDadosService {
         rep.save(glicemia);
     }
 
+    public  void registrarGlicemia(br.tcc.glic.domain.core.Glicemia glicemia){
+        this.registrarGlicemia(glicemia.getValor(), glicemia.getHora());
+    }
+
     public List<br.tcc.glic.domain.core.Glicemia> listGlicemias() {
         Repository<Glicemia> rep = RepositoryFactory.get(br.tcc.glic.data.entities.Glicemia.class);
         List<br.tcc.glic.data.entities.Glicemia> glicemias = rep.toList();

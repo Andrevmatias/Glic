@@ -21,6 +21,7 @@ import java.util.List;
 
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.RegistrarDadosService;
+import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -29,22 +30,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingConnectionFailure = false;
     private GoogleApiClient mGoogleGamesApiClient;
+    private RegisterGlycemiaFragment fragmentGlycemia;
+    private RegistrarDadosService registrarDadosService;
+
+    public MainActivity() {
+        registrarDadosService = new RegistrarDadosService();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mGoogleApiClient = getGoogleApiClient();
+        fragmentGlycemia = (RegisterGlycemiaFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_register_glycemia_main);
 
-        mGoogleGamesApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        initApiClients();
+        initComponents();
+    }
 
-        mGoogleGamesApiClient.connect();
-
+    private void initComponents() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_logout);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +75,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 openSettings();
             }
         });
+    }
+
+    private void initApiClients() {
+        mGoogleApiClient = getGoogleApiClient();
+
+        mGoogleGamesApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mGoogleGamesApiClient.connect();
     }
 
     private void openSettings() {
@@ -139,5 +156,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionSuspended(int i) {
         Toast.makeText(this, Integer.toString(i), Toast.LENGTH_LONG);
+    }
+
+    public void addGlycemia(View view) {
+        Glicemia glicemia = fragmentGlycemia.getGlycemia();
+
+        registrarDadosService.registrarGlicemia(glicemia);
+
+        Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG);
     }
 }
