@@ -75,6 +75,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 openSettings();
             }
         });
+
+        FloatingActionButton fabList = (FloatingActionButton) findViewById(R.id.fab_list);
+        fabList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openList();
+            }
+        });
     }
 
     private void initApiClients() {
@@ -91,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void openList() {
+        Intent intent = new Intent(this, EntriesListActivity.class);
         startActivity(intent);
     }
 
@@ -155,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(this, Integer.toString(i), Toast.LENGTH_LONG);
+        Toast.makeText(this, Integer.toString(i), Toast.LENGTH_LONG).show();
     }
 
     public void addGlycemia(View view) {
@@ -163,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         registrarDadosService.registrarGlicemia(glicemia);
 
-        Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG);
+        Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+
+        fragmentGlycemia.reset();
     }
 }

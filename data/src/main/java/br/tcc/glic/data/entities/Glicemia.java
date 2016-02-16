@@ -2,7 +2,7 @@ package br.tcc.glic.data.entities;
 
 import com.orm.dsl.Table;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by André on 02/02/2016.
@@ -18,7 +18,7 @@ public class Glicemia implements Entity {
 
     public Glicemia(int valor, java.util.Date hora) {
         this.valor = valor;
-        this.hora = new Date(hora.getTime());
+        this.hora = hora;
     }
 
     public int getValor() {

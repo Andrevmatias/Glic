@@ -77,4 +77,5 @@
     <string name="injected_insulins">Insulinas Aplicadas</string>
     <string name="now">Agora</string>
     <string name="result_saved">Dados salvos</string>
+    <string name="calendar_bundle_argument">calendar_bundle_argument</string>
 </resources>
