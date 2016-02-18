@@ -35,5 +35,9 @@
 
     </PreferenceCategory>
 
+    <Preference
+        android:title="@string/logout_title"
+        android:key="@string/logout_key"
+        android:enabled="false"/>
 
 </PreferenceScreen>

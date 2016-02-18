@@ -4,20 +4,16 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.games.Games;
-
-import java.util.List;
 
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.RegistrarDadosService;
@@ -50,34 +46,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void initComponents() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_logout);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Glicemia> glicemias = new RegistrarDadosService().listGlicemias();
-                for (Glicemia glicemia :
-                        glicemias) {
-                    Toast.makeText(getApplicationContext(), Integer.toString(glicemia.getValor()), Toast.LENGTH_SHORT).show();
-                }
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        handleSignOut();
-                    }
-                });
-            }
-        });
-
-        FloatingActionButton fabSettings = (FloatingActionButton) findViewById(R.id.fab_settings);
-        fabSettings.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnSettings = (ImageButton) findViewById(R.id.btn_settings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openSettings();
             }
         });
 
-        FloatingActionButton fabList = (FloatingActionButton) findViewById(R.id.fab_list);
-        fabList.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnList = (ImageButton) findViewById(R.id.btn_list);
+        btnList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openList();
@@ -117,11 +95,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-    }
-
-    private void handleSignOut() {
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
     }
 
     @Override

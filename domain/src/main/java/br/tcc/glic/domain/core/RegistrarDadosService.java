@@ -1,6 +1,7 @@
 package br.tcc.glic.domain.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class RegistrarDadosService {
 
     public List<br.tcc.glic.domain.core.Glicemia> listGlicemias() {
         Repository<Glicemia> rep = RepositoryFactory.get(br.tcc.glic.data.entities.Glicemia.class);
-        List<br.tcc.glic.data.entities.Glicemia> glicemias = rep.toList();
+        List<br.tcc.glic.data.entities.Glicemia> glicemias =  rep.toList();
+        Collections.sort(glicemias);
         List<br.tcc.glic.domain.core.Glicemia> glicemiasRet = new ArrayList<>();
         for (Glicemia glicemia :
                 glicemias) {

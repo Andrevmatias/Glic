@@ -8,7 +8,8 @@ import java.util.Date;
  * Created by André on 02/02/2016.
  */
 @Table
-public class Glicemia implements Entity {
+public class Glicemia
+        implements Entity, Comparable<Glicemia> {
     private Long id;
     private int valor;
     private Date hora;
@@ -39,5 +40,12 @@ public class Glicemia implements Entity {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public int compareTo(Glicemia another) {
+        long result = another.getHora().getTime() - this.getHora().getTime();
+        if(result == 0) return 0;
+        return result > 1 ? 1 : -1;
     }
 }

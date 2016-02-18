@@ -1,6 +1,7 @@
 package br.tcc.glic.fragments;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -11,9 +12,16 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.v4.app.Fragment;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
 import java.util.Arrays;
 import java.util.List;
 
+import br.tcc.glic.LoginActivity;
 import br.tcc.glic.R;
 import br.tcc.glic.userconfiguration.RegisterDataField;
 
@@ -21,8 +29,11 @@ import br.tcc.glic.userconfiguration.RegisterDataField;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener, GoogleApiClient.ConnectionCallbacks {
 
+
+    private GoogleApiClient mGoogleApiClient;
+    private Preference prefLogout;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -36,6 +47,8 @@ public class SettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.preferences);
 
         initComponents();
+
+        configureGoogleApi();
     }
 
     @Override
@@ -53,8 +66,54 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void initComponents() {
+        prefLogout = findPreference(getString(R.string.logout_key));
+        prefLogout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        handleSignOut();
+                    }
+                });
+
+                return true;
+            }
+        });
+
         initListsEntries();
         initSummary(getPreferenceScreen());
+    }
+
+    private void configureGoogleApi() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addConnectionCallbacks(this)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mGoogleApiClient.disconnect();
+    }
+
+    private void handleSignOut() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginIntent);
     }
 
     private void initListsEntries() {
@@ -114,5 +173,16 @@ public class SettingsFragment extends PreferenceFragment
 
             p.setSummary(builder.toString());
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if(prefLogout != null)
+            prefLogout.setEnabled(mGoogleApiClient.isConnected());
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

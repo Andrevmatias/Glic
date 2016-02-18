@@ -32,7 +32,6 @@ public class GlicemiaViewAdapter extends RecyclerView.Adapter<GlicemiaViewAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getCodigo().toString());
         holder.mContentView.setText(String.valueOf(mValues.get(position).getValor()));
         if(mValues.get(position).getHora() != null)
             holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(mValues.get(position).getHora()));
@@ -56,7 +55,6 @@ public class GlicemiaViewAdapter extends RecyclerView.Adapter<GlicemiaViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
         public final TextView mContentView;
         private final TextView mTimeView;
         public Glicemia mItem;
@@ -64,7 +62,6 @@ public class GlicemiaViewAdapter extends RecyclerView.Adapter<GlicemiaViewAdapte
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id_glicemia);
             mContentView = (TextView) view.findViewById(R.id.valor_glicemia);
             mTimeView = (TextView) view.findViewById(R.id.hora_glicemia);
         }
