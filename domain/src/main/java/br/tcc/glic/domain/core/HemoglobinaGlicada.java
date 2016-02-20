@@ -1,22 +1,11 @@
 package br.tcc.glic.domain.core;
 
-import java.util.Date;
-
 /**
  * Created by André on 26/01/2016.
  */
-public class HemoglobinaGlicada {
+public class HemoglobinaGlicada extends Registro {
     private int codigo;
     private double valor;
-    private Date dataExame;
-
-    public Date getDataExame() {
-        return dataExame;
-    }
-
-    public void setDataExame(Date dataExame) {
-        this.dataExame = dataExame;
-    }
 
     public double getValor() {
         return valor;

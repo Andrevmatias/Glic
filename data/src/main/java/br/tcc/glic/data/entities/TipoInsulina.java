@@ -1,22 +1,16 @@
-package br.tcc.glic.domain.core;
+package br.tcc.glic.data.entities;
 
 /**
- * Created by André on 26/01/2016.
+ * Created by André on 19/02/2016.
  */
-public class TipoInsulina {
-    private Long codigo;
+public class TipoInsulina
+    implements Entity
+{
+    private Long id;
     private String nome;
     private int inicio;
     private int pico;
     private int duracao;
-
-    public Long getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(Long codigo) {
-        this.codigo = codigo;
-    }
 
     public String getNome() {
         return nome;
@@ -48,5 +42,13 @@ public class TipoInsulina {
 
     public void setDuracao(int duracao) {
         this.duracao = duracao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,17 +1,14 @@
 package br.tcc.glic.domain.core;
 
-import java.util.Date;
-
 import br.tcc.glic.domain.enums.TipoExercicio;
 
 /**
  * Created by André on 25/01/2016.
  */
-public class PraticaExercicio {
+public class PraticaExercicio extends Registro {
     private int codigo;
     private TipoExercicio tipo;
     private int duracao;
-    private Date hora;
 
     public int getCodigo() {
         return codigo;
@@ -35,13 +32,5 @@ public class PraticaExercicio {
 
     public void setDuracao(int duracao) {
         this.duracao = duracao;
-    }
-
-    public Date getHora() {
-        return hora;
-    }
-
-    public void setHora(Date hora) {
-        this.hora = hora;
     }
 }

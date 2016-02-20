@@ -11,13 +11,14 @@ import java.util.List;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.Registro;
 
 public class GlicemiaViewAdapter extends RecyclerView.Adapter<GlicemiaViewAdapter.ViewHolder> {
 
-    private final List<Glicemia> mValues;
+    private final List<Registro> mValues;
     private final EntriesListFragment.OnListFragmentInteractionListener mListener;
 
-    public GlicemiaViewAdapter(List<Glicemia> items, EntriesListFragment.OnListFragmentInteractionListener listener) {
+    public GlicemiaViewAdapter(List<Registro> items, EntriesListFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -31,8 +32,8 @@ public class GlicemiaViewAdapter extends RecyclerView.Adapter<GlicemiaViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mContentView.setText(String.valueOf(mValues.get(position).getValor()));
+        holder.mItem = (Glicemia) mValues.get(position);
+        holder.mContentView.setText(String.valueOf(((Glicemia)mValues.get(position)).getValor()));
         if(mValues.get(position).getHora() != null)
             holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(mValues.get(position).getHora()));
 

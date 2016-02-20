@@ -55,4 +55,14 @@
         android:layout_margin="@dimen/fab_margin"
         android:background="@null"
         android:src="@drawable/ic_list" />
+
+    <ImageButton
+        android:id="@+id/btn_add_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btn_list"
+        android:layout_below="@id/layout_add_glycemia_main"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@null"
+        android:src="@drawable/ic_plus" />
 </RelativeLayout>

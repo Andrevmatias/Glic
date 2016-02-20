@@ -1,14 +1,11 @@
 package br.tcc.glic.domain.core;
 
-import java.util.Date;
-
 /**
  * Created by André on 26/01/2016.
  */
-public class AplicacaoInsulina {
+public class AplicacaoInsulina extends Registro {
     private int codigo;
     private double quantidade;
-    private Date hora;
     private TipoInsulina tipo;
 
     public int getCodigo() {
@@ -25,14 +22,6 @@ public class AplicacaoInsulina {
 
     public void setQuantidade(double quantidade) {
         this.quantidade = quantidade;
-    }
-
-    public Date getHora() {
-        return hora;
-    }
-
-    public void setHora(Date hora) {
-        this.hora = hora;
     }
 
     public TipoInsulina getTipo() {

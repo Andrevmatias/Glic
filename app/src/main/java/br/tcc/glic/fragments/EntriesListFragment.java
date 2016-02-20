@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Glicemia;
-import br.tcc.glic.domain.core.RegistrarDadosService;
+import br.tcc.glic.domain.services.RegistrarDadosService;
 
 /**
  * A fragment representing a list of Items.
@@ -54,7 +54,7 @@ public class EntriesListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new GlicemiaViewAdapter(new RegistrarDadosService().listGlicemias(), mListener));
+            recyclerView.setAdapter(new GlicemiaViewAdapter(new RegistrarDadosService().listRegistros(), mListener));
         }
         return view;
     }

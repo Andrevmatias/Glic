@@ -1,16 +1,13 @@
 package br.tcc.glic.domain.core;
 
-import java.util.Date;
-
 import br.tcc.glic.domain.enums.TipoCarboidrato;
 
 /**
  * Created by André on 26/01/2016.
  */
-public class CarboidratoIngerido {
+public class CarboidratoIngerido extends Registro{
     private int codigo;
     private int quantidade;
-    private Date hora;
     private TipoCarboidrato tipo;
 
     public TipoCarboidrato getTipo() {
@@ -19,14 +16,6 @@ public class CarboidratoIngerido {
 
     public void setTipo(TipoCarboidrato tipo) {
         this.tipo = tipo;
-    }
-
-    public Date getHora() {
-        return hora;
-    }
-
-    public void setHora(Date hora) {
-        this.hora = hora;
     }
 
     public int getQuantidade() {

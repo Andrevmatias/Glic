@@ -16,7 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
 import br.tcc.glic.domain.core.Glicemia;
-import br.tcc.glic.domain.core.RegistrarDadosService;
+import br.tcc.glic.domain.services.RegistrarDadosService;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -61,6 +61,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 openList();
             }
         });
+
+        ImageButton btnAddEntry = (ImageButton) findViewById(R.id.btn_add_entry);
+        btnAddEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddEntry();
+            }
+        });
+    }
+
+    private void openAddEntry() {
+        Intent intent = new Intent(this, RegisterDataActivity.class);
+        startActivity(intent);
     }
 
     private void initApiClients() {
