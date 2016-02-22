@@ -6,6 +6,7 @@ import java.util.List;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
 import br.tcc.glic.domain.core.TipoInsulina;
+import br.tcc.glic.domain.services.defaultdata.TiposInsulinaPadrao;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
@@ -26,5 +27,12 @@ public class TipoInsulinaService {
                 : rep.toList())
             result.add(Conversions.tipoInsulina(tipoBd));
         return result;
+    }
+
+    public void registrarInsulinasPadrao(){
+        for (TipoInsulina tipo :
+                TiposInsulinaPadrao.getAll()) {
+            adicionarTipoInsulina(tipo);
+        }
     }
 }

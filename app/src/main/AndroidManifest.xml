@@ -43,7 +43,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".EntriesListActivity"></activity>
+        <activity android:name=".EntriesListActivity" />
+        <activity android:name=".InsulinTypesActivity"></activity>
     </application>
 
 </manifest>

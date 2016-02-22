@@ -16,6 +16,7 @@ import java.util.Set;
 import br.tcc.glic.domain.core.IntervaloGlicemia;
 import br.tcc.glic.domain.enums.TipoGlicemia;
 import br.tcc.glic.domain.enums.TipoTerapia;
+import br.tcc.glic.domain.services.TipoInsulinaService;
 import br.tcc.glic.fragments.configuration.AgeConfigurationFragment;
 import br.tcc.glic.fragments.configuration.OnConfigurationSelectedListener;
 import br.tcc.glic.fragments.configuration.TreatmentTypeConfigurationFragment;
@@ -81,12 +82,14 @@ public class FirstConfigurationActivity extends AppCompatActivity
         saveAgeConfigurations(sharedPreferencesEditor);
         saveTreatmentConfigurations(sharedPreferencesEditor);
 
-        sharedPreferencesEditor.commit();
+        sharedPreferencesEditor.apply();
+
+        new TipoInsulinaService().registrarInsulinasPadrao();
 
         ConfigUtils.getSystemConfigurationFile(this)
                 .edit()
                 .putBoolean(getString(R.string.app_configured_config), true)
-                .commit();
+                .apply();
     }
 
     private void saveTreatmentConfigurations(SharedPreferences.Editor sharedPreferencesEditor) {
