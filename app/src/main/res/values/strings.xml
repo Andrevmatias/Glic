@@ -81,4 +81,6 @@
     <string name="logout_title">Sair</string>
     <string name="logout_key">logout_key</string>
     <string name="insulin_types">Tipos de Insulina</string>
+    <string name="date_time_picker_type_argument">date_time_picker_type_argument</string>
+    <string name="show_date_bundle_argument">show_date_bundle_argument</string>
 </resources>

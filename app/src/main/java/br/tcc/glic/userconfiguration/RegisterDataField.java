@@ -11,8 +11,8 @@ import br.tcc.glic.domain.enums.TipoTerapia;
 public enum RegisterDataField {
     Glycemia,
     Carbohydrates,
-    HbA1c,
-    Insulin;
+    Insulin,
+    HbA1c;
 
     public static RegisterDataField[] getByTipoTerapia(TipoTerapia tipoTerapia){
         switch (tipoTerapia){
