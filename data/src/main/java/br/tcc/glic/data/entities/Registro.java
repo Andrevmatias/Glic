@@ -18,10 +18,13 @@ public class Registro
     private TipoInsulina tipoInsulina;
 
     public Registro(TipoRegistro tipo){
+        this();
         this.tipo = tipo;
     }
 
-    public Registro(){}
+    public Registro(){
+        tipoInsulina = new TipoInsulina();
+    }
 
     public TipoInsulina getTipoInsulina() {
         return tipoInsulina;
