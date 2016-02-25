@@ -1,6 +1,9 @@
 package br.tcc.glic.domain.utils;
 
+import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoInsulina;
+import br.tcc.glic.domain.core.CarboidratoIngerido;
+import br.tcc.glic.domain.core.Glicemia;
 
 /**
  * Created by André on 19/02/2016.
@@ -24,5 +27,21 @@ public final class Conversions {
         tipoBd.setNome(tipo.getNome());
         tipoBd.setPico(tipo.getPico());
         return tipoBd;
+    }
+
+    public static Glicemia glicemia(Registro registro) {
+        Glicemia glicemia = new Glicemia();
+        glicemia.setCodigo(registro.getId());
+        glicemia.setHora(registro.getHora());
+        glicemia.setValor((int) registro.getValor());
+        return glicemia;
+    }
+
+    public static CarboidratoIngerido carboidratoIngerido(Registro registro) {
+        CarboidratoIngerido carboidrato = new CarboidratoIngerido();
+        carboidrato.setCodigo(registro.getId());
+        carboidrato.setHora(registro.getHora());
+        carboidrato.setQuantidade((int) registro.getValor());
+        return carboidrato;
     }
 }

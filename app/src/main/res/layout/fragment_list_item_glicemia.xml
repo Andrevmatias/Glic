@@ -5,11 +5,20 @@
     android:orientation="vertical"
     android:background="@drawable/list_border">
 
+    <ImageView
+        android:id="@+id/img_glycemia_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_glycemia" />
+
     <TextView
         android:id="@+id/valor_glicemia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
+        android:layout_toRightOf="@id/img_glycemia_list"
         android:textSize="50sp"
         android:textAppearance="?attr/textAppearanceListItem" />
 

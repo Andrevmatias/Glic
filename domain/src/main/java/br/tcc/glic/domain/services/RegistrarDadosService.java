@@ -9,6 +9,8 @@ import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoRegistro;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
+import br.tcc.glic.domain.core.CarboidratoIngerido;
+import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
@@ -35,7 +37,7 @@ public class RegistrarDadosService {
         rep.save(registro);
     }
 
-    public  void registrarGlicemia(br.tcc.glic.domain.core.CarboidratoIngerido carboidratoIngerido){
+    public  void registrarCarboidratosIngeridos(br.tcc.glic.domain.core.CarboidratoIngerido carboidratoIngerido){
         this.registrarCarboidratosIngeridos(carboidratoIngerido.getQuantidade(), carboidratoIngerido.getHora());
     }
 
@@ -73,12 +75,19 @@ public class RegistrarDadosService {
         List<br.tcc.glic.domain.core.Registro> registrosRet = new ArrayList<>();
         for (Registro registro :
                 registros) {
-            if(registro.getTipo() == TipoRegistro.Glicemia) {
-                br.tcc.glic.domain.core.Glicemia novaGlicemia = new br.tcc.glic.domain.core.Glicemia();
-                novaGlicemia.setCodigo(registro.getId());
-                novaGlicemia.setHora(registro.getHora());
-                novaGlicemia.setValor((int)registro.getValor());
-                registrosRet.add(novaGlicemia);
+            switch (registro.getTipo()) {
+                case Glicemia:
+                    Glicemia glicemia = Conversions.glicemia(registro);
+                    registrosRet.add(glicemia);
+                    break;
+                case HemoglobinaGlicada:
+                    break;
+                case CarboidratoIngerido:
+                    CarboidratoIngerido carboidratoIngerido = Conversions.carboidratoIngerido(registro);
+                    registrosRet.add(carboidratoIngerido);
+                    break;
+                case AplicacaoInsulina:
+                    break;
             }
         }
 

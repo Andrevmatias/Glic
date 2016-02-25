@@ -52,8 +52,12 @@ public class RegisterGlycemiaFragment extends Fragment
     }
 
     public Glicemia getGlycemia(){
+        String valor = edtGlycemia.getText().toString();
+        if(valor.length() == 0)
+            return null;
+
         Glicemia glicemia = new Glicemia();
-        glicemia.setValor(Integer.parseInt(edtGlycemia.getText().toString()));
+        glicemia.setValor(Integer.parseInt(valor));
         if(fragmentDateTime != null)
             glicemia.setHora(new Date(fragmentDateTime.getDateTime().getTimeInMillis()));
         else

@@ -17,6 +17,7 @@ public class Registro
     private double valor;
     private TipoInsulina tipoInsulina;
 
+
     public Registro(TipoRegistro tipo){
         this();
         this.tipo = tipo;

@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_register_carbohydrates"
     android:layout_width="match_parent"
@@ -7,21 +7,21 @@
 
     <EditText
         android:id="@+id/edt_carbohydrates"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="2"
         android:inputType="number"
         android:textAlignment="center"
         android:textSize="50sp"
-        android:drawableLeft="@drawable/ic_glycemia"
+        android:drawableLeft="@drawable/ic_carbohydrates"
         android:drawablePadding="5dp"/>
 
-    <ImageButton
-        android:id="@+id/btn_exam_time"
-        android:visibility="gone"
+    <fragment
+        android:id="@+id/date_time_carbohydrates"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@null"
-        android:src="@drawable/ic_date_time" />
+        android:layout_height="wrap_content"
+        android:name="br.tcc.glic.fragments.DateTimeFragment"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/edt_carbohydrates"/>
 
-</LinearLayout>
+</RelativeLayout>

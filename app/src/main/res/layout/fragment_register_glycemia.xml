@@ -1,15 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_register_glycemia"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="br.tcc.glic.fragments.RegisterGlycemiaFragment"
-    android:orientation="vertical">
+    tools:context="br.tcc.glic.fragments.RegisterGlycemiaFragment">
 
     <EditText
         android:id="@+id/edt_glycemia"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:inputType="number"
         android:textAlignment="center"
         android:textSize="50sp"
@@ -18,7 +17,9 @@
 
     <FrameLayout
         android:id="@+id/container_date_time_glycemia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/edt_glycemia"/>
 
-</LinearLayout>
+</RelativeLayout>

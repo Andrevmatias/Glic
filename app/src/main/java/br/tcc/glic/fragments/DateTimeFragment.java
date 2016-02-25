@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -26,7 +25,6 @@ import br.tcc.glic.R;
 public class DateTimeFragment extends Fragment
         implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
 
-    private ImageButton btnPick;
     private TextView txtCurrentDateTime;
 
     private Calendar currentDate;
@@ -83,8 +81,9 @@ public class DateTimeFragment extends Fragment
     }
 
     private void initComponents(View view) {
-        btnPick = (ImageButton) view.findViewById(R.id.btn_pick_date_time);
-        btnPick.setOnClickListener(new View.OnClickListener() {
+        txtCurrentDateTime = (TextView) view.findViewById(R.id.current_date_time);
+
+        txtCurrentDateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != DateType.TimeOnly)
@@ -94,7 +93,6 @@ public class DateTimeFragment extends Fragment
             }
         });
 
-        txtCurrentDateTime = (TextView) view.findViewById(R.id.current_date_time);
         showCurrentDate();
     }
 

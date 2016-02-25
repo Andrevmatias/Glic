@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/list_border">
+
+    <ImageView
+        android:id="@+id/img_carbohydrate_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_carbohydrates"/>
+
+    <TextView
+        android:id="@+id/quantidade_carboidrato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textSize="50sp"
+        android:layout_toRightOf="@id/img_carbohydrate_list"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gr"
+        android:layout_toRightOf="@id/quantidade_carboidrato"
+        android:layout_alignBaseline="@id/quantidade_carboidrato"/>
+
+    <TextView
+        android:id="@+id/hora_carboidrato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textColor="#999"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+</RelativeLayout>

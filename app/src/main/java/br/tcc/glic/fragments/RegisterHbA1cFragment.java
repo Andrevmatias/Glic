@@ -48,13 +48,6 @@ public class RegisterHbA1cFragment extends Fragment
     private void initComponents(View view) {
         edtGlycemia = (EditText) view.findViewById(R.id.edt_glycemia);
 
-        btnExamTime = (ImageButton) view.findViewById(R.id.btn_exam_time);
-        btnExamTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickExamDate();
-            }
-        });
     }
 
     private void pickExamDate() {
