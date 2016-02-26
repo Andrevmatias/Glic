@@ -12,6 +12,7 @@ import java.util.List;
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
 
 public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -40,6 +41,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(viewType == CARBOHYDRATE)
             return new CarboidratoIngeridoViewHolder(view);
 
+        if(viewType == HBA1C)
+            return new HemoglobinaGlicadaViewHolder(view);
+
         throw new IllegalArgumentException("Entry type not found.");
     }
 
@@ -49,6 +53,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(viewType == CARBOHYDRATE)
             return R.layout.fragment_list_item_carboidrato_ingerido;
+
+        if(viewType == HBA1C)
+            return R.layout.fragment_list_item_hemoglobina_glicada;
 
         throw new IllegalArgumentException("Entry type not found.");
     }
@@ -63,6 +70,10 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case CARBOHYDRATE:
                 configureCarboidratoIngeridoViewHolder((CarboidratoIngeridoViewHolder) holder,
                         (CarboidratoIngerido) items.get(position));
+                break;
+            case HBA1C:
+                configureHemoglobinaGlicadaViewHolder((HemoglobinaGlicadaViewHolder) holder,
+                        (HemoglobinaGlicada) items.get(position));
                 break;
         }
     }
@@ -96,6 +107,21 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
+    private void configureHemoglobinaGlicadaViewHolder(final HemoglobinaGlicadaViewHolder holder,
+                                                       HemoglobinaGlicada hbA1c) {
+        holder.mContentView.setText(String.valueOf(hbA1c.getValor()));
+        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy").format(hbA1c.getHora()));
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != listener) {
+                    listener.onListFragmentInteraction(holder.mItem);
+                }
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return items.size();
@@ -108,6 +134,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(items.get(position) instanceof CarboidratoIngerido)
             return CARBOHYDRATE;
+
+        if(items.get(position) instanceof HemoglobinaGlicada)
+            return HBA1C;
 
         return -1;
     }
@@ -142,6 +171,25 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.quantidade_carboidrato);
             mTimeView = (TextView) view.findViewById(R.id.hora_carboidrato);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mContentView.getText() + "'";
+        }
+    }
+
+    public class HemoglobinaGlicadaViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mContentView;
+        private final TextView mTimeView;
+        public Glicemia mItem;
+
+        public HemoglobinaGlicadaViewHolder(View view) {
+            super(view);
+            mView = view;
+            mContentView = (TextView) view.findViewById(R.id.valor_hemoglobina);
+            mTimeView = (TextView) view.findViewById(R.id.hora_hemoglobina);
         }
 
         @Override

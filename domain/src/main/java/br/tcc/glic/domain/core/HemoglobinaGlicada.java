@@ -4,7 +4,7 @@ package br.tcc.glic.domain.core;
  * Created by André on 26/01/2016.
  */
 public class HemoglobinaGlicada extends Registro {
-    private int codigo;
+    private Long codigo;
     private double valor;
 
     public double getValor() {
@@ -15,11 +15,11 @@ public class HemoglobinaGlicada extends Registro {
         this.valor = valor;
     }
 
-    public int getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 }

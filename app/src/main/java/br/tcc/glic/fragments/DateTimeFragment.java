@@ -42,7 +42,7 @@ public class DateTimeFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        configure(savedInstanceState);
+        configure();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_date_time, container, false);
@@ -52,16 +52,17 @@ public class DateTimeFragment extends Fragment
         return view;
     }
 
-    private void configure(Bundle savedInstanceState) {
-        if(savedInstanceState != null)
-            currentDate = (Calendar) savedInstanceState.get(getString(R.string.calendar_bundle_argument));
-
-        if(currentDate == null)
+    private void configure() {
+        Bundle arguments = getArguments();
+        String calendarKey = getString(R.string.calendar_bundle_argument);
+        if(arguments != null && arguments.containsKey(calendarKey))
+            currentDate = (Calendar) arguments.get(calendarKey);
+        else
             currentDate = Calendar.getInstance();
 
-        String type_key = getString(R.string.date_time_picker_type_argument);
-        if(savedInstanceState != null && savedInstanceState.containsKey(type_key))
-            type = (DateType) savedInstanceState.get(type_key);
+        String typeKey = getString(R.string.date_time_picker_type_argument);
+        if(arguments != null && arguments.containsKey(typeKey))
+            type = (DateType) arguments.get(typeKey);
 
         setDateTimeFormat(type);
     }

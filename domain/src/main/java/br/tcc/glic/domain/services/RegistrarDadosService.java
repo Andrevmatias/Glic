@@ -11,6 +11,7 @@ import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
@@ -81,6 +82,8 @@ public class RegistrarDadosService {
                     registrosRet.add(glicemia);
                     break;
                 case HemoglobinaGlicada:
+                    HemoglobinaGlicada hemoglobinaGlicada = Conversions.hemoglobinaGlicada(registro);
+                    registrosRet.add(hemoglobinaGlicada);
                     break;
                 case CarboidratoIngerido:
                     CarboidratoIngerido carboidratoIngerido = Conversions.carboidratoIngerido(registro);

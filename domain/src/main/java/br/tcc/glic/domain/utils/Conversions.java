@@ -4,6 +4,7 @@ import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.HemoglobinaGlicada;
 
 /**
  * Created by André on 19/02/2016.
@@ -43,5 +44,13 @@ public final class Conversions {
         carboidrato.setHora(registro.getHora());
         carboidrato.setQuantidade((int) registro.getValor());
         return carboidrato;
+    }
+
+    public static HemoglobinaGlicada hemoglobinaGlicada(Registro registro) {
+        HemoglobinaGlicada glicemia = new HemoglobinaGlicada();
+        glicemia.setCodigo(registro.getId());
+        glicemia.setHora(registro.getHora());
+        glicemia.setValor(registro.getValor());
+        return glicemia;
     }
 }

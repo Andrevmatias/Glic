@@ -17,9 +17,11 @@ import java.util.Map;
 
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.services.RegistrarDadosService;
 import br.tcc.glic.fragments.RegisterCarbohydratesFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
+import br.tcc.glic.fragments.RegisterHbA1cFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
 import br.tcc.glic.userconfiguration.RegisterDataField;
 
@@ -65,12 +67,13 @@ public class RegisterDataActivity extends AppCompatActivity {
                     dataFieldFragments.put(RegisterDataField.Insulin, registerInsulinFragment);
                     transaction.add(R.id.register_data_container, registerInsulinFragment);
                     break;
+                    */
+                    break;
                 case HbA1c:
                     RegisterHbA1cFragment registerHbA1cFragment = new RegisterHbA1cFragment();
                     dataFieldFragments.put(RegisterDataField.HbA1c, registerHbA1cFragment);
                     transaction.add(R.id.register_data_container, registerHbA1cFragment);
                     break;
-                    */
             }
         }
 
@@ -91,6 +94,7 @@ public class RegisterDataActivity extends AppCompatActivity {
                 case Insulin:
                     break;
                 case HbA1c:
+                    saveHbA1c();
                     break;
             }
         }
@@ -98,6 +102,15 @@ public class RegisterDataActivity extends AppCompatActivity {
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
 
         goToMain();
+    }
+
+    private void saveHbA1c() {
+        RegisterHbA1cFragment fragmentHbA1c =
+                (RegisterHbA1cFragment) dataFieldFragments.get(RegisterDataField.HbA1c);
+
+        HemoglobinaGlicada hbA1c = fragmentHbA1c.getHbA1c();
+        if(hbA1c != null)
+            new RegistrarDadosService().registrarHemoglobinaGlicada(hbA1c);
     }
 
     private void goToMain() {
