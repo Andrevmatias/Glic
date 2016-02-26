@@ -31,7 +31,7 @@ public enum RegisterDataField {
             case Glycemia: return context.getString(R.string.glycemia);
             case Carbohydrates: return context.getString(R.string.ingested_carbohydrates);
             case HbA1c: return context.getString(R.string.hba1c);
-            case Insulin: return context.getString(R.string.injected_insulins);
+            case Insulin: return context.getString(R.string.injected_insulin);
             default: return null;
         }
     }

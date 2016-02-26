@@ -2,6 +2,7 @@ package br.tcc.glic.domain.utils;
 
 import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoInsulina;
+import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
@@ -47,10 +48,19 @@ public final class Conversions {
     }
 
     public static HemoglobinaGlicada hemoglobinaGlicada(Registro registro) {
-        HemoglobinaGlicada glicemia = new HemoglobinaGlicada();
-        glicemia.setCodigo(registro.getId());
-        glicemia.setHora(registro.getHora());
-        glicemia.setValor(registro.getValor());
-        return glicemia;
+        HemoglobinaGlicada hemoglobinaGlicada = new HemoglobinaGlicada();
+        hemoglobinaGlicada.setCodigo(registro.getId());
+        hemoglobinaGlicada.setHora(registro.getHora());
+        hemoglobinaGlicada.setValor(registro.getValor());
+        return hemoglobinaGlicada;
+    }
+
+    public static AplicacaoInsulina aplicacaoInsulina(Registro registro) {
+        AplicacaoInsulina aplicacaoInsulina = new AplicacaoInsulina();
+        aplicacaoInsulina.setCodigo(registro.getId());
+        aplicacaoInsulina.setHora(registro.getHora());
+        aplicacaoInsulina.setQuantidade(registro.getValor());
+        aplicacaoInsulina.setTipo(tipoInsulina(registro.getTipoInsulina()));
+        return aplicacaoInsulina;
     }
 }

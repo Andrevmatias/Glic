@@ -1,20 +1,28 @@
 package br.tcc.glic;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
@@ -22,13 +30,17 @@ import br.tcc.glic.domain.services.RegistrarDadosService;
 import br.tcc.glic.fragments.RegisterCarbohydratesFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.RegisterHbA1cFragment;
+import br.tcc.glic.fragments.RegisterInsulinFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
 import br.tcc.glic.userconfiguration.RegisterDataField;
 
 public class RegisterDataActivity extends AppCompatActivity {
 
     private Map<RegisterDataField, Fragment> dataFieldFragments = new HashMap<>();
+    private List<RegisterDataField> availableFields =
+            new ArrayList<>(Arrays.asList(RegisterDataField.values()));
     private Toolbar toolbar;
+    private View btnAddField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +48,39 @@ public class RegisterDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_data);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_register_data);
+        btnAddField = findViewById(R.id.btn_add_register_field);
         setSupportActionBar(toolbar);
 
         addDefaultFields();
+    }
+
+    public void addField(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final List<RegisterDataFieldListAdapterModel> models = convertToListAdapterModel(availableFields);
+        ArrayAdapter<RegisterDataFieldListAdapterModel> adapter =
+                new ArrayAdapter<>(this, android.R.layout.select_dialog_item, models);
+        builder
+            .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    FragmentTransaction transaction =
+                            getSupportFragmentManager().beginTransaction();
+                    addField(transaction, models.get(which).getRegisterDataField());
+                    transaction.commit();
+                    dialog.dismiss();
+                }
+            })
+                .create()
+                .show();
+    }
+
+    private List<RegisterDataFieldListAdapterModel> convertToListAdapterModel(List<RegisterDataField> fields) {
+        List<RegisterDataFieldListAdapterModel> list = new ArrayList<>();
+        for (RegisterDataField field :
+                fields) {
+            list.add(new RegisterDataFieldListAdapterModel(field, this));
+        }
+        return list;
     }
 
     private void addDefaultFields() {
@@ -47,37 +89,43 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         for (RegisterDataField field :
                 fieldsToShow) {
-            switch (field){
-                case Glycemia:
-                    RegisterGlycemiaFragment registerGlycemiaFragment = new RegisterGlycemiaFragment();
-                    Bundle args = new Bundle();
-                    args.putBoolean(getString(R.string.show_date_bundle_argument), true);
-                    registerGlycemiaFragment.setArguments(args);
-                    dataFieldFragments.put(RegisterDataField.Glycemia, registerGlycemiaFragment);
-                    transaction.add(R.id.register_data_container, registerGlycemiaFragment);
-                    break;
-                case Carbohydrates:
-                    RegisterCarbohydratesFragment registerCarbohydratesFragment = new RegisterCarbohydratesFragment();
-                    dataFieldFragments.put(RegisterDataField.Carbohydrates, registerCarbohydratesFragment);
-                    transaction.add(R.id.register_data_container, registerCarbohydratesFragment);
-                    break;
-                case Insulin:
-                                    /*
-                    RegisterInsulinFragment registerInsulinFragment = new RegisterInsulinFragment();
-                    dataFieldFragments.put(RegisterDataField.Insulin, registerInsulinFragment);
-                    transaction.add(R.id.register_data_container, registerInsulinFragment);
-                    break;
-                    */
-                    break;
-                case HbA1c:
-                    RegisterHbA1cFragment registerHbA1cFragment = new RegisterHbA1cFragment();
-                    dataFieldFragments.put(RegisterDataField.HbA1c, registerHbA1cFragment);
-                    transaction.add(R.id.register_data_container, registerHbA1cFragment);
-                    break;
-            }
+            addField(transaction, field);
         }
 
         transaction.commit();
+    }
+
+    private void addField(FragmentTransaction transaction, RegisterDataField field) {
+        switch (field){
+            case Glycemia:
+                RegisterGlycemiaFragment registerGlycemiaFragment = new RegisterGlycemiaFragment();
+                Bundle args = new Bundle();
+                args.putBoolean(getString(R.string.show_date_bundle_argument), true);
+                registerGlycemiaFragment.setArguments(args);
+                dataFieldFragments.put(RegisterDataField.Glycemia, registerGlycemiaFragment);
+                transaction.add(R.id.register_data_container, registerGlycemiaFragment);
+                break;
+            case Carbohydrates:
+                RegisterCarbohydratesFragment registerCarbohydratesFragment = new RegisterCarbohydratesFragment();
+                dataFieldFragments.put(RegisterDataField.Carbohydrates, registerCarbohydratesFragment);
+                transaction.add(R.id.register_data_container, registerCarbohydratesFragment);
+                break;
+            case Insulin:
+                RegisterInsulinFragment registerInsulinFragment = new RegisterInsulinFragment();
+                dataFieldFragments.put(RegisterDataField.Insulin, registerInsulinFragment);
+                transaction.add(R.id.register_data_container, registerInsulinFragment);
+                break;
+            case HbA1c:
+                RegisterHbA1cFragment registerHbA1cFragment = new RegisterHbA1cFragment();
+                dataFieldFragments.put(RegisterDataField.HbA1c, registerHbA1cFragment);
+                transaction.add(R.id.register_data_container, registerHbA1cFragment);
+                break;
+        }
+
+        availableFields.remove(field);
+
+        if(availableFields.isEmpty())
+            btnAddField.setVisibility(View.GONE);
     }
 
     private void saveAll() {
@@ -92,6 +140,7 @@ public class RegisterDataActivity extends AppCompatActivity {
                     saveCarbohydrates();
                     break;
                 case Insulin:
+                    saveInsulin();
                     break;
                 case HbA1c:
                     saveHbA1c();
@@ -100,8 +149,15 @@ public class RegisterDataActivity extends AppCompatActivity {
         }
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+    }
 
-        goToMain();
+    private void saveInsulin() {
+        RegisterInsulinFragment fragmentInsulin =
+                (RegisterInsulinFragment) dataFieldFragments.get(RegisterDataField.Insulin);
+
+        AplicacaoInsulina aplicacaoInsulina = fragmentInsulin.getInsulin();
+        if(aplicacaoInsulina != null)
+            new RegistrarDadosService().registrarAplicacaoInsulina(aplicacaoInsulina);
     }
 
     private void saveHbA1c() {
@@ -146,10 +202,38 @@ public class RegisterDataActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            saveAll();
+            //Os dados são salvos no onStop
+            goToMain();
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveAll();
+        finish();
+    }
+
+    private class RegisterDataFieldListAdapterModel {
+        private final RegisterDataField registerDataField;
+        private final Context context;
+
+        public RegisterDataFieldListAdapterModel(RegisterDataField field, Context context) {
+            this.registerDataField = field;
+            this.context = context;
+        }
+
+        public RegisterDataField getRegisterDataField() {
+            return registerDataField;
+        }
+
+        @Override
+        public String toString() {
+            return this.registerDataField.getHumanReadableString(this.context);
+        }
     }
 }

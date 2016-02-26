@@ -49,6 +49,7 @@ public class RegisterCarbohydratesFragment extends Fragment
         CarboidratoIngerido carboidratoIngerido = new CarboidratoIngerido();
         carboidratoIngerido.setQuantidade(Integer.parseInt(quantidade));
         carboidratoIngerido.setHora(fragmentDateTime.getDateTime().getTime());
+
         return carboidratoIngerido;
     }
 

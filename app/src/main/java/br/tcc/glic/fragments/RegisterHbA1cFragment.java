@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.util.Date;
-
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
 
@@ -60,10 +58,8 @@ public class RegisterHbA1cFragment extends Fragment
 
         HemoglobinaGlicada hba1c = new HemoglobinaGlicada();
         hba1c.setValor(Double.parseDouble(valor));
-        if(fragmentDateTime != null)
-            hba1c.setHora(new Date(fragmentDateTime.getDateTime().getTimeInMillis()));
-        else
-            hba1c.setHora(new Date());
+        hba1c.setHora(fragmentDateTime.getDateTime().getTime());
+
         return hba1c;
     }
 

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.tcc.glic.R;
+import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
@@ -41,6 +42,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(viewType == CARBOHYDRATE)
             return new CarboidratoIngeridoViewHolder(view);
 
+        if(viewType == INSULIN)
+            return new AplicacaoInsulinaViewHolder(view);
+
         if(viewType == HBA1C)
             return new HemoglobinaGlicadaViewHolder(view);
 
@@ -53,6 +57,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(viewType == CARBOHYDRATE)
             return R.layout.fragment_list_item_carboidrato_ingerido;
+
+        if(viewType == INSULIN)
+            return R.layout.fragment_list_item_aplicacao_insulina;
 
         if(viewType == HBA1C)
             return R.layout.fragment_list_item_hemoglobina_glicada;
@@ -70,6 +77,10 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case CARBOHYDRATE:
                 configureCarboidratoIngeridoViewHolder((CarboidratoIngeridoViewHolder) holder,
                         (CarboidratoIngerido) items.get(position));
+                break;
+            case INSULIN:
+                configureAplicacaoInsulinaViewHolder((AplicacaoInsulinaViewHolder) holder,
+                        (AplicacaoInsulina) items.get(position));
                 break;
             case HBA1C:
                 configureHemoglobinaGlicadaViewHolder((HemoglobinaGlicadaViewHolder) holder,
@@ -96,6 +107,22 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                                         CarboidratoIngerido carboidrato) {
         holder.mContentView.setText(String.valueOf(carboidrato.getQuantidade()));
         holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(carboidrato.getHora()));
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != listener) {
+                    listener.onListFragmentInteraction(holder.mItem);
+                }
+            }
+        });
+    }
+
+    private void configureAplicacaoInsulinaViewHolder(final AplicacaoInsulinaViewHolder holder,
+                                                       AplicacaoInsulina aplicacaoInsulina) {
+        holder.mContentView.setText(String.valueOf(aplicacaoInsulina.getQuantidade()));
+        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(aplicacaoInsulina.getHora()));
+        holder.mTypeView.setText(aplicacaoInsulina.getTipo().getNome());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +162,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(items.get(position) instanceof CarboidratoIngerido)
             return CARBOHYDRATE;
 
+        if(items.get(position) instanceof AplicacaoInsulina)
+            return INSULIN;
+
         if(items.get(position) instanceof HemoglobinaGlicada)
             return HBA1C;
 
@@ -171,6 +201,27 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.quantidade_carboidrato);
             mTimeView = (TextView) view.findViewById(R.id.hora_carboidrato);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mContentView.getText() + "'";
+        }
+    }
+
+    public class AplicacaoInsulinaViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mContentView;
+        private final TextView mTimeView;
+        private final TextView mTypeView;
+        public Glicemia mItem;
+
+        public AplicacaoInsulinaViewHolder(View view) {
+            super(view);
+            mView = view;
+            mContentView = (TextView) view.findViewById(R.id.quantidade_insulina);
+            mTimeView = (TextView) view.findViewById(R.id.hora_insulina);
+            mTypeView = (TextView) view.findViewById(R.id.tipo_insulina);
         }
 
         @Override

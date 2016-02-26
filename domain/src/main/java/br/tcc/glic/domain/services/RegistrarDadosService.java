@@ -9,6 +9,7 @@ import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoRegistro;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
+import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
@@ -90,6 +91,8 @@ public class RegistrarDadosService {
                     registrosRet.add(carboidratoIngerido);
                     break;
                 case AplicacaoInsulina:
+                    AplicacaoInsulina aplicacaoInsulina = Conversions.aplicacaoInsulina(registro);
+                    registrosRet.add(aplicacaoInsulina);
                     break;
             }
         }

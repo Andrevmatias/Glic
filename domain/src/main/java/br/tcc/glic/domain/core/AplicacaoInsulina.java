@@ -4,15 +4,15 @@ package br.tcc.glic.domain.core;
  * Created by André on 26/01/2016.
  */
 public class AplicacaoInsulina extends Registro {
-    private int codigo;
+    private Long codigo;
     private double quantidade;
     private TipoInsulina tipo;
 
-    public int getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 

@@ -74,7 +74,7 @@
     <string name="ingested_carbohydrates">Carboidratos Ingeridos</string>
     <string name="glycemia">Glicemia</string>
     <string name="hba1c">HbA1c</string>
-    <string name="injected_insulins">Insulinas Aplicadas</string>
+    <string name="injected_insulin">Insulina Aplicada</string>
     <string name="now">Agora</string>
     <string name="result_saved">Salvo</string>
     <string name="calendar_bundle_argument">calendar_bundle_argument</string>
@@ -83,4 +83,5 @@
     <string name="insulin_types">Tipos de Insulina</string>
     <string name="date_time_picker_type_argument">date_time_picker_type_argument</string>
     <string name="show_date_bundle_argument">show_date_bundle_argument</string>
+    <string name="add_field">Adicionar</string>
 </resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/list_border">
+
+    <ImageView
+        android:id="@+id/img_insulin_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_insulin" />
+
+    <TextView
+        android:id="@+id/quantidade_insulina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_toRightOf="@id/img_insulin_list"
+        android:textSize="50sp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/tipo_insulina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/quantidade_insulina"
+        android:layout_alignBaseline="@id/quantidade_insulina"/>
+
+    <TextView
+        android:id="@+id/hora_insulina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textColor="#999"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="?attr/textAppearanceListItemSmall" />
+
+</RelativeLayout>
