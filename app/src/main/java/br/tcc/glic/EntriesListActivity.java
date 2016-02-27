@@ -3,7 +3,7 @@ package br.tcc.glic;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.fragments.EntriesListFragment;
 
 public class EntriesListActivity extends AppCompatActivity
@@ -17,7 +17,7 @@ public class EntriesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Glicemia item) {
-
+    public void onListFragmentInteraction(Registro item) {
+        //TODO: editar item
     }
 }

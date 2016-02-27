@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.tcc.glic.R;
-import br.tcc.glic.domain.core.Glicemia;
-import br.tcc.glic.domain.services.RegistrarDadosService;
+import br.tcc.glic.domain.core.Registro;
+import br.tcc.glic.domain.services.RegistrosService;
 
 /**
  * A fragment representing a list of Items.
@@ -48,7 +48,7 @@ public class EntriesListFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new RegistroViewAdapter(new RegistrarDadosService().listRegistros(), mListener));
+            recyclerView.setAdapter(new RegistroViewAdapter(new RegistrosService().listRegistros(), mListener));
         }
         return view;
     }
@@ -72,6 +72,6 @@ public class EntriesListFragment extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Glicemia item);
+        void onListFragmentInteraction(Registro item);
     }
 }

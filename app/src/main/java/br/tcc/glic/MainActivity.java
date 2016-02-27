@@ -16,7 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
 import br.tcc.glic.domain.core.Glicemia;
-import br.tcc.glic.domain.services.RegistrarDadosService;
+import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private boolean mResolvingConnectionFailure = false;
     private GoogleApiClient mGoogleGamesApiClient;
     private RegisterGlycemiaFragment fragmentGlycemia;
-    private RegistrarDadosService registrarDadosService;
+    private RegistrosService registrarDadosService;
 
     public MainActivity() {
-        registrarDadosService = new RegistrarDadosService();
+        registrarDadosService = new RegistrosService();
     }
 
     @Override

@@ -90,6 +90,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void configureGlicemiaViewHolder(final GlicemiaViewHolder holder, Glicemia glicemia) {
+        holder.mItem = glicemia;
         holder.mContentView.setText(String.valueOf(glicemia.getValor()));
         holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(glicemia.getHora()));
 
@@ -105,6 +106,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureCarboidratoIngeridoViewHolder(final CarboidratoIngeridoViewHolder holder,
                                                         CarboidratoIngerido carboidrato) {
+        holder.mItem = carboidrato;
         holder.mContentView.setText(String.valueOf(carboidrato.getQuantidade()));
         holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(carboidrato.getHora()));
 
@@ -120,6 +122,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureAplicacaoInsulinaViewHolder(final AplicacaoInsulinaViewHolder holder,
                                                        AplicacaoInsulina aplicacaoInsulina) {
+        holder.mItem = aplicacaoInsulina;
         holder.mContentView.setText(String.valueOf(aplicacaoInsulina.getQuantidade()));
         holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(aplicacaoInsulina.getHora()));
         holder.mTypeView.setText(aplicacaoInsulina.getTipo().getNome());
@@ -136,6 +139,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureHemoglobinaGlicadaViewHolder(final HemoglobinaGlicadaViewHolder holder,
                                                        HemoglobinaGlicada hbA1c) {
+        holder.mItem = hbA1c;
         holder.mContentView.setText(String.valueOf(hbA1c.getValor()));
         holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy").format(hbA1c.getHora()));
 
@@ -194,7 +198,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public final View mView;
         public final TextView mContentView;
         private final TextView mTimeView;
-        public Glicemia mItem;
+        public CarboidratoIngerido mItem;
 
         public CarboidratoIngeridoViewHolder(View view) {
             super(view);
@@ -214,7 +218,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public final TextView mContentView;
         private final TextView mTimeView;
         private final TextView mTypeView;
-        public Glicemia mItem;
+        public AplicacaoInsulina mItem;
 
         public AplicacaoInsulinaViewHolder(View view) {
             super(view);
@@ -234,7 +238,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public final View mView;
         public final TextView mContentView;
         private final TextView mTimeView;
-        public Glicemia mItem;
+        public HemoglobinaGlicada mItem;
 
         public HemoglobinaGlicadaViewHolder(View view) {
             super(view);

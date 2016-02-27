@@ -26,7 +26,7 @@ import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
-import br.tcc.glic.domain.services.RegistrarDadosService;
+import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.RegisterCarbohydratesFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.RegisterHbA1cFragment;
@@ -157,7 +157,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         AplicacaoInsulina aplicacaoInsulina = fragmentInsulin.getInsulin();
         if(aplicacaoInsulina != null)
-            new RegistrarDadosService().registrarAplicacaoInsulina(aplicacaoInsulina);
+            new RegistrosService().registrarAplicacaoInsulina(aplicacaoInsulina);
     }
 
     private void saveHbA1c() {
@@ -166,7 +166,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         HemoglobinaGlicada hbA1c = fragmentHbA1c.getHbA1c();
         if(hbA1c != null)
-            new RegistrarDadosService().registrarHemoglobinaGlicada(hbA1c);
+            new RegistrosService().registrarHemoglobinaGlicada(hbA1c);
     }
 
     private void goToMain() {
@@ -180,7 +180,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         Glicemia glycemia = fragmentGycemia.getGlycemia();
         if(glycemia != null)
-            new RegistrarDadosService().registrarGlicemia(glycemia);
+            new RegistrosService().registrarGlicemia(glycemia);
     }
 
     private void saveCarbohydrates() {
@@ -189,7 +189,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         CarboidratoIngerido carboidratoIngerido = fragmentCarbohydrates.getCarbohydrate();
         if(carboidratoIngerido != null)
-            new RegistrarDadosService().registrarCarboidratosIngeridos(carboidratoIngerido);
+            new RegistrosService().registrarCarboidratosIngeridos(carboidratoIngerido);
     }
 
     @Override

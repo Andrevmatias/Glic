@@ -18,7 +18,7 @@ import br.tcc.glic.domain.utils.Conversions;
 /**
  * Created by André on 02/02/2016.
  */
-public class RegistrarDadosService {
+public class RegistrosService {
     public void registrarGlicemia(int valor, Date hora){
         Repository<Registro> rep = RepositoryFactory.get(Registro.class);
         Registro registro = new Registro(TipoRegistro.Glicemia);
