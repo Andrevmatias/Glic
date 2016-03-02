@@ -17,6 +17,7 @@ import com.google.android.gms.games.Games;
 
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.services.RegistrosService;
+import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private boolean mResolvingConnectionFailure = false;
     private GoogleApiClient mGoogleGamesApiClient;
     private RegisterGlycemiaFragment fragmentGlycemia;
+    private IndicatorsFragment fragmentIndicators;
     private RegistrosService registrarDadosService;
 
     public MainActivity() {
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         fragmentGlycemia = (RegisterGlycemiaFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_register_glycemia_main);
+        fragmentIndicators = (IndicatorsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_indicators_main);
 
         initApiClients();
         initComponents();
@@ -96,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void openList() {
         Intent intent = new Intent(this, EntriesListActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(fragmentIndicators != null)
+            fragmentIndicators.calcIndicators();
     }
 
     @NonNull

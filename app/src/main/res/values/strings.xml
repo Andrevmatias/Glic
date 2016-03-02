@@ -84,4 +84,8 @@
     <string name="date_time_picker_type_argument">date_time_picker_type_argument</string>
     <string name="show_date_bundle_argument">show_date_bundle_argument</string>
     <string name="add_field">Adicionar</string>
+    <string name="glycemia_variation_symbol">↑↓</string>
+    <string name="day">dia</string>
+    <string name="week">semana</string>
+    <string name="month">mês</string>
 </resources>

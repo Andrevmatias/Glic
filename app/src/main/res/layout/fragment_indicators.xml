@@ -1,0 +1,201 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="br.tcc.glic.fragments.IndicatorsFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:id="@+id/label_glycemia_indicators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:text="@string/glycemia" />
+
+        <LinearLayout
+            android:id="@+id/glycemia_indicators_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_glycemia_indicators"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/day_glycemia_indicators_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/day_average_glycemia_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="30sp"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/week_glycemia_indicators_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/week_average_glycemia_indicator"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="30sp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/week_glycemia_variation_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/glycemia_variation_symbol" />
+
+                <TextView
+                    android:id="@+id/week_glycemia_variability_indicator"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/month_glycemia_indicators_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/month_average_glycemia_indicator"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="30sp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/month_glycemia_variation_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/glycemia_variation_symbol" />
+
+                <TextView
+                    android:id="@+id/month_glycemia_variability_indicator"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/day" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/week" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/month" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/label_carbohydrates_indicators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:text="@string/ingested_carbohydrates" />
+
+        <LinearLayout
+            android:id="@+id/carbohydrates_indicators_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/day_average_carbohydrates_indicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/week_average_carbohydrates_indicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/month_average_carbohydrates_indicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/day" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/week" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="@string/month" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
