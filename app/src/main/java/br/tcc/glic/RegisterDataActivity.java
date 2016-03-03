@@ -2,7 +2,6 @@ package br.tcc.glic;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -129,67 +128,89 @@ public class RegisterDataActivity extends AppCompatActivity {
     }
 
     private void saveAll() {
+        boolean anySaved = false;
+        boolean newHbA1c = false;
         for (RegisterDataField fieldKey :
                 dataFieldFragments.keySet()) {
             switch (fieldKey)
             {
                 case Glycemia:
-                    saveGlycemia();
+                    anySaved = anySaved || saveGlycemia();
                     break;
                 case Carbohydrates:
-                    saveCarbohydrates();
+                    anySaved = anySaved || saveCarbohydrates();
                     break;
                 case Insulin:
-                    saveInsulin();
+                    anySaved = anySaved || saveInsulin();
                     break;
                 case HbA1c:
-                    saveHbA1c();
+                    anySaved = anySaved || saveHbA1c();
+                    newHbA1c = true;
                     break;
             }
         }
 
-        Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+        if(anySaved)
+            Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+
+        if(newHbA1c)
+            setResult(RESULT_OK);
     }
 
-    private void saveInsulin() {
+    private boolean saveInsulin() {
         RegisterInsulinFragment fragmentInsulin =
                 (RegisterInsulinFragment) dataFieldFragments.get(RegisterDataField.Insulin);
 
         AplicacaoInsulina aplicacaoInsulina = fragmentInsulin.getInsulin();
-        if(aplicacaoInsulina != null)
+        if(aplicacaoInsulina != null) {
             new RegistrosService().registrarAplicacaoInsulina(aplicacaoInsulina);
+            fragmentInsulin.reset();
+            return true;
+        }
+
+        return false;
     }
 
-    private void saveHbA1c() {
+    private boolean saveHbA1c() {
         RegisterHbA1cFragment fragmentHbA1c =
                 (RegisterHbA1cFragment) dataFieldFragments.get(RegisterDataField.HbA1c);
 
         HemoglobinaGlicada hbA1c = fragmentHbA1c.getHbA1c();
-        if(hbA1c != null)
+        if(hbA1c != null){
             new RegistrosService().registrarHemoglobinaGlicada(hbA1c);
+            fragmentHbA1c.reset();
+            return true;
+        }
+
+        return false;
     }
 
-    private void goToMain() {
-        Intent nextIntent = new Intent(this, MainActivity.class);
-        startActivity(nextIntent);
-    }
-
-    private void saveGlycemia() {
+    private boolean saveGlycemia() {
         RegisterGlycemiaFragment fragmentGycemia =
                 (RegisterGlycemiaFragment) dataFieldFragments.get(RegisterDataField.Glycemia);
 
         Glicemia glycemia = fragmentGycemia.getGlycemia();
-        if(glycemia != null)
+        if(glycemia != null) {
             new RegistrosService().registrarGlicemia(glycemia);
+            fragmentGycemia.reset();
+            return true;
+        }
+
+        return false;
     }
 
-    private void saveCarbohydrates() {
+    private boolean saveCarbohydrates() {
         RegisterCarbohydratesFragment fragmentCarbohydrates =
                 (RegisterCarbohydratesFragment) dataFieldFragments.get(RegisterDataField.Carbohydrates);
 
         CarboidratoIngerido carboidratoIngerido = fragmentCarbohydrates.getCarbohydrate();
-        if(carboidratoIngerido != null)
+        if (carboidratoIngerido != null) {
             new RegistrosService().registrarCarboidratosIngeridos(carboidratoIngerido);
+            fragmentCarbohydrates.reset();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -202,8 +223,8 @@ public class RegisterDataActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            //Os dados são salvos no onStop
-            goToMain();
+            //Os dados são salvos no finish
+            finish();
             return true;
         }
 
@@ -213,9 +234,13 @@ public class RegisterDataActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        saveAll();
         finish();
+    }
+
+    @Override
+    public void finish() {
+        saveAll();
+        super.finish();
     }
 
     private class RegisterDataFieldListAdapterModel {

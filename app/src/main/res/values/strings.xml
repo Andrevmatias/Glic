@@ -88,4 +88,6 @@
     <string name="day">dia</string>
     <string name="week">semana</string>
     <string name="month">mês</string>
+    <string name="estimated_average_glycemia">Glicemia Média Estimada</string>
+    <string name="your_estimated_average_glycemia_is">Sua Glicemia Média Estimada de acordo com a última hemoglobina glicada registrada é</string>
 </resources>

@@ -29,6 +29,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         trySilentSignIn();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
     private void configureGoogleApi() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()

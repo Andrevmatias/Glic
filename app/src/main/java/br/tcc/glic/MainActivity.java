@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,6 +17,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.enums.TipoIndicador;
+import br.tcc.glic.domain.services.IndicadoresService;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
@@ -23,7 +26,7 @@ import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
 
-    private static final int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 1, RC_HBA1C_REGISTERED = 2;
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingConnectionFailure = false;
     private GoogleApiClient mGoogleGamesApiClient;
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void openAddEntry() {
         Intent intent = new Intent(this, RegisterDataActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, RC_HBA1C_REGISTERED);
     }
 
     private void initApiClients() {
@@ -103,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if(fragmentIndicators != null)
             fragmentIndicators.calcIndicators();
     }
@@ -148,15 +151,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             mResolvingConnectionFailure = false;
             if (resultCode == RESULT_OK) {
                 mGoogleGamesApiClient.connect();
-            } else {
-                // Bring up an error dialog to alert the user that sign-in
-                // failed. The R.string.signin_failure should reference an error
-                // string in your strings.xml file that tells the user they
-
             }
+        } else if (requestCode == RC_HBA1C_REGISTERED) {
+            if(resultCode == RESULT_OK)
+                showEstimatedAverageGlycemia();
         }
     }
 
+    private void showEstimatedAverageGlycemia() {
+        double eag = new IndicadoresService()
+                .getIndicador(TipoIndicador.GlicemiaMediaEstimada).getValor();
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.estimated_average_glycemia)
+                .setMessage(getString(R.string.your_estimated_average_glycemia_is)
+                        + " " + String.valueOf((int)Math.floor(eag)))
+                .create()
+                .show();
+    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -176,5 +188,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
 
         fragmentGlycemia.reset();
+        fragmentIndicators.calcIndicators();
     }
 }

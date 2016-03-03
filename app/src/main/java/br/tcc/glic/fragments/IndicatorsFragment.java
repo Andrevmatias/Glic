@@ -25,6 +25,7 @@ public class IndicatorsFragment extends Fragment {
     private TextView txtDayAvgCarbohydrates;
     private TextView txtWeekAvgCarbohydrates;
     private TextView txtMonthAvgCarbohydrates;
+    private View containerCarbohydrateIndicators;
 
     public IndicatorsFragment() {
         // Required empty public constructor
@@ -44,28 +45,56 @@ public class IndicatorsFragment extends Fragment {
     public void calcIndicators() {
         IndicadoresService service = new IndicadoresService();
 
+        double avgDayGlycemia = service.getIndicador(TipoIndicador.MediaGlicemicaDia).getValor();
+        double avgWeekGlycemia = service.getIndicador(TipoIndicador.MediaGlicemicaSemana).getValor();
+        double avgMonthGlycemia = service.getIndicador(TipoIndicador.MediaGlicemicaMes).getValor();
+
+        double varWeekGlycemia = service.getIndicador(TipoIndicador.VariabilidadeGlicemiaSemana).getValor();
+        double varMonthGlycemia = service.getIndicador(TipoIndicador.VariabilidadeGlicemiaMes).getValor();
+
+        double avgDayCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosDia).getValor();
+        double avgWeekCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosSemana).getValor();
+        double avgMonthCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosMes).getValor();
+
         txtDayAvgGlycemia
-                .setText(String
-                        .valueOf(service.getIndicador(TipoIndicador.MediaGlicemicaDia).getValor()));
-        txtWeekAvgGlycemia.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.MediaGlicemicaSemana).getValor()));
-        txtMonthAvgGlycemia.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.MediaGlicemicaMes).getValor()));
+                .setText(Double.isNaN(avgDayGlycemia) ? "-"
+                        : String.valueOf((int)Math.floor(avgDayGlycemia)));
+        txtWeekAvgGlycemia
+                .setText(Double.isNaN(avgWeekGlycemia) ? "-"
+                        : String.valueOf((int)Math.floor(avgWeekGlycemia)));
+        txtMonthAvgGlycemia
+                .setText(Double.isNaN(avgMonthGlycemia) ? "-"
+                        : String.valueOf((int)Math.floor(avgMonthGlycemia)));
 
-        txtWeekVarGlycemia.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.VariabilidadeGlicemiaSemana).getValor()));
-        txtMonthVarGlycemia.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.VariabilidadeGlicemiaMes).getValor()));
+        txtWeekVarGlycemia
+                .setText(Double.isNaN(varWeekGlycemia) ? "-"
+                        : String.valueOf((int)Math.floor(varWeekGlycemia)));
+        txtMonthVarGlycemia
+                .setText(Double.isNaN(varMonthGlycemia) ? "-"
+                        : String.valueOf((int)Math.floor(varMonthGlycemia)));
 
-        txtDayAvgCarbohydrates.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.MediaCarboidratosDia).getValor()));
-        txtWeekAvgCarbohydrates.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.MediaCarboidratosSemana).getValor()));
-        txtMonthAvgCarbohydrates.setText(String
-                .valueOf(service.getIndicador(TipoIndicador.MediaCarboidratosMes).getValor()));
+        txtDayAvgCarbohydrates
+                .setText(Double.isNaN(avgDayCarbohydrates) ? "-"
+                        : String.valueOf((int)Math.floor(avgDayCarbohydrates)));
+        txtWeekAvgCarbohydrates
+                .setText(Double.isNaN(avgWeekCarbohydrates) ? "-"
+                        : String.valueOf((int)Math.floor(avgWeekCarbohydrates)));
+        txtMonthAvgCarbohydrates
+                .setText(Double.isNaN(avgMonthCarbohydrates) ? "-"
+                        : String.valueOf((int)Math.floor(avgMonthCarbohydrates)));
+
+        if(Double.isNaN(avgDayCarbohydrates)
+                && Double.isNaN(avgWeekCarbohydrates)
+                && Double.isNaN(avgMonthCarbohydrates)) {
+            containerCarbohydrateIndicators.setVisibility(View.GONE);
+        } else {
+            containerCarbohydrateIndicators.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initComponents(View view) {
+        containerCarbohydrateIndicators = view.findViewById(R.id.carbohydrates_indicators_container);
+
         txtDayAvgGlycemia = (TextView) view.findViewById(R.id.day_average_glycemia_indicator);
         txtWeekAvgGlycemia = (TextView) view.findViewById(R.id.week_average_glycemia_indicator);
         txtMonthAvgGlycemia = (TextView) view.findViewById(R.id.month_average_glycemia_indicator);
