@@ -21,7 +21,8 @@ import br.tcc.glic.domain.services.RegistrosService;
  */
 public class EntriesListFragment extends Fragment {
 
-    private OnListFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener listener;
+    private RegistroViewAdapter viewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,17 +49,26 @@ public class EntriesListFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new RegistroViewAdapter(new RegistrosService().listRegistros(), mListener));
+            viewAdapter = new RegistroViewAdapter(new RegistrosService().listRegistros(), listener);
+            recyclerView.setAdapter(viewAdapter);
         }
         return view;
     }
 
 
+    public void notifyItemRemoved(Registro item){
+        viewAdapter.notifyItemRemoved(item);
+    }
+
+    public void notifyItemChanged(Registro item){
+        viewAdapter.notifyItemChanged(item);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            listener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -68,7 +78,7 @@ public class EntriesListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
     public interface OnListFragmentInteractionListener {

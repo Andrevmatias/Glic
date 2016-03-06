@@ -3,20 +3,13 @@ package br.tcc.glic.domain.core;
 import br.tcc.glic.domain.enums.TipoExercicio;
 
 /**
+ * Registro de prática de exercício
  * Created by André on 25/01/2016.
  */
 public class PraticaExercicio extends Registro {
-    private int codigo;
+
     private TipoExercicio tipo;
     private int duracao;
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
 
     public TipoExercicio getTipo() {
         return tipo;

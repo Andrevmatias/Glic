@@ -96,4 +96,5 @@
     <string name="delete">Excluir</string>
     <string name="are_you_sure_delete">Você tem certeza de que deseja excluir este registro?</string>
     <string name="yes">Sim</string>
+    <string name="invalid_entry_type">Tipo de registro não reconhecido</string>
 </resources>

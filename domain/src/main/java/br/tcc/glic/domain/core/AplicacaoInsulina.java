@@ -1,20 +1,13 @@
 package br.tcc.glic.domain.core;
 
 /**
+ * Registro de aplicação de insulina
  * Created by André on 26/01/2016.
  */
 public class AplicacaoInsulina extends Registro {
-    private Long codigo;
+
     private double quantidade;
     private TipoInsulina tipo;
-
-    public Long getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(Long codigo) {
-        this.codigo = codigo;
-    }
 
     public double getQuantidade() {
         return quantidade;

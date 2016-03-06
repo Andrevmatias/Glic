@@ -16,12 +16,17 @@
         android:drawableLeft="@drawable/ic_carbohydrates"
         android:drawablePadding="5dp"/>
 
-    <fragment
-        android:id="@+id/date_time_carbohydrates"
+    <FrameLayout
+        android:id="@+id/container_date_time_carbohydrates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="br.tcc.glic.fragments.DateTimeFragment"
         android:layout_alignParentRight="true"
         android:layout_below="@id/edt_carbohydrates"/>
 
+
+    <include
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/container_date_time_carbohydrates"
+        layout="@layout/partial_edit_dialog_buttons" />
 </RelativeLayout>

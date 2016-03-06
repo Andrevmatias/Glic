@@ -1,23 +1,30 @@
 package br.tcc.glic.fragments;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.Calendar;
+
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
+import br.tcc.glic.domain.core.Registro;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegisterHbA1cFragment extends Fragment
+public class RegisterHbA1cFragment extends EditEntryDialogFragment
 {
     private EditText edtHbA1c;
     private DateTimeFragment fragmentDateTime;
+
+    private Long currentEntryId;
 
     public RegisterHbA1cFragment() {
         // Required empty public constructor
@@ -41,14 +48,51 @@ public class RegisterHbA1cFragment extends Fragment
         Bundle args = new Bundle();
         args.putSerializable(getString(R.string.date_time_picker_type_argument), DateTimeFragment.DateType.DateOnly);
         fragmentDateTime.setArguments(args);
-        getFragmentManager()
+        getChildFragmentManager()
                 .beginTransaction()
                 .add(R.id.container_date_time_hba1c, fragmentDateTime)
                 .commit();
     }
 
-    private void initComponents(View view) {
+    @Override
+    protected void initComponents(View view) {
+        super.initComponents(view);
+
         edtHbA1c = (EditText) view.findViewById(R.id.edt_hba1c);
+
+        if(getArguments() != null) {
+            HemoglobinaGlicada hba1c =
+                    (HemoglobinaGlicada) getArguments().getSerializable(getString(R.string.entry_bundle_argument));
+            if(hba1c != null)
+                configureCurrentEntry(hba1c);
+        }
+    }
+
+    private void configureCurrentEntry(HemoglobinaGlicada hemoglobinaGlicada) {
+        edtHbA1c.setText(String.valueOf(hemoglobinaGlicada.getValor()));
+        currentEntryId = hemoglobinaGlicada.getCodigo();
+
+        if(fragmentDateTime != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(hemoglobinaGlicada.getHora());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.calendar_bundle_argument), calendar);
+            fragmentDateTime.setArguments(bundle);
+        }
+
+    }
+
+    @Override
+    public Registro getRegistro() {
+        return getHbA1c();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setTitle(R.string.hba1c);
+        return dialog;
     }
 
     public HemoglobinaGlicada getHbA1c(){
@@ -57,6 +101,7 @@ public class RegisterHbA1cFragment extends Fragment
             return null;
 
         HemoglobinaGlicada hba1c = new HemoglobinaGlicada();
+        hba1c.setCodigo(currentEntryId);
         hba1c.setValor(Double.parseDouble(valor));
         hba1c.setHora(fragmentDateTime.getDateTime().getTime());
 
@@ -64,6 +109,7 @@ public class RegisterHbA1cFragment extends Fragment
     }
 
     public void reset(){
+        currentEntryId = 0l;
         if(fragmentDateTime != null)
             fragmentDateTime.reset();
         edtHbA1c.setText("");

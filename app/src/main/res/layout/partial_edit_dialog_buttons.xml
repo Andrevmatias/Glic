@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_buttons_edit_dialog"
+    style="@style/ContainerDialogButtons">
+
+    <ImageView
+        android:id="@+id/btn_apply_changes"
+        android:layout_alignParentRight="true"
+        style="@style/DialogButton"
+        android:src="@drawable/ic_ok" />
+
+    <ImageView
+        android:id="@+id/btn_cancel"
+        android:layout_toLeftOf="@id/btn_apply_changes"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_return"
+        style="@style/DialogButton" />
+
+    <ImageView
+        android:id="@+id/btn_delete"
+        android:layout_alignParentLeft="true"
+        style="@style/DialogButton"
+        android:src="@drawable/ic_delete" />
+</RelativeLayout>

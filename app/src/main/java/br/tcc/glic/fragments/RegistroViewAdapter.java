@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.AplicacaoInsulina;
@@ -21,9 +23,11 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int GLYCEMIA = 0, CARBOHYDRATE = 1, INSULIN = 2, HBA1C = 3;
 
     private final List<Registro> items;
+    private final Map<Long, Integer> idPositionMapping;
     private final EntriesListFragment.OnListFragmentInteractionListener listener;
 
     public RegistroViewAdapter(List<Registro> items, EntriesListFragment.OnListFragmentInteractionListener listener) {
+        this.idPositionMapping = new HashMap<>();
         this.items = items;
         this.listener = listener;
     }
@@ -69,22 +73,24 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        Registro registro = items.get(position);
+        idPositionMapping.put(registro.getCodigo(), position);
+
         switch (holder.getItemViewType()){
             case GLYCEMIA:
-                configureGlicemiaViewHolder((GlicemiaViewHolder) holder,
-                        (Glicemia) items.get(position));
+                configureGlicemiaViewHolder((GlicemiaViewHolder) holder, (Glicemia) registro);
                 break;
             case CARBOHYDRATE:
                 configureCarboidratoIngeridoViewHolder((CarboidratoIngeridoViewHolder) holder,
-                        (CarboidratoIngerido) items.get(position));
+                        (CarboidratoIngerido) registro);
                 break;
             case INSULIN:
                 configureAplicacaoInsulinaViewHolder((AplicacaoInsulinaViewHolder) holder,
-                        (AplicacaoInsulina) items.get(position));
+                        (AplicacaoInsulina) registro);
                 break;
             case HBA1C:
                 configureHemoglobinaGlicadaViewHolder((HemoglobinaGlicadaViewHolder) holder,
-                        (HemoglobinaGlicada) items.get(position));
+                        (HemoglobinaGlicada) registro);
                 break;
         }
     }
@@ -173,6 +179,18 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return HBA1C;
 
         return -1;
+    }
+
+    public void notifyItemChanged(Registro item) {
+        int position = idPositionMapping.get(item.getCodigo());
+        this.items.set(position, item);
+        this.notifyItemChanged(position, item);
+    }
+
+    public void notifyItemRemoved(Registro item) {
+        int position = idPositionMapping.get(item.getCodigo());
+        this.items.remove(position);
+        this.notifyItemRemoved(position);
     }
 
     public class GlicemiaViewHolder extends RecyclerView.ViewHolder {

@@ -25,10 +25,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
     </LinearLayout>
+
     <FrameLayout
         android:id="@+id/container_date_time_insulin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/insulin_values_container"/>
+
+    <include
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/container_date_time_insulin"
+        layout="@layout/partial_edit_dialog_buttons" />
 </RelativeLayout>
