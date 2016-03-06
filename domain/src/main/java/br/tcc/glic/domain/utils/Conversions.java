@@ -2,6 +2,7 @@ package br.tcc.glic.domain.utils;
 
 import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoInsulina;
+import br.tcc.glic.data.entities.TipoRegistro;
 import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
@@ -62,5 +63,38 @@ public final class Conversions {
         aplicacaoInsulina.setQuantidade(registro.getValor());
         aplicacaoInsulina.setTipo(tipoInsulina(registro.getTipoInsulina()));
         return aplicacaoInsulina;
+    }
+
+    public static Registro registro(br.tcc.glic.domain.core.Glicemia glicemia) {
+        Registro registroBd = new Registro(TipoRegistro.Glicemia);
+        registroBd.setId(glicemia.getCodigo());
+        registroBd.setHora(glicemia.getHora());
+        registroBd.setValor(glicemia.getValor());
+        return registroBd;
+    }
+
+    public static Registro registro(br.tcc.glic.domain.core.CarboidratoIngerido carboidratoIngerido) {
+        Registro registroBd = new Registro(TipoRegistro.CarboidratoIngerido);
+        registroBd.setId(carboidratoIngerido.getCodigo());
+        registroBd.setHora(carboidratoIngerido.getHora());
+        registroBd.setValor(carboidratoIngerido.getQuantidade());
+        return registroBd;
+    }
+
+    public static Registro registro(br.tcc.glic.domain.core.AplicacaoInsulina aplicacaoInsulina) {
+        Registro registroBd = new Registro(TipoRegistro.AplicacaoInsulina);
+        registroBd.setId(aplicacaoInsulina.getCodigo());
+        registroBd.setHora(aplicacaoInsulina.getHora());
+        registroBd.setValor(aplicacaoInsulina.getQuantidade());
+        registroBd.setTipoInsulina(tipoInsulina(aplicacaoInsulina.getTipo()));
+        return registroBd;
+    }
+
+    public static Registro registro(br.tcc.glic.domain.core.HemoglobinaGlicada hemoglobinaGlicada) {
+        Registro registroBd = new Registro(TipoRegistro.HemoglobinaGlicada);
+        registroBd.setId(hemoglobinaGlicada.getCodigo());
+        registroBd.setHora(hemoglobinaGlicada.getHora());
+        registroBd.setValor(hemoglobinaGlicada.getValor());
+        return registroBd;
     }
 }

@@ -99,4 +99,32 @@ public class RegistrosService {
 
         return  registrosRet;
     }
+
+    public void delete(br.tcc.glic.domain.core.Registro registro) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+        Registro registroBd = convertRegistro(registro);
+        rep.delete(registroBd);
+    }
+
+    public void update(br.tcc.glic.domain.core.Registro registro) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+        Registro registroBd = convertRegistro(registro);
+        rep.save(registroBd);
+    }
+
+    private Registro convertRegistro(br.tcc.glic.domain.core.Registro registro) {
+        if(registro instanceof Glicemia)
+            return Conversions.registro((Glicemia) registro);
+
+        if(registro instanceof CarboidratoIngerido)
+            return Conversions.registro((CarboidratoIngerido) registro);
+
+        if(registro instanceof AplicacaoInsulina)
+            return Conversions.registro((AplicacaoInsulina) registro);
+
+        if(registro instanceof HemoglobinaGlicada)
+            return Conversions.registro((HemoglobinaGlicada) registro);
+
+        return null;
+    }
 }

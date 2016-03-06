@@ -90,4 +90,10 @@
     <string name="month">mês</string>
     <string name="estimated_average_glycemia">Glicemia Média Estimada</string>
     <string name="your_estimated_average_glycemia_is">Sua Glicemia Média Estimada de acordo com a última hemoglobina glicada registrada é</string>
+    <string name="entry_bundle_argument">entry_bundle_argument</string>
+    <string name="apply_changes">Aplicar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Excluir</string>
+    <string name="are_you_sure_delete">Você tem certeza de que deseja excluir este registro?</string>
+    <string name="yes">Sim</string>
 </resources>

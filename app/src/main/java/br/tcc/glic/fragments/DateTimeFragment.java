@@ -128,7 +128,8 @@ public class DateTimeFragment extends Fragment
     }
 
     private void showCurrentDate() {
-        txtCurrentDateTime.setText(dateFormat.format(currentDate.getTime()));
+        if(txtCurrentDateTime != null)
+            txtCurrentDateTime.setText(dateFormat.format(currentDate.getTime()));
     }
 
     @Override
@@ -141,6 +142,7 @@ public class DateTimeFragment extends Fragment
     public void reset() {
         currentDate = Calendar.getInstance();
     }
+
 
     public enum DateType {
         DateTime,
