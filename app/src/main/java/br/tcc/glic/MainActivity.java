@@ -187,6 +187,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
 
+        Intent intent = new Intent(this, RemindersService.class);
+        startService(intent);
+
         fragmentGlycemia.reset();
         fragmentIndicators.calcIndicators();
     }

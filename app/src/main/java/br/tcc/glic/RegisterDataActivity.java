@@ -2,6 +2,7 @@ package br.tcc.glic;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -150,8 +151,11 @@ public class RegisterDataActivity extends AppCompatActivity {
             }
         }
 
-        if(anySaved)
+        if(anySaved) {
             Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, RemindersService.class);
+            startService(intent);
+        }
 
         if(newHbA1c)
             setResult(RESULT_OK);
