@@ -44,7 +44,20 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".EntriesListActivity" />
-        <activity android:name=".InsulinTypesActivity"></activity>
+        <activity android:name=".InsulinTypesActivity" />
+
+        <service
+            android:name=".RemindersService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name="br.tcc.glic.NotificationsBroadcastReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.NOTIFY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

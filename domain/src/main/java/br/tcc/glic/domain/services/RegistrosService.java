@@ -16,6 +16,7 @@ import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
+ * Serviço de registro de dados de tratamento
  * Created by André on 02/02/2016.
  */
 public class RegistrosService {
