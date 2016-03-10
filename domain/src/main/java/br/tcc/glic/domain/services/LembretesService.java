@@ -2,30 +2,81 @@ package br.tcc.glic.domain.services;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
+import br.tcc.glic.domain.core.Lembrete;
 
 /**
  * Serviço de identificação e listagem de lembretes
  * Created by André on 26/02/2016.
  */
 public class LembretesService {
+
+    private static final int INTERVALO_LEMBRETE = 5000; //30 segundos
+    private static final int TOLERANCIA = 1800000; // 30 minutos
+    private static final int DIAS_ESCOPO_ANALISE = 7;
+    private static final int MINIMO_AMOSTRAS_ANALISE = 20;
+
     private final Repository<Registro> repository;
 
     public LembretesService() {
         repository = RepositoryFactory.get(Registro.class);
-
-        Calendar agora = Calendar.getInstance();
     }
 
-    public List<Calendar> getHorasLembretes(){
-        ArrayList<Calendar> lembretes = new ArrayList<>();
-        Calendar agora = Calendar.getInstance();
-        agora.add(Calendar.SECOND, 3);
-        lembretes.add(agora);
+    public List<Lembrete> getLembretes(){
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        Calendar inicioEscopo = Calendar.getInstance();
+        inicioEscopo.add(Calendar.DATE, -DIAS_ESCOPO_ANALISE);
+        List<Registro> ultimosRegistros = rep.find("hora < ? and hora > ?",
+                new String[]{
+                        String.valueOf(Calendar.getInstance().getTimeInMillis()),
+                        String.valueOf(inicioEscopo.getTimeInMillis())
+                },
+                null, "hora desc", null);
+
+        if(ultimosRegistros.size() < MINIMO_AMOSTRAS_ANALISE)
+            return new ArrayList<>(0);
+
+        AnalizadorRegistros analizador = new AnalizadorRegistros(ultimosRegistros);
+
+        List<Calendar> horariosComuns = analizador.identificarHorariosDeRegistroComuns();
+
+        return gerarLembretes(horariosComuns);
+    }
+
+    private List<Lembrete> gerarLembretes(List<Calendar> horariosComuns) {
+        List<Lembrete> lembretes = new ArrayList<>();
+
+        for (Calendar horario : horariosComuns) {
+            Date horaRegistro = horario.getTime();
+            horario.add(Calendar.MINUTE, TOLERANCIA);
+            lembretes.add(new Lembrete(horaRegistro, horario.getTime()));
+        }
+
         return lembretes;
+    }
+
+    public boolean deveDispararParaHorarioComum(Calendar horaComumDeRegistro) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        List<Registro> registros = rep.find("hora < ?",
+                new String[]{String.valueOf(Calendar.getInstance().getTimeInMillis())},
+                null, "hora desc", "1");
+
+        if(registros.isEmpty())
+            return true;
+
+        Registro registroMaisProximo = registros.get(0);
+        Long distanciaHorarios = Math.abs(
+            horaComumDeRegistro.getTimeInMillis()
+            - registroMaisProximo.getHora().getTime()
+        );
+
+        return distanciaHorarios > TOLERANCIA;
     }
 }

@@ -53,7 +53,7 @@
 
         <receiver
             android:name="br.tcc.glic.NotificationsBroadcastReceiver"
-            android:exported="true" >
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFY" />
             </intent-filter>

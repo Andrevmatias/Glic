@@ -12,6 +12,7 @@ import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.TipoIndicador;
 
 /**
+ * Serviço para cálculo de indicadores
  * Created by André on 26/02/2016.
  */
 public class IndicadoresService {
@@ -27,11 +28,11 @@ public class IndicadoresService {
         Calendar agora = Calendar.getInstance();
 
         agora.add(Calendar.DAY_OF_MONTH, -1);
-        stringDataUltimoDia = String.valueOf(agora.getTime().getTime());
+        stringDataUltimoDia = String.valueOf(agora.getTimeInMillis());
         agora.add(Calendar.DAY_OF_MONTH, -6);
-        stringDataUltimaSemana = String.valueOf(agora.getTime().getTime());
+        stringDataUltimaSemana = String.valueOf(agora.getTimeInMillis());
         agora.add(Calendar.DAY_OF_MONTH, -23);
-        stringDataUltimoMes = String.valueOf(agora.getTime().getTime());
+        stringDataUltimoMes = String.valueOf(agora.getTimeInMillis());
     }
 
     public List<Indicador> getIndicadores(){

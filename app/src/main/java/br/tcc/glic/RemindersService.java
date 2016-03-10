@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.tcc.glic.domain.core.Lembrete;
 import br.tcc.glic.domain.services.LembretesService;
 
 public class RemindersService extends IntentService {
@@ -24,18 +25,20 @@ public class RemindersService extends IntentService {
      */
     private static Map<Integer, Map<Integer, PendingIntent>> pendingIntentsMap;
 
-    private final DateFormat dateFormat;
+    private static DateFormat dateFormat;
     private List<Calendar> lastReminderTimes;
 
     public RemindersService() {
         super("RemindersService");
 
-        dateFormat = new SimpleDateFormat("HH:mm");
         lastReminderTimes = new ArrayList<>();
+
+        if(dateFormat == null)
+            dateFormat = new SimpleDateFormat("HH:mm");
 
         if(pendingIntentsMap == null) {
             pendingIntentsMap = new HashMap<>();
-            for (int i = 0; i <= 24; i++)
+            for (int i = 0; i < 24; i++)
                 pendingIntentsMap.put(i, new HashMap<Integer, PendingIntent>());
         }
     }
@@ -52,19 +55,20 @@ public class RemindersService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         LembretesService service = new LembretesService();
 
-        List<Calendar> reminderTimes = service.getHorasLembretes();
+        List<Lembrete> reminderTimes = service.getLembretes();
         if (!areEqual(reminderTimes, lastReminderTimes)) {
             clearAlarms();
             configureNotifications(reminderTimes);
         }
     }
 
-    private boolean areEqual(List<Calendar> reminderTimes, List<Calendar> lastReminderTimes) {
+    private boolean areEqual(List<Lembrete> reminderTimes, List<Calendar> lastReminderTimes) {
         if(reminderTimes.size() != lastReminderTimes.size())
             return false;
 
         for (int i = 0; i < reminderTimes.size(); i++) {
-            Calendar current = reminderTimes.get(i);
+            Calendar current = Calendar.getInstance();
+            current.setTime(reminderTimes.get(i).getHoraLembrete());
             Calendar last = lastReminderTimes.get(i);
 
             if(current.get(Calendar.HOUR_OF_DAY) != last.get(Calendar.HOUR_OF_DAY))
@@ -78,7 +82,7 @@ public class RemindersService extends IntentService {
     }
 
     private void clearAlarms() {
-        for (int i = 1; i <= 24; i++) {
+        for (int i = 1; i < 24; i++) {
             for (PendingIntent alarmIntent : pendingIntentsMap.get(i).values()) {
                 alarmManager.cancel(alarmIntent);
             }
@@ -88,15 +92,18 @@ public class RemindersService extends IntentService {
         lastReminderTimes.clear();
     }
 
-    private void configureNotifications(List<Calendar> reminderTimes) {
+    private void configureNotifications(List<Lembrete> reminders) {
         Intent intent = new Intent(this, NotificationsBroadcastReceiver.class);
 
-        for (Calendar reminderTime : reminderTimes) {
+        for (Lembrete reminder : reminders) {
             intent.putExtra(getString(R.string.reminder_time_extra),
-                    dateFormat.format(reminderTime.getTime()));
+                    dateFormat.format(reminder.getHoraRegistro()));
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
+
+            Calendar reminderTime = Calendar.getInstance();
+            reminderTime.setTime(reminder.getHoraLembrete());
 
             pendingIntentsMap
                     .get(reminderTime.get(Calendar.HOUR_OF_DAY))

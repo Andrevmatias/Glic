@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 /**
+ * Base de repositório padrão
  * Created by André on 02/02/2016.
  */
 public class RepositoryBase<T> implements Repository<T> {
@@ -41,7 +42,8 @@ public class RepositoryBase<T> implements Repository<T> {
     }
 
     @Override
-    public List<T> find(String query, String[] params, String groupBy, String orderBy, String limit) {
+    public List<T> find(String query, String[] params, String groupBy, String orderBy,
+                        String limit) {
         return SugarRecord.find(baseClass, query, params, groupBy, orderBy, limit);
     }
 }

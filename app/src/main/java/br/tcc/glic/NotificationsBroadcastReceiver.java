@@ -10,6 +10,10 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
+import java.util.Calendar;
+
+import br.tcc.glic.domain.services.LembretesService;
+
 /**
  * Receiver para notificações periódicas
  * Created by André on 06/03/2016.
@@ -23,6 +27,9 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void notifyReminder(Context context, String time) {
+        if(!shouldRemind(time))
+            return;
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder =
@@ -42,5 +49,15 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
         builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, 0));
 
         notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private boolean shouldRemind(String time) {
+        String[] timeSplited = time.split(":");
+        int hour = Integer.parseInt(timeSplited[0]);
+        int minute = Integer.parseInt(timeSplited[1]);
+        Calendar reminderTime = Calendar.getInstance();
+        reminderTime.set(Calendar.HOUR_OF_DAY, hour);
+        reminderTime.set(Calendar.MINUTE, minute);
+        return new LembretesService().deveDispararParaHorarioComum(reminderTime);
     }
 }
