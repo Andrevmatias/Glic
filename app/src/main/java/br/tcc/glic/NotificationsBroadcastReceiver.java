@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import java.util.Calendar;
 
 import br.tcc.glic.domain.services.LembretesService;
+import br.tcc.glic.userconfiguration.ConfigUtils;
 
 /**
  * Receiver para notificações periódicas
@@ -27,6 +29,10 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void notifyReminder(Context context, String time) {
+        SharedPreferences userConfig = ConfigUtils.getUserConfigurationFile(context);
+        if(!userConfig.getBoolean(context.getString(R.string.activate_notifications_config), true))
+            return;
+
         if(!shouldRemind(time))
             return;
 

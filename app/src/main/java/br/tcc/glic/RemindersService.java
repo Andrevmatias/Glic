@@ -5,6 +5,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import br.tcc.glic.domain.core.Lembrete;
 import br.tcc.glic.domain.services.LembretesService;
+import br.tcc.glic.userconfiguration.ConfigUtils;
 
 public class RemindersService extends IntentService {
 
@@ -41,6 +43,10 @@ public class RemindersService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        SharedPreferences userConfig = ConfigUtils.getUserConfigurationFile(this);
+        if(!userConfig.getBoolean(getString(R.string.activate_notifications_config), true))
+            return;
+
         LembretesService service = new LembretesService();
 
         List<Lembrete> reminderTimes = service.getLembretes();

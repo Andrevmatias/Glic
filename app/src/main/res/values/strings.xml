@@ -102,4 +102,6 @@
     <string name="reminder_notification_text">Você geralmente faz um registro às %s</string>
     <string name="reminder_time_extra">reminder_time_extra</string>
     <string name="reminder_notification_big_text">Você geralmente faz um registro às %s, achei melhor lembrar (•‿•)</string>
+    <string name="activate_notifications_config">activate_notifications_config</string>
+    <string name="activate_notifications_config_text">Ativar lembretes de registro</string>
 </resources>

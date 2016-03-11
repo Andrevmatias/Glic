@@ -44,6 +44,11 @@
 
     </Preference>
 
+    <CheckBoxPreference
+        android:title="@string/activate_notifications_config_text"
+        android:key="@string/activate_notifications_config"
+        android:defaultValue="true"/>
+
     <Preference
         android:title="@string/logout_title"
         android:key="@string/logout_key"

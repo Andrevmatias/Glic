@@ -1,6 +1,9 @@
 package br.tcc.glic.fragments;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,7 +25,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.tcc.glic.LoginActivity;
+import br.tcc.glic.NotificationsBroadcastReceiver;
 import br.tcc.glic.R;
+import br.tcc.glic.RemindersService;
+import br.tcc.glic.userconfiguration.ConfigUtils;
 import br.tcc.glic.userconfiguration.RegisterDataField;
 
 /**
@@ -136,6 +142,28 @@ public class SettingsFragment extends PreferenceFragment
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePrefSummary(findPreference(key));
+        SharedPreferences userConfig = ConfigUtils.getUserConfigurationFile(getActivity());
+        if(!userConfig.getBoolean(getString(R.string.activate_notifications_config), true)) {
+            clearNotifications();
+        } else {
+            Intent intent = new Intent(getActivity(), RemindersService.class);
+            getActivity().startService(intent);
+        }
+    }
+
+    private void clearNotifications() {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(getActivity(), NotificationsBroadcastReceiver.class);
+
+        PendingIntent current;
+        for (
+                int i = 0;
+                (current = PendingIntent.getBroadcast(getActivity(), i, intent, PendingIntent.FLAG_NO_CREATE)) != null;
+                i++
+                ) {
+            alarmManager.cancel(current);
+        }
     }
 
     private void initSummary(Preference p) {
