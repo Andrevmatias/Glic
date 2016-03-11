@@ -22,6 +22,7 @@ public class LembretesService {
     private static final int MINIMO_AMOSTRAS_ANALISE = 20;
 
     private final Repository<Registro> repository;
+    private static int cont;
 
     public LembretesService() {
         repository = RepositoryFactory.get(Registro.class);
@@ -54,7 +55,7 @@ public class LembretesService {
 
         for (Calendar horario : horariosComuns) {
             Date horaRegistro = horario.getTime();
-            horario.add(Calendar.MINUTE, TOLERANCIA);
+            horario.add(Calendar.MILLISECOND, TOLERANCIA);
             lembretes.add(new Lembrete(horaRegistro, horario.getTime()));
         }
 

@@ -97,7 +97,7 @@ class AnalizadorRegistros {
             int media = calcularMedia(cluster);
             Calendar lembrete = Calendar.getInstance();
             setHoraMinuto(lembrete, media);
-            if(agora.compareTo(lembrete) > 1)
+            while(agora.compareTo(lembrete) > 0)
                 lembrete.add(Calendar.DATE, 1);
 
             if(naoContem(horariosComuns, lembrete))
