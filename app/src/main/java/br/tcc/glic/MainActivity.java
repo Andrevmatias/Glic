@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private RegistrosService registrarDadosService;
 
     public MainActivity() {
-        registrarDadosService = new RegistrosService();
+        registrarDadosService = new RegistrosService(this);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void showEstimatedAverageGlycemia() {
-        double eag = new IndicadoresService()
+        double eag = new IndicadoresService(this)
                 .getIndicador(TipoIndicador.GlicemiaMediaEstimada).getValor();
 
         new AlertDialog.Builder(this)

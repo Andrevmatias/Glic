@@ -63,13 +63,13 @@ public class EntriesListActivity extends AppCompatActivity
 
     @Override
     public void onApply(Registro registro) {
-        new RegistrosService().update(registro);
+        new RegistrosService(this).update(registro);
         fragmentList.notifyItemChanged(registro);
     }
 
     @Override
     public void onDelete(Registro registro) {
-        new RegistrosService().delete(registro);
+        new RegistrosService(this).delete(registro);
         fragmentList.notifyItemRemoved(registro);
     }
 }

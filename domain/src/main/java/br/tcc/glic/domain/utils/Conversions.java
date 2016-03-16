@@ -1,14 +1,21 @@
 package br.tcc.glic.domain.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoInsulina;
 import br.tcc.glic.data.entities.TipoRegistro;
+import br.tcc.glic.domain.R;
 import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
+import br.tcc.glic.domain.enums.QualidadeRegistro;
 
 /**
+ * Classe para conversão BD <-> Domínio
  * Created by André on 19/02/2016.
  */
 public final class Conversions {
@@ -32,12 +39,30 @@ public final class Conversions {
         return tipoBd;
     }
 
-    public static Glicemia glicemia(Registro registro) {
+    public static Glicemia glicemia(Registro registro, Context context) {
         Glicemia glicemia = new Glicemia();
         glicemia.setCodigo(registro.getId());
         glicemia.setHora(registro.getHora());
         glicemia.setValor((int) registro.getValor());
+        glicemia.setQualidade(getQualidadeGlicemia(glicemia, context));
+
         return glicemia;
+    }
+
+    private static QualidadeRegistro getQualidadeGlicemia(Glicemia glicemia, Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        int min = Integer.parseInt(pref.getString(context.getString(R.string.min_pre_glycemia_config),
+                "0"));
+        int max = Integer.parseInt(pref.getString(context.getString(R.string.max_pre_glycemia_config),
+                String.valueOf(Integer.MAX_VALUE)));
+
+        if(glicemia.getValor() < min)
+            return QualidadeRegistro.Baixo;
+
+        if(glicemia.getValor() > max)
+            return QualidadeRegistro.Alto;
+
+        return QualidadeRegistro.Bom;
     }
 
     public static CarboidratoIngerido carboidratoIngerido(Registro registro) {

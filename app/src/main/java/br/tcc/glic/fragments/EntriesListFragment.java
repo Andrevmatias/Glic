@@ -49,7 +49,7 @@ public class EntriesListFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            viewAdapter = new RegistroViewAdapter(new RegistrosService().listRegistros(), listener);
+            viewAdapter = new RegistroViewAdapter(new RegistrosService(getActivity()).listRegistros(), listener);
             recyclerView.setAdapter(viewAdapter);
         }
         return view;

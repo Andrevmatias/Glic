@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Glic.Domain</string>
+
+    <string name="min_pre_glycemia_config">min_pre_glycemia_config</string>
+    <string name="max_pre_glycemia_config">max_pre_glycemia_config</string>
+    <string name="min_pos_glycemia_config">min_pos_glycemia_config</string>
+    <string name="max_pos_glycemia_config">max_pos_glycemia_config</string>
 </resources>

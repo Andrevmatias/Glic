@@ -167,7 +167,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         AplicacaoInsulina aplicacaoInsulina = fragmentInsulin.getInsulin();
         if(aplicacaoInsulina != null) {
-            new RegistrosService().registrarAplicacaoInsulina(aplicacaoInsulina);
+            new RegistrosService(this).registrarAplicacaoInsulina(aplicacaoInsulina);
             fragmentInsulin.reset();
             return true;
         }
@@ -181,7 +181,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         HemoglobinaGlicada hbA1c = fragmentHbA1c.getHbA1c();
         if(hbA1c != null){
-            new RegistrosService().registrarHemoglobinaGlicada(hbA1c);
+            new RegistrosService(this).registrarHemoglobinaGlicada(hbA1c);
             fragmentHbA1c.reset();
             return true;
         }
@@ -195,7 +195,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         Glicemia glycemia = fragmentGycemia.getGlycemia();
         if(glycemia != null) {
-            new RegistrosService().registrarGlicemia(glycemia);
+            new RegistrosService(this).registrarGlicemia(glycemia);
             fragmentGycemia.reset();
             return true;
         }
@@ -209,7 +209,7 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         CarboidratoIngerido carboidratoIngerido = fragmentCarbohydrates.getCarbohydrate();
         if (carboidratoIngerido != null) {
-            new RegistrosService().registrarCarboidratosIngeridos(carboidratoIngerido);
+            new RegistrosService(this).registrarCarboidratosIngeridos(carboidratoIngerido);
             fragmentCarbohydrates.reset();
             return true;
         }

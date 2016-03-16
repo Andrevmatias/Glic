@@ -6,4 +6,7 @@
     <color name="colorBlue">#09658C</color>
     <color name="colorWhite">#FFFF</color>
     <color name="colorBlack">#333333</color>
+    <color name="colorLow">#448AA8</color>
+    <color name="colorHigh">#FF7E5F</color>
+    <color name="colorGood">#47BD76</color>
 </resources>

@@ -21,6 +21,13 @@
         android:textSize="50sp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
+    <ImageView
+        android:id="@+id/img_quality_glycemia_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/valor_glicemia" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

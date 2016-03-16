@@ -1,14 +1,22 @@
 package br.tcc.glic.domain.services;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoRegistro;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
+import br.tcc.glic.domain.R;
 import br.tcc.glic.domain.core.Indicador;
+import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.domain.enums.TipoIndicador;
 
 /**
@@ -17,12 +25,18 @@ import br.tcc.glic.domain.enums.TipoIndicador;
  */
 public class IndicadoresService {
 
+    private final Map<TipoIndicador, Indicador> cache;
+
     private final String stringDataUltimaSemana;
     private final String stringDataUltimoMes;
     private final String stringDataUltimoDia;
+    private final Context context;
     private final Repository<Registro> repository;
 
-    public IndicadoresService() {
+    public IndicadoresService(Context context) {
+        this.context = context;
+        this.cache = new HashMap<>();
+
         repository = RepositoryFactory.get(Registro.class);
 
         Calendar agora = Calendar.getInstance();
@@ -35,23 +49,84 @@ public class IndicadoresService {
         stringDataUltimoMes = String.valueOf(agora.getTimeInMillis());
     }
 
-    public List<Indicador> getIndicadores(){
+    public List<Indicador> getIndicadores() {
+        return getIndicadores(false);
+    }
+
+    public List<Indicador> getIndicadores(boolean noCache){
         TipoIndicador[] tiposIndicador = TipoIndicador.values();
         List<Indicador> indicadores = new ArrayList<>(tiposIndicador.length);
 
         for (TipoIndicador tipo :
                 tiposIndicador) {
-            indicadores.add(getIndicador(tipo));
+            indicadores.add(getIndicador(tipo, noCache));
         }
 
         return indicadores;
     }
 
+    public Indicador getIndicador(TipoIndicador tipo, boolean noCache) {
+        if(noCache)
+            cache.remove(tipo);
+
+        return getIndicador(tipo);
+    }
+
     public Indicador getIndicador(TipoIndicador tipo) {
+        if(cache.containsKey(tipo))
+            return cache.get(tipo);
+
         Indicador indicador = new Indicador();
         indicador.setTipo(tipo);
         indicador.setValor(calcularValor(tipo));
+
+        indicador.setQualidade(getQualidadeIndicador(indicador));
+
+        cache.put(tipo, indicador);
+
         return  indicador;
+    }
+
+    private QualidadeRegistro getQualidadeIndicador(Indicador indicador) {
+        TipoIndicador tipo = indicador.getTipo();
+        if(tipo == TipoIndicador.MediaGlicemicaDia
+                || tipo == TipoIndicador.MediaGlicemicaSemana
+                || tipo == TipoIndicador.MediaGlicemicaMes
+                || tipo == TipoIndicador.GlicemiaMediaEstimada)
+            return getQualidadeGlicemia(indicador.getValor(), context);
+
+        if(tipo == TipoIndicador.VariabilidadeGlicemiaSemana)
+            return getQualidadeVariabilidade(indicador.getValor(),
+                    getIndicador(TipoIndicador.MediaGlicemicaSemana).getValor());
+
+        if(tipo == TipoIndicador.VariabilidadeGlicemiaMes)
+            return getQualidadeVariabilidade(indicador.getValor(),
+                    getIndicador(TipoIndicador.MediaGlicemicaMes).getValor());
+
+        return QualidadeRegistro.Bom;
+    }
+
+    private QualidadeRegistro getQualidadeVariabilidade(double valor, double mediaCorrespondente) {
+        if(valor > (mediaCorrespondente / 3d))
+            return QualidadeRegistro.Alto;
+
+        return QualidadeRegistro.Bom;
+    }
+
+    private static QualidadeRegistro getQualidadeGlicemia(double valor, Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        int min = Integer.parseInt(pref.getString(context.getString(R.string.min_pre_glycemia_config),
+                "0"));
+        int max = Integer.parseInt(pref.getString(context.getString(R.string.max_pre_glycemia_config),
+                String.valueOf(Integer.MAX_VALUE)));
+
+        if(valor < min)
+            return QualidadeRegistro.Baixo;
+
+        if(valor > max)
+            return QualidadeRegistro.Alto;
+
+        return QualidadeRegistro.Bom;
     }
 
     private double calcularValor(TipoIndicador tipo) {

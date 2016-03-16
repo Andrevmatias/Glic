@@ -1,9 +1,13 @@
 package br.tcc.glic.fragments;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -96,31 +100,46 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void configureGlicemiaViewHolder(final GlicemiaViewHolder holder, Glicemia glicemia) {
-        holder.mItem = glicemia;
-        holder.mContentView.setText(String.valueOf(glicemia.getValor()));
-        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(glicemia.getHora()));
+        holder.item = glicemia;
+        holder.contentView.setText(String.valueOf(glicemia.getValor()));
+        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(glicemia.getHora()));
+        holder.qualityImage.setImageDrawable(getQualityDrawable(glicemia, holder.view.getContext()));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.mItem);
+                    listener.onListFragmentInteraction(holder.item);
                 }
             }
         });
     }
 
+    private Drawable getQualityDrawable(Glicemia glicemia, Context context) {
+        switch (glicemia.getQualidade())
+        {
+            case Baixo:
+                return ContextCompat.getDrawable(context, R.drawable.ic_low);
+            case Bom:
+                return ContextCompat.getDrawable(context, R.drawable.ic_good);
+            case Alto:
+                return ContextCompat.getDrawable(context, R.drawable.ic_high);
+        }
+
+        throw new RuntimeException("QualidadeRegistro not recognized");
+    }
+
     private void configureCarboidratoIngeridoViewHolder(final CarboidratoIngeridoViewHolder holder,
                                                         CarboidratoIngerido carboidrato) {
-        holder.mItem = carboidrato;
-        holder.mContentView.setText(String.valueOf(carboidrato.getQuantidade()));
-        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(carboidrato.getHora()));
+        holder.item = carboidrato;
+        holder.contentView.setText(String.valueOf(carboidrato.getQuantidade()));
+        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(carboidrato.getHora()));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.mItem);
+                    listener.onListFragmentInteraction(holder.item);
                 }
             }
         });
@@ -128,16 +147,16 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureAplicacaoInsulinaViewHolder(final AplicacaoInsulinaViewHolder holder,
                                                        AplicacaoInsulina aplicacaoInsulina) {
-        holder.mItem = aplicacaoInsulina;
-        holder.mContentView.setText(String.valueOf(aplicacaoInsulina.getQuantidade()));
-        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(aplicacaoInsulina.getHora()));
-        holder.mTypeView.setText(aplicacaoInsulina.getTipo().getNome());
+        holder.item = aplicacaoInsulina;
+        holder.contentView.setText(String.valueOf(aplicacaoInsulina.getQuantidade()));
+        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(aplicacaoInsulina.getHora()));
+        holder.typeView.setText(aplicacaoInsulina.getTipo().getNome());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.mItem);
+                    listener.onListFragmentInteraction(holder.item);
                 }
             }
         });
@@ -145,15 +164,15 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureHemoglobinaGlicadaViewHolder(final HemoglobinaGlicadaViewHolder holder,
                                                        HemoglobinaGlicada hbA1c) {
-        holder.mItem = hbA1c;
-        holder.mContentView.setText(String.valueOf(hbA1c.getValor()));
-        holder.mTimeView.setText(new SimpleDateFormat("dd/MM/yy").format(hbA1c.getHora()));
+        holder.item = hbA1c;
+        holder.contentView.setText(String.valueOf(hbA1c.getValor()));
+        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy").format(hbA1c.getHora()));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.mItem);
+                    listener.onListFragmentInteraction(holder.item);
                 }
             }
         });
@@ -194,80 +213,83 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class GlicemiaViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mContentView;
-        private final TextView mTimeView;
-        public Glicemia mItem;
+        public final View view;
+        public final TextView contentView;
+        private final TextView timeView;
+        private final ImageView qualityImage;
+        public Glicemia item;
 
         public GlicemiaViewHolder(View view) {
             super(view);
-            mView = view;
-            mContentView = (TextView) view.findViewById(R.id.valor_glicemia);
-            mTimeView = (TextView) view.findViewById(R.id.hora_glicemia);
+            this.view = view;
+            contentView = (TextView) view.findViewById(R.id.valor_glicemia);
+            timeView = (TextView) view.findViewById(R.id.hora_glicemia);
+            qualityImage = (ImageView) view.findViewById(R.id.img_quality_glycemia_list);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + contentView.getText() + "'";
         }
     }
 
     public class CarboidratoIngeridoViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mContentView;
-        private final TextView mTimeView;
-        public CarboidratoIngerido mItem;
+        public final View view;
+        public final TextView contentView;
+        private final TextView timeView;
+        public CarboidratoIngerido item;
 
         public CarboidratoIngeridoViewHolder(View view) {
             super(view);
-            mView = view;
-            mContentView = (TextView) view.findViewById(R.id.quantidade_carboidrato);
-            mTimeView = (TextView) view.findViewById(R.id.hora_carboidrato);
+            this.view = view;
+            contentView = (TextView) view.findViewById(R.id.quantidade_carboidrato);
+            timeView = (TextView) view.findViewById(R.id.hora_carboidrato);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + contentView.getText() + "'";
         }
     }
 
     public class AplicacaoInsulinaViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mContentView;
-        private final TextView mTimeView;
-        private final TextView mTypeView;
-        public AplicacaoInsulina mItem;
+        public final View view;
+        public final TextView contentView;
+        private final TextView timeView;
+        private final TextView typeView;
+        public AplicacaoInsulina item;
 
         public AplicacaoInsulinaViewHolder(View view) {
             super(view);
-            mView = view;
-            mContentView = (TextView) view.findViewById(R.id.quantidade_insulina);
-            mTimeView = (TextView) view.findViewById(R.id.hora_insulina);
-            mTypeView = (TextView) view.findViewById(R.id.tipo_insulina);
+            this.view = view;
+            contentView = (TextView) view.findViewById(R.id.quantidade_insulina);
+            timeView = (TextView) view.findViewById(R.id.hora_insulina);
+            typeView = (TextView) view.findViewById(R.id.tipo_insulina);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + contentView.getText() + "'";
         }
     }
 
     public class HemoglobinaGlicadaViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mContentView;
-        private final TextView mTimeView;
-        public HemoglobinaGlicada mItem;
+        private final View view;
+        private final TextView contentView;
+        private final TextView timeView;
+        private HemoglobinaGlicada item;
+
 
         public HemoglobinaGlicadaViewHolder(View view) {
             super(view);
-            mView = view;
-            mContentView = (TextView) view.findViewById(R.id.valor_hemoglobina);
-            mTimeView = (TextView) view.findViewById(R.id.hora_hemoglobina);
+            this.view = view;
+            contentView = (TextView) view.findViewById(R.id.valor_hemoglobina);
+            timeView = (TextView) view.findViewById(R.id.hora_hemoglobina);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + contentView.getText() + "'";
         }
     }
 }

@@ -1,5 +1,7 @@
 package br.tcc.glic.domain.services;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -20,6 +22,13 @@ import br.tcc.glic.domain.utils.Conversions;
  * Created by André on 02/02/2016.
  */
 public class RegistrosService {
+
+    private final Context context;
+
+    public RegistrosService(Context context) {
+        this.context = context;
+    }
+
     public void registrarGlicemia(int valor, Date hora){
         Repository<Registro> rep = RepositoryFactory.get(Registro.class);
         Registro registro = new Registro(TipoRegistro.Glicemia);
@@ -80,7 +89,7 @@ public class RegistrosService {
                 registros) {
             switch (registro.getTipo()) {
                 case Glicemia:
-                    Glicemia glicemia = Conversions.glicemia(registro);
+                    Glicemia glicemia = Conversions.glicemia(registro, context);
                     registrosRet.add(glicemia);
                     break;
                 case HemoglobinaGlicada:
