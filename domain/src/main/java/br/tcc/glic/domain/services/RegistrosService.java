@@ -39,6 +39,7 @@ public class RegistrosService {
 
     public  void registrarGlicemia(br.tcc.glic.domain.core.Glicemia glicemia){
         this.registrarGlicemia(glicemia.getValor(), glicemia.getHora());
+        glicemia.setQualidade(Conversions.getQualidadeGlicemia(glicemia.getValor(), context));
     }
 
     public void registrarCarboidratosIngeridos(int quantidade, Date hora){
@@ -64,6 +65,8 @@ public class RegistrosService {
 
     public  void registrarHemoglobinaGlicada(br.tcc.glic.domain.core.HemoglobinaGlicada hemoglobinaGlicada){
         this.registrarHemoglobinaGlicada(hemoglobinaGlicada.getValor(), hemoglobinaGlicada.getHora());
+        hemoglobinaGlicada.setGme(IndicadoresService.calcularGME(hemoglobinaGlicada.getValor()));
+        hemoglobinaGlicada.setQualidade(Conversions.getQualidadeGlicemia(hemoglobinaGlicada.getGme(), context));
     }
 
     public void registrarAplicacaoInsulina(double quantidade, Date hora, br.tcc.glic.domain.core.TipoInsulina tipo){
@@ -93,7 +96,7 @@ public class RegistrosService {
                     registrosRet.add(glicemia);
                     break;
                 case HemoglobinaGlicada:
-                    HemoglobinaGlicada hemoglobinaGlicada = Conversions.hemoglobinaGlicada(registro);
+                    HemoglobinaGlicada hemoglobinaGlicada = Conversions.hemoglobinaGlicada(registro, context);
                     registrosRet.add(hemoglobinaGlicada);
                     break;
                 case CarboidratoIngerido:

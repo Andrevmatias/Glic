@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/ic_glycemia"/>
+
+    <TextView
+        android:id="@+id/feedback_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_toRightOf="@id/img_feedback"
+        android:textSize="50sp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/feedback_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mg/dL"
+        android:layout_toRightOf="@id/feedback_value"
+        android:layout_alignBaseline="@id/feedback_value"/>
+
+    <ImageView
+        android:id="@+id/img_quality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentEnd="false" />
+
+    <TextView
+        android:id="@+id/txt_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/img_quality"
+        android:layout_alignRight="@+id/img_quality"
+        android:gravity="center"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

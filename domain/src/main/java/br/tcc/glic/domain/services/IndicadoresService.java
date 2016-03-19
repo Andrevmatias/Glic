@@ -91,8 +91,7 @@ public class IndicadoresService {
         TipoIndicador tipo = indicador.getTipo();
         if(tipo == TipoIndicador.MediaGlicemicaDia
                 || tipo == TipoIndicador.MediaGlicemicaSemana
-                || tipo == TipoIndicador.MediaGlicemicaMes
-                || tipo == TipoIndicador.GlicemiaMediaEstimada)
+                || tipo == TipoIndicador.MediaGlicemicaMes)
             return getQualidadeGlicemia(indicador.getValor(), context);
 
         if(tipo == TipoIndicador.VariabilidadeGlicemiaSemana)
@@ -147,27 +146,13 @@ public class IndicadoresService {
                 return calcularMediaCarboidratosSemana();
             case MediaCarboidratosMes:
                 return calcularMediaCarboidratosMes();
-            case GlicemiaMediaEstimada:
-                return calcularGlicemiaMediaEstimada();
         }
 
         throw new UnsupportedOperationException("Tipo de indicador não suportado.");
     }
 
-    private double calcularGlicemiaMediaEstimada() {
-        List<Registro> ultimoHbA1c = repository
-                .find("tipo = ?",
-                        new String[]{ TipoRegistro.HemoglobinaGlicada.toString() },
-                        null, "hora desc", "1");
-
-        if(!ultimoHbA1c.isEmpty())
-            return calcularGME(ultimoHbA1c.get(0).getValor());
-        else
-            return 0;
-    }
-
-    private double calcularGME(double valor) {
-        return (28.7 * valor) - 46.7;
+    public static int calcularGME(double valor) {
+        return (int)Math.round((28.7 * valor) - 46.7);
     }
 
     private double calcularMediaCarboidratosMes() {

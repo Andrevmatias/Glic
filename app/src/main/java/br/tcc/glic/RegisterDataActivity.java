@@ -129,39 +129,44 @@ public class RegisterDataActivity extends AppCompatActivity {
     }
 
     private void saveAll() {
-        boolean anySaved = false;
-        boolean newHbA1c = false;
+        ArrayList<br.tcc.glic.domain.core.Registro> registeredEntries
+                = new ArrayList<>(dataFieldFragments.size());
+
         for (RegisterDataField fieldKey :
                 dataFieldFragments.keySet()) {
+
+            br.tcc.glic.domain.core.Registro registro = null;
             switch (fieldKey)
             {
                 case Glycemia:
-                    anySaved = anySaved || saveGlycemia();
+                    registro = saveGlycemia();
                     break;
                 case Carbohydrates:
-                    anySaved = anySaved || saveCarbohydrates();
+                    registro = saveCarbohydrates();
                     break;
                 case Insulin:
-                    anySaved = anySaved || saveInsulin();
+                    registro = saveInsulin();
                     break;
                 case HbA1c:
-                    anySaved = anySaved || saveHbA1c();
-                    newHbA1c = true;
+                    registro = saveHbA1c();
                     break;
             }
+            if(registro != null)
+                registeredEntries.add(registro);
         }
 
-        if(anySaved) {
+        if(!registeredEntries.isEmpty()) {
             Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, RemindersService.class);
             startService(intent);
-        }
 
-        if(newHbA1c)
-            setResult(RESULT_OK);
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(getString(R.string.registered_entries_extra), registeredEntries);
+            setResult(RESULT_OK, returnIntent);
+        }
     }
 
-    private boolean saveInsulin() {
+    private br.tcc.glic.domain.core.Registro saveInsulin() {
         RegisterInsulinFragment fragmentInsulin =
                 (RegisterInsulinFragment) dataFieldFragments.get(RegisterDataField.Insulin);
 
@@ -169,13 +174,13 @@ public class RegisterDataActivity extends AppCompatActivity {
         if(aplicacaoInsulina != null) {
             new RegistrosService(this).registrarAplicacaoInsulina(aplicacaoInsulina);
             fragmentInsulin.reset();
-            return true;
+            return aplicacaoInsulina;
         }
 
-        return false;
+        return null;
     }
 
-    private boolean saveHbA1c() {
+    private br.tcc.glic.domain.core.Registro saveHbA1c() {
         RegisterHbA1cFragment fragmentHbA1c =
                 (RegisterHbA1cFragment) dataFieldFragments.get(RegisterDataField.HbA1c);
 
@@ -183,13 +188,13 @@ public class RegisterDataActivity extends AppCompatActivity {
         if(hbA1c != null){
             new RegistrosService(this).registrarHemoglobinaGlicada(hbA1c);
             fragmentHbA1c.reset();
-            return true;
+            return hbA1c;
         }
 
-        return false;
+        return null;
     }
 
-    private boolean saveGlycemia() {
+    private br.tcc.glic.domain.core.Registro saveGlycemia() {
         RegisterGlycemiaFragment fragmentGycemia =
                 (RegisterGlycemiaFragment) dataFieldFragments.get(RegisterDataField.Glycemia);
 
@@ -197,13 +202,13 @@ public class RegisterDataActivity extends AppCompatActivity {
         if(glycemia != null) {
             new RegistrosService(this).registrarGlicemia(glycemia);
             fragmentGycemia.reset();
-            return true;
+            return glycemia;
         }
 
-        return false;
+        return null;
     }
 
-    private boolean saveCarbohydrates() {
+    private br.tcc.glic.domain.core.Registro saveCarbohydrates() {
         RegisterCarbohydratesFragment fragmentCarbohydrates =
                 (RegisterCarbohydratesFragment) dataFieldFragments.get(RegisterDataField.Carbohydrates);
 
@@ -211,10 +216,10 @@ public class RegisterDataActivity extends AppCompatActivity {
         if (carboidratoIngerido != null) {
             new RegistrosService(this).registrarCarboidratosIngeridos(carboidratoIngerido);
             fragmentCarbohydrates.reset();
-            return true;
+            return carboidratoIngerido;
         }
 
-        return false;
+        return null;
     }
 
     @Override

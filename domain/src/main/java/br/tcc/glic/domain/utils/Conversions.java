@@ -13,6 +13,7 @@ import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.services.IndicadoresService;
 
 /**
  * Classe para conversão BD <-> Domínio
@@ -44,22 +45,22 @@ public final class Conversions {
         glicemia.setCodigo(registro.getId());
         glicemia.setHora(registro.getHora());
         glicemia.setValor((int) registro.getValor());
-        glicemia.setQualidade(getQualidadeGlicemia(glicemia, context));
+        glicemia.setQualidade(getQualidadeGlicemia(glicemia.getValor(), context));
 
         return glicemia;
     }
 
-    private static QualidadeRegistro getQualidadeGlicemia(Glicemia glicemia, Context context) {
+    public static QualidadeRegistro getQualidadeGlicemia(int valor, Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         int min = Integer.parseInt(pref.getString(context.getString(R.string.min_pre_glycemia_config),
                 "0"));
         int max = Integer.parseInt(pref.getString(context.getString(R.string.max_pre_glycemia_config),
                 String.valueOf(Integer.MAX_VALUE)));
 
-        if(glicemia.getValor() < min)
+        if(valor < min)
             return QualidadeRegistro.Baixo;
 
-        if(glicemia.getValor() > max)
+        if(valor > max)
             return QualidadeRegistro.Alto;
 
         return QualidadeRegistro.Bom;
@@ -73,11 +74,13 @@ public final class Conversions {
         return carboidrato;
     }
 
-    public static HemoglobinaGlicada hemoglobinaGlicada(Registro registro) {
+    public static HemoglobinaGlicada hemoglobinaGlicada(Registro registro, Context context) {
         HemoglobinaGlicada hemoglobinaGlicada = new HemoglobinaGlicada();
         hemoglobinaGlicada.setCodigo(registro.getId());
         hemoglobinaGlicada.setHora(registro.getHora());
         hemoglobinaGlicada.setValor(registro.getValor());
+        hemoglobinaGlicada.setGme(IndicadoresService.calcularGME(registro.getValor()));
+        hemoglobinaGlicada.setQualidade(getQualidadeGlicemia(hemoglobinaGlicada.getGme(), context));
         return hemoglobinaGlicada;
     }
 

@@ -1,5 +1,6 @@
 package br.tcc.glic;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -16,9 +17,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import br.tcc.glic.adapters.FeedbackListAdapter;
 import br.tcc.glic.domain.core.Glicemia;
-import br.tcc.glic.domain.enums.TipoIndicador;
-import br.tcc.glic.domain.services.IndicadoresService;
+import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
@@ -26,7 +30,7 @@ import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
 
-    private static final int RC_SIGN_IN = 1, RC_HBA1C_REGISTERED = 2;
+    private static final int RC_SIGN_IN = 1, RC_DATA_REGISTERED = 2;
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingConnectionFailure = false;
     private GoogleApiClient mGoogleGamesApiClient;
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void openAddEntry() {
         Intent intent = new Intent(this, RegisterDataActivity.class);
-        startActivityForResult(intent, RC_HBA1C_REGISTERED);
+        startActivityForResult(intent, RC_DATA_REGISTERED);
     }
 
     private void initApiClients() {
@@ -152,22 +156,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if (resultCode == RESULT_OK) {
                 mGoogleGamesApiClient.connect();
             }
-        } else if (requestCode == RC_HBA1C_REGISTERED) {
-            if(resultCode == RESULT_OK)
-                showEstimatedAverageGlycemia();
+        } else if (requestCode == RC_DATA_REGISTERED) {
+            if(resultCode == RESULT_OK) {
+                List<Registro> registros =
+                        (List<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_extra));
+
+                showFeedBack(registros);
+            }
         }
     }
 
-    private void showEstimatedAverageGlycemia() {
-        double eag = new IndicadoresService(this)
-                .getIndicador(TipoIndicador.GlicemiaMediaEstimada).getValor();
+    private void showFeedBack(List<Registro> registros) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.estimated_average_glycemia)
-                .setMessage(getString(R.string.your_estimated_average_glycemia_is)
-                        + " " + String.valueOf((int)Math.floor(eag)))
-                .create()
-                .show();
+        FeedbackListAdapter adapter =
+                new FeedbackListAdapter(this, registros);
+        builder
+            .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            })
+            .create()
+            .show();
     }
 
     @Override
@@ -186,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         registrarDadosService.registrarGlicemia(glicemia);
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
+
+        ArrayList<Registro> registros = new ArrayList<>();
+        registros.add(glicemia);
+        showFeedBack(registros);
 
         Intent intent = new Intent(this, RemindersService.class);
         startService(intent);
