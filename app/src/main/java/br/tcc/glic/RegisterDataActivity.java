@@ -161,7 +161,7 @@ public class RegisterDataActivity extends AppCompatActivity {
             startService(intent);
 
             Intent returnIntent = new Intent();
-            returnIntent.putExtra(getString(R.string.registered_entries_extra), registeredEntries);
+            returnIntent.putExtra(getString(R.string.registered_entries_argument), registeredEntries);
             setResult(RESULT_OK, returnIntent);
         }
     }

@@ -104,8 +104,13 @@
     <string name="reminder_notification_big_text">Você geralmente faz um registro às %s, achei melhor lembrar (•‿•)</string>
     <string name="activate_notifications_config">activate_notifications_config</string>
     <string name="activate_notifications_config_text">Ativar lembretes de registro</string>
-    <string name="registered_entries_extra">registered_entries_extra</string>
-    <string name="low">Baixo</string>
-    <string name="good">Bom</string>
-    <string name="high">Alto</string>
+    <string name="registered_entries_argument">registered_entries_argument</string>
+    <string name="auto_avaliation_config">auto_avaliation_config</string>
+    <string name="how_is_your_glicemia">Como está a sua glicemia?</string>
+    <string name="self_evaluation">Auto-avaliação</string>
+    <string name="self_evaluation_congrats_title">Parabéns, você acertou!</string>
+    <string name="self_evaluation_congrats_text">Você respondeu que sua glicemia está %s e é isto mesmo! Parece que você já sabe algumas coisas sobre a diabetes, parabéns!</string>
+    <string name="self_evaluation_wrong_answer_title">Resposta errada</string>
+    <string name="self_evaluation_wrong_answer_text">Parece que você respondeu errado... Sua glicemia, na verdade, está \"%s\".\n\nMenor que 80 = Baixo\nEntre 80 e 140 = Bom\nAcima de 140 = Alto</string>
+    <string name="correct_self_evaluation_answers_config">correct_self_evaluation_answers_config</string>
 </resources>

@@ -92,23 +92,9 @@ public class FeedbackListAdapter extends BaseAdapter {
 
         feedbackValue.setText(String.valueOf(glicemia.getValor()));
         imageQuality.setImageDrawable(getQualityDrawable(glicemia.getQualidade()));
-        txtFeedback.setText(getQualityText(glicemia.getQualidade()));
+        txtFeedback.setText(glicemia.getQualidade().getDescription(context));
 
         return view;
-    }
-
-    private String getQualityText(QualidadeRegistro qualidade) {
-        switch (qualidade)
-        {
-            case Baixo:
-                return context.getString(R.string.low);
-            case Bom:
-                return context.getString(R.string.good);
-            case Alto:
-                return context.getString(R.string.high);
-        }
-
-        throw new RuntimeException("QualidadeRegistro not recognized");
     }
 
     private Drawable getQualityDrawable(QualidadeRegistro qualidade) {
@@ -135,7 +121,7 @@ public class FeedbackListAdapter extends BaseAdapter {
         feedbackValue.setText(String.valueOf(hba1c.getValor()));
         glycemiaValue.setText(String.valueOf(hba1c.getGme()));
         imageQuality.setImageDrawable(getQualityDrawable(hba1c.getQualidade()));
-        txtFeedback.setText(getQualityText(hba1c.getQualidade()));
+        txtFeedback.setText(hba1c.getQualidade().getDescription(context));
 
         return view;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -26,6 +27,8 @@ import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
+import br.tcc.glic.fragments.SelfEvaluationFragment;
+import br.tcc.glic.userconfiguration.ConfigUtils;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -158,15 +161,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         } else if (requestCode == RC_DATA_REGISTERED) {
             if(resultCode == RESULT_OK) {
-                List<Registro> registros =
-                        (List<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_extra));
+                ArrayList<Registro> registros =
+                        (ArrayList<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_argument));
 
-                showFeedBack(registros);
+                if(ConfigUtils.isAutoAvaliationOn(this))
+                    askForSelfEvaluation(registros);
+                else
+                    showFeedback(registros);
             }
         }
     }
 
-    private void showFeedBack(List<Registro> registros) {
+    private void askForSelfEvaluation(ArrayList<Registro> registros) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getString(R.string.registered_entries_argument), registros);
+
+        DialogFragment dialog = new SelfEvaluationFragment();
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), null);
+    }
+
+    private void showFeedback(List<Registro> registros) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         FeedbackListAdapter adapter =
@@ -200,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         ArrayList<Registro> registros = new ArrayList<>();
         registros.add(glicemia);
-        showFeedBack(registros);
+        showFeedback(registros);
 
         Intent intent = new Intent(this, RemindersService.class);
         startService(intent);
