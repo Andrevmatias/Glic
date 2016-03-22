@@ -46,14 +46,15 @@ public final class ConfigUtils {
 
     public static boolean isAutoAvaliationOn(Context context) {
         SharedPreferences prefs = getUserConfigurationFile(context);
-        return prefs.getBoolean(context.getString(R.string.auto_avaliation_config), true);
+        return prefs.getBoolean(context.getString(R.string.self_evaluation_config), true) 
+                || prefs.getBoolean(context.getString(R.string.self_evaluation_user_config), false);
     }
 
     public static void turnOffAutoAvaliation(Context context) {
         SharedPreferences prefs = getUserConfigurationFile(context);
         prefs
                 .edit()
-                .putBoolean(context.getString(R.string.auto_avaliation_config), false)
+                .putBoolean(context.getString(R.string.self_evaluation_config), false)
                 .apply();
     }
 

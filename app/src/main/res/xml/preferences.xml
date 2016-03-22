@@ -45,6 +45,11 @@
     </Preference>
 
     <CheckBoxPreference
+        android:title="@string/activate_self_evaluation_text"
+        android:key="@string/self_evaluation_user_config"
+        android:defaultValue="false"/>
+
+    <CheckBoxPreference
         android:title="@string/activate_notifications_config_text"
         android:key="@string/activate_notifications_config"
         android:defaultValue="true"/>

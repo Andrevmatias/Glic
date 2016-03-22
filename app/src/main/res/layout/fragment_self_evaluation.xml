@@ -6,22 +6,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/img_glycemia_list"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_glycemia" />
 
         <TextView
             android:id="@+id/valor_glicemia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:layout_toRightOf="@id/img_glycemia_list"
+            android:layout_centerInParent="true"
             android:textSize="50sp"
             android:textAppearance="?attr/textAppearanceListItem" />
+
+        <ImageView
+            android:id="@+id/img_glycemia_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/valor_glicemia"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_glycemia" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +35,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/how_is_your_glicemia"/>
+        android:text="@string/how_is_your_glicemia"
+        android:gravity="center"
+        android:layout_margin="@dimen/text_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,18 +48,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_low"/>
+            android:drawableTop="@drawable/ic_low"
+            android:text="@string/low"/>
         <Button
             android:id="@+id/btn_good"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_good"/>
+            android:drawableTop="@drawable/ic_good"
+            android:text="@string/good"/>
         <Button
             android:id="@+id/btn_high"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_high"/>
+            android:drawableTop="@drawable/ic_high"
+            android:text="@string/high"/>
     </LinearLayout>
 </LinearLayout>

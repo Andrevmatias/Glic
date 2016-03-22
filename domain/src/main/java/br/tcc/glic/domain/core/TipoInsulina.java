@@ -1,9 +1,12 @@
 package br.tcc.glic.domain.core;
 
+import java.io.Serializable;
+
 /**
+ * Tipo de insulina registrado
  * Created by André on 26/01/2016.
  */
-public class TipoInsulina {
+public class TipoInsulina implements Serializable {
     private Long codigo;
     private String nome;
     private int inicio;

@@ -1,6 +1,7 @@
 package br.tcc.glic.fragments;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -13,14 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.tcc.glic.R;
-import br.tcc.glic.adapters.FeedbackListAdapter;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
@@ -29,11 +28,25 @@ import br.tcc.glic.userconfiguration.ConfigUtils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SelfEvaluationFragment extends DialogFragment implements View.OnClickListener {
+public class SelfEvaluationFragment extends DialogFragment
+        implements View.OnClickListener {
     private TextView txtGlycemia;
     private Button btnLow, btnGood, btnHigh;
     private QualidadeRegistro correctAnswer;
     private ArrayList<Registro> registros;
+    private SelfEvaluationDismissListener dismissListener;
+    private boolean dismiss = false;
+
+    public static boolean shouldShowFor(List<Registro> entriesToEvaluate)
+    {
+        for (Registro registro : entriesToEvaluate) {
+            if(registro instanceof Glicemia) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public SelfEvaluationFragment() {
         // Required empty public constructor
@@ -43,11 +56,18 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_auto_avaliation, container, false);
+        View view = inflater.inflate(R.layout.fragment_self_evaluation, container, false);
 
         initComponents(view);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(dismiss)
+            dismiss();
     }
 
     private void configureCurrentEntry(Glicemia glicemia) {
@@ -56,7 +76,7 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
     }
 
     protected void initComponents(View view) {
-        txtGlycemia = (EditText) view.findViewById(R.id.edt_glycemia);
+        txtGlycemia = (TextView) view.findViewById(R.id.valor_glicemia);
 
         btnGood = (Button) view.findViewById(R.id.btn_good);
         btnGood.setOnClickListener(this);
@@ -78,29 +98,15 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
                 }
                 if(glicemia != null)
                     configureCurrentEntry(glicemia);
-                else
-                    showFeedback(registros);
+                else {
+                    if (dismissListener != null)
+                        dismissListener.onDismissSelfEvaluation(registros);
+                    dismiss = true;
+                }
             }
         } else {
-            dismiss();
+            dismiss = true;
         }
-    }
-
-    private void showFeedback(List<Registro> registros) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        FeedbackListAdapter adapter =
-                new FeedbackListAdapter(getActivity(), registros);
-        builder
-                .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .create()
-                .show();
-
-        dismiss();
     }
 
     @NonNull
@@ -117,11 +123,22 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
         {
             case R.id.btn_low:
                 evaluateAnswer(QualidadeRegistro.Baixo);
+                break;
             case R.id.btn_high:
                 evaluateAnswer(QualidadeRegistro.Alto);
+                break;
             case R.id.btn_good:
                 evaluateAnswer(QualidadeRegistro.Bom);
+                break;
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if(activity instanceof SelfEvaluationDismissListener)
+            this.dismissListener = (SelfEvaluationDismissListener) activity;
     }
 
     private void evaluateAnswer(QualidadeRegistro answer) {
@@ -129,7 +146,8 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        showFeedback(registros);
+                        if (dismissListener != null)
+                            dismissListener.onDismissSelfEvaluation(registros);
                     }
                 });
 
@@ -147,13 +165,17 @@ public class SelfEvaluationFragment extends DialogFragment implements View.OnCli
         } else {
             alertDialogBuilder
                     .setTitle(R.string.self_evaluation_wrong_answer_title)
-                    .setIcon(R.drawable.ic_high)
+                    .setIcon(R.drawable.ic_no)
                     .setMessage(String.format(getString(R.string.self_evaluation_wrong_answer_text),
-                            answer.getDescription(getActivity()), correctAnswer.getDescription(getActivity()),
-                            min, min, max, max));
+                            correctAnswer.getDescription(getActivity()), answer.getDescription(getActivity()),
+                            min, max));
         }
         alertDialogBuilder.create().show();
 
         dismiss();
+    }
+
+    public interface SelfEvaluationDismissListener {
+        void onDismissSelfEvaluation(List<Registro> evaluatedEntries);
     }
 }

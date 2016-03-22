@@ -88,6 +88,11 @@ public class SettingsFragment extends PreferenceFragment
             }
         });
 
+        Preference selfEvalutionPref = findPreference(getString(R.string.self_evaluation_user_config));
+        SharedPreferences prefs = ConfigUtils.getUserConfigurationFile(getActivity());
+        if(prefs.getBoolean(getString(R.string.self_evaluation_config), true))
+            getPreferenceScreen().removePreference(selfEvalutionPref);
+
         initListsEntries();
         initSummary(getPreferenceScreen());
     }

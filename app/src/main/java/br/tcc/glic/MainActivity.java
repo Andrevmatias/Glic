@@ -30,7 +30,9 @@ import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.SelfEvaluationFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        SelfEvaluationFragment.SelfEvaluationDismissListener{
 
 
     private static final int RC_SIGN_IN = 1, RC_DATA_REGISTERED = 2;
@@ -154,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
         if (requestCode == RC_SIGN_IN) {
             mResolvingConnectionFailure = false;
             if (resultCode == RESULT_OK) {
@@ -164,9 +168,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ArrayList<Registro> registros =
                         (ArrayList<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_argument));
 
-                if(ConfigUtils.isAutoAvaliationOn(this))
+                if(ConfigUtils.isAutoAvaliationOn(this) && SelfEvaluationFragment.shouldShowFor(registros))
                     askForSelfEvaluation(registros);
-                else
+                else if(FeedbackListAdapter.suportsAny(registros))
                     showFeedback(registros);
             }
         }
@@ -215,12 +219,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         ArrayList<Registro> registros = new ArrayList<>();
         registros.add(glicemia);
-        showFeedback(registros);
+
+        if(ConfigUtils.isAutoAvaliationOn(this))
+            askForSelfEvaluation(registros);
+        else
+            showFeedback(registros);
 
         Intent intent = new Intent(this, RemindersService.class);
         startService(intent);
 
         fragmentGlycemia.reset();
         fragmentIndicators.calcIndicators();
+    }
+
+    @Override
+    public void onDismissSelfEvaluation(final List<Registro> evaluatedEntries) {
+        if(!ConfigUtils.isAutoAvaliationOn(this))
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.self_evaluation_desactivation)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            showFeedback(evaluatedEntries);
+                        }
+                    })
+                    .create()
+                    .show();
+        else
+            showFeedback(evaluatedEntries);
     }
 }

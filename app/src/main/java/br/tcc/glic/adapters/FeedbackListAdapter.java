@@ -125,4 +125,13 @@ public class FeedbackListAdapter extends BaseAdapter {
 
         return view;
     }
+
+    public static boolean suportsAny(ArrayList<Registro> registros) {
+        for (Registro registro : registros) {
+            if (registro instanceof Glicemia || registro instanceof HemoglobinaGlicada)
+                return true;
+        }
+
+        return false;
+    }
 }
