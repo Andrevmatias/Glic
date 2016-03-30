@@ -11,6 +11,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void handleSilentSigninResult(GoogleSignInResult data) {
-        if(data.isSuccess()) {
+        if(data.isSuccess() || data.getStatus().getStatusCode() == CommonStatusCodes.NETWORK_ERROR) {
             startNextActivity();
         } else {
             setContentView(R.layout.activity_login);

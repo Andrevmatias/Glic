@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.tcc.glic.fragments.ChooseChartFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/glycemia_chart_choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_glycemia"
+        android:text="@string/glycemia"
+        style="@style/ChartTypeListItem" />
+
+    <TextView
+        android:id="@+id/glycemia_hour_chart_choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_glycemia"
+        android:text="@string/glycemia_by_hour"
+        style="@style/ChartTypeListItem" />
+
+    <TextView
+        android:id="@+id/carbohydrate_chart_choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_carbohydrates"
+        android:text="@string/ingested_carbohydrates"
+        style="@style/ChartTypeListItem" />
+
+</LinearLayout>

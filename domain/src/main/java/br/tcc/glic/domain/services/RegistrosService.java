@@ -140,4 +140,22 @@ public class RegistrosService {
 
         return null;
     }
+
+    public List<Glicemia> listGlicemias(Date de, Date ate) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        List<Registro> registros = rep.find("tipo = ? and hora >= ? and hora <= ?",
+                new String[]{
+                        TipoRegistro.Glicemia.toString(),
+                        String.valueOf(de.getTime()),
+                        String.valueOf(ate.getTime())
+                }, null, "hora asc", null);
+
+        List<Glicemia> retorno = new ArrayList<>(registros.size());
+
+        for (Registro registro : registros)
+            retorno.add(Conversions.glicemia(registro, context));
+
+        return retorno;
+    }
 }

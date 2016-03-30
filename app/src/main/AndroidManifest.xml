@@ -52,12 +52,14 @@
             android:exported="false" />
 
         <receiver
-            android:name="br.tcc.glic.NotificationsBroadcastReceiver"
-            android:exported="false" >
+            android:name=".NotificationsBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFY" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".ChartsActivity"/>
     </application>
 
 </manifest>

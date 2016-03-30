@@ -116,4 +116,8 @@
     <string name="self_evaluation_desactivation">Você já respondeu corretamente várias vezes!\n\nAcho que não preciso mais te perguntar. Vou desativar a auto-avaliação.\n\nSe quiser ativar novamente, basta ir nas configurações.</string>
     <string name="self_evaluation_user_config">auto_avaliation_user_config</string>
     <string name="activate_self_evaluation_text">Ativar auto-avaliação</string>
+    <string name="glycemia_by_hour">Glicemia por horário</string>
+    <string name="chart_glycemia_description">Médias Glicêmicas por Dia</string>
+    <string name="average">Média</string>
+    <string name="variability">Variabilidade</string>
 </resources>
