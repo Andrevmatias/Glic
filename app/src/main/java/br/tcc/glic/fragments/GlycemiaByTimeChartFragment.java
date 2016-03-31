@@ -1,7 +1,6 @@
 package br.tcc.glic.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,25 +18,27 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.services.AnalizadorRegistros;
 import br.tcc.glic.domain.services.RegistrosService;
-import br.tcc.glic.domain.utils.MathUtils;
 
 /**
  * Fragment para exibição de gráfico de glicemias
  * Created by André on 27/03/2016.
  */
-public class GlycemiaChartFragment extends Fragment {
+public class GlycemiaByTimeChartFragment extends Fragment {
     private LineChart chart;
     private int daysScope = 30;
 
-    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+    private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
-    public GlycemiaChartFragment() {
+    public GlycemiaByTimeChartFragment() {
     }
 
     @Nullable
@@ -59,23 +60,28 @@ public class GlycemiaChartFragment extends Fragment {
     }
 
     private LineData getChartData(List<Glicemia> glycemias) {
-        List<String> xAxisValues = new ArrayList<>();
         List<Entry> entriesAvg = new ArrayList<>(glycemias.size());
-        List<Entry> entriesVar = new ArrayList<>(glycemias.size());
 
-        String currentX = null;
-        int xIndex = -1;
+        AnalizadorRegistros analizadorRegistros = AnalizadorRegistros.getInstance(glycemias);
+        List<Calendar> commonTimes = analizadorRegistros.identificarHorariosDeRegistroComuns();
+        List<String> xAxisValues = new ArrayList<>(commonTimes.size());
+        Collections.sort(commonTimes);
+        for(Calendar commonTime : commonTimes)
+            xAxisValues.add(dateFormat.format(commonTime.getTime()));
+
+
+        int xIndex = 0;
         List<Glicemia> currentList = new ArrayList<>();
         for(Glicemia glycemia : glycemias) {
-            String xValue = dateFormat.format(glycemia.getHora());
-            if(!xValue.equals(currentX)) {
-                currentX = xValue;
-                xAxisValues.add(xValue);
+            Calendar xValue = Calendar.getInstance();
+            xValue.setTime(glycemia.getHora());
+            int comparation = compareTime(commonTimes.get(xIndex), xValue);
+            if(comparation > 0
+                    && commonTimes.size() > xIndex + 1
+                    && Math.abs(compareTime(commonTimes.get(xIndex + 1), xValue)) < comparation) {
 
-                if (!currentList.isEmpty()){
+                if (!currentList.isEmpty())
                     entriesAvg.add(new Entry(calcAverage(currentList), xIndex));
-                    entriesVar.add(new Entry(calcStandardDeviation(currentList), xIndex));
-                }
 
                 xIndex++;
                 currentList.clear();
@@ -84,38 +90,37 @@ public class GlycemiaChartFragment extends Fragment {
             currentList.add(glycemia);
         }
 
-        if (!currentList.isEmpty()){
+        if (!currentList.isEmpty())
             entriesAvg.add(new Entry(calcAverage(currentList), xIndex));
-            entriesVar.add(new Entry(calcStandardDeviation(currentList), xIndex));
-        }
 
         List<ILineDataSet> dataSets = new ArrayList<>();
         LineDataSet dataSetAvg = new LineDataSet(entriesAvg, getString(R.string.average));
         dataSetAvg.setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         dataSetAvg.setCircleColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         dataSets.add(dataSetAvg);
-        LineDataSet dataSetVar = new LineDataSet(entriesVar, getString(R.string.variability));
-        dataSets.add(dataSetVar);
 
         return  new LineData(xAxisValues,dataSets);
     }
 
     private float calcStandardDeviation(List<Glicemia> glicemias) {
-        return (float) MathUtils.calcularDesvioPadrao(getValues(glicemias));
+        double media = calcAverage(glicemias);
+        double acumulador = 0l;
+
+        for (Glicemia glicemia :
+                glicemias) {
+            acumulador += Math.pow(glicemia.getValor() - media, 2);
+        }
+
+        return (float) Math.sqrt(acumulador / (double)glicemias.size());
     }
 
     private float calcAverage(List<Glicemia> glicemias) {
-        return (float) MathUtils.calcularMedia(getValues(glicemias));
-    }
-
-    @NonNull
-    private List<Double> getValues(List<Glicemia> glicemias) {
-        List<Double> valores = new ArrayList<>(glicemias.size());
+        float acumulador = 0l;
         for (Glicemia glicemia :
                 glicemias) {
-            valores.add((double) glicemia.getValor());
+            acumulador += glicemia.getValor();
         }
-        return valores;
+        return acumulador / (float)glicemias.size();
     }
 
     private List<Glicemia> getSortedGlycemias() {
@@ -123,12 +128,39 @@ public class GlycemiaChartFragment extends Fragment {
 
         Calendar from = Calendar.getInstance();
         from.add(Calendar.DATE, -daysScope);
-        return service.listGlicemias(from.getTime(), new Date());
+        List<Glicemia> glicemias = service.listGlicemias(from.getTime(), new Date());
+        Collections.sort(glicemias, new Comparator<Glicemia>() {
+            @Override
+            public int compare(Glicemia lhs, Glicemia rhs) {
+                Calendar timeFirst = Calendar.getInstance();
+                Calendar timeSecond = Calendar.getInstance();
+
+                timeFirst.setTime(lhs.getHora());
+                timeSecond.setTime(rhs.getHora());
+
+                return compareTime(timeFirst, timeSecond);
+            }
+        });
+
+        return glicemias;
+    }
+
+    private int compareTime(Calendar timeFirst, Calendar timeSecond) {
+        int hourFirst = timeFirst.get(Calendar.HOUR_OF_DAY);
+        int hourSecond = timeSecond.get(Calendar.HOUR_OF_DAY);
+
+        if(hourFirst != hourSecond)
+            return hourFirst - hourSecond;
+
+        int minuteFirst = timeFirst.get(Calendar.MINUTE);
+        int minuteSecond = timeSecond.get(Calendar.MINUTE);
+
+        return minuteFirst - minuteSecond;
     }
 
     private void initComponents(View view) {
         chart = (LineChart) view.findViewById(R.id.chart_glycemia);
 
-        chart.setDescription(getString(R.string.chart_glycemia_description));
+        chart.setDescription(getString(R.string.chart_glycemia_by_hour_description));
     }
 }

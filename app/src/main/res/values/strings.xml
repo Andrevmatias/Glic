@@ -120,4 +120,5 @@
     <string name="chart_glycemia_description">Médias Glicêmicas por Dia</string>
     <string name="average">Média</string>
     <string name="variability">Variabilidade</string>
+    <string name="chart_glycemia_by_hour_description">Média de Glicemias por Hora do Dia</string>
 </resources>

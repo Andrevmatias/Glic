@@ -18,6 +18,7 @@ import br.tcc.glic.domain.R;
 import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.domain.enums.TipoIndicador;
+import br.tcc.glic.domain.utils.MathUtils;
 
 /**
  * Serviço para cálculo de indicadores
@@ -161,7 +162,7 @@ public class IndicadoresService {
                         TipoRegistro.CarboidratoIngerido.toString(),
                         stringDataUltimoMes);
 
-        return calcularMedia(getValores(carboidratos));
+        return MathUtils.calcularMedia(getValores(carboidratos));
     }
 
     private double calcularMediaCarboidratosSemana() {
@@ -170,7 +171,7 @@ public class IndicadoresService {
                         TipoRegistro.CarboidratoIngerido.toString(),
                         stringDataUltimaSemana);
 
-        return calcularMedia(getValores(carboidratos));
+        return MathUtils.calcularMedia(getValores(carboidratos));
     }
 
     private double calcularMediaCarboidratosDia() {
@@ -179,7 +180,7 @@ public class IndicadoresService {
                         TipoRegistro.CarboidratoIngerido.toString(),
                         stringDataUltimoDia);
 
-        return calcularMedia(getValores(carboidratos));
+        return MathUtils.calcularMedia(getValores(carboidratos));
     }
 
     private double calcularMediaGlicemicaMes() {
@@ -188,7 +189,7 @@ public class IndicadoresService {
                         TipoRegistro.Glicemia.toString(),
                         stringDataUltimoMes);
 
-        return calcularMedia(getValores(glicemias));
+        return MathUtils.calcularMedia(getValores(glicemias));
     }
 
     private double calcularMediaGlicemicaSemana() {
@@ -197,7 +198,7 @@ public class IndicadoresService {
                         TipoRegistro.Glicemia.toString(),
                         stringDataUltimaSemana);
 
-        return calcularMedia(getValores(glicemias));
+        return MathUtils.calcularMedia(getValores(glicemias));
     }
 
     private double calcularMediaGlicemcaDia() {
@@ -206,7 +207,7 @@ public class IndicadoresService {
                         TipoRegistro.Glicemia.toString(),
                         stringDataUltimoDia);
 
-        return calcularMedia(getValores(glicemias));
+        return MathUtils.calcularMedia(getValores(glicemias));
     }
 
     private double calcularVariabilidadeGlicemiaMes() {
@@ -215,7 +216,7 @@ public class IndicadoresService {
                         TipoRegistro.Glicemia.toString(),
                         stringDataUltimoMes);
 
-        return calcularDesvioPadrao(getValores(glicemias));
+        return MathUtils.calcularDesvioPadrao(getValores(glicemias));
     }
 
     private double calcularVariabilidadeGlicemiaSemana() {
@@ -224,7 +225,7 @@ public class IndicadoresService {
                         TipoRegistro.Glicemia.toString(),
                         stringDataUltimaSemana);
 
-        return calcularDesvioPadrao(getValores(glicemias));
+        return MathUtils.calcularDesvioPadrao(getValores(glicemias));
     }
 
     private List<Double> getValores(List<Registro> glicemiasSemana) {
@@ -236,26 +237,5 @@ public class IndicadoresService {
         }
 
         return valores;
-    }
-
-    private double calcularDesvioPadrao(List<Double> valores) {
-        double media = calcularMedia(valores);
-        double acumulador = 0l;
-
-        for (double valor :
-                valores) {
-            acumulador += Math.pow(valor - media, 2);
-        }
-
-        return Math.sqrt(acumulador / (double)valores.size());
-    }
-
-    private double calcularMedia(List<Double> valores) {
-        double acumulador = 0l;
-        for (double valor :
-                valores) {
-            acumulador += valor;
-        }
-        return acumulador / (double)valores.size();
     }
 }

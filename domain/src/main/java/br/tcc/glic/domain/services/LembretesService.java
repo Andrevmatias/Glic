@@ -16,24 +16,20 @@ import br.tcc.glic.domain.core.Lembrete;
  */
 public class LembretesService {
 
-    private static final int INTERVALO_LEMBRETE = 5000; //30 segundos
     private static final int TOLERANCIA = 1800000; // 30 minutos
     private static final int DIAS_ESCOPO_ANALISE = 7;
     private static final int MINIMO_AMOSTRAS_ANALISE = 20;
 
     private final Repository<Registro> repository;
-    private static int cont;
 
     public LembretesService() {
         repository = RepositoryFactory.get(Registro.class);
     }
 
     public List<Lembrete> getLembretes(){
-        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
-
         Calendar inicioEscopo = Calendar.getInstance();
         inicioEscopo.add(Calendar.DATE, -DIAS_ESCOPO_ANALISE);
-        List<Registro> ultimosRegistros = rep.find("hora < ? and hora > ?",
+        List<Registro> ultimosRegistros = repository.find("hora < ? and hora > ?",
                 new String[]{
                         String.valueOf(Calendar.getInstance().getTimeInMillis()),
                         String.valueOf(inicioEscopo.getTimeInMillis())
@@ -63,9 +59,7 @@ public class LembretesService {
     }
 
     public boolean deveDispararParaHorarioComum(Calendar horaComumDeRegistro) {
-        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
-
-        List<Registro> registros = rep.find("hora < ?",
+        List<Registro> registros = repository.find("hora < ?",
                 new String[]{String.valueOf(Calendar.getInstance().getTimeInMillis())},
                 null, "hora desc", "1");
 

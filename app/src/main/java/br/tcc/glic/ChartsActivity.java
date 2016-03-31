@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import br.tcc.glic.fragments.ChooseChartFragment;
+import br.tcc.glic.fragments.GlycemiaByTimeChartFragment;
 import br.tcc.glic.fragments.GlycemiaChartFragment;
 
 public class ChartsActivity extends AppCompatActivity
@@ -45,7 +46,10 @@ public class ChartsActivity extends AppCompatActivity
     }
 
     private void showGlycemiaByHouChart() {
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.charts_container, new GlycemiaByTimeChartFragment())
+                .commit();
     }
 
     private void showGlycemiaChart() {

@@ -19,19 +19,32 @@ import br.tcc.glic.data.entities.Registro;
  * Classe para análises sobre Registros
  * Created by André on 09/03/2016.
  */
-class AnalizadorRegistros {
+public class AnalizadorRegistros {
 
     private static SimpleDateFormat dateFormat;
     private int mediaExamesDia;
     private List<Instance> amostra;
 
-    public AnalizadorRegistros(List<Registro> registros) {
+    private AnalizadorRegistros(){
         if(dateFormat == null)
             dateFormat = new SimpleDateFormat("ddMMyy");
+    }
+
+    AnalizadorRegistros(List<Registro> registros) {
+        this();
 
         amostra = new ArrayList<>(registros.size());
         transformarDados(registros);
     }
+
+    public static AnalizadorRegistros getInstance(List<? extends br.tcc.glic.domain.core.Registro> registros){
+        AnalizadorRegistros analizador = new AnalizadorRegistros();
+        analizador.amostra = new ArrayList<>(registros.size());
+        analizador.transformarDadosDomain(registros);
+
+        return  analizador;
+    }
+
 
     private void transformarDados(List<Registro> registros) {
         Collections.sort(registros);
@@ -41,6 +54,29 @@ class AnalizadorRegistros {
         String diaAtual = "";
         int contagemDia = 0;
         for (Registro registro : registros) {
+            String diaString = dateFormat.format(registro.getHora());
+            if(contagemDia != 0 && !diaAtual.equals(diaString)){
+                examesDia.add(contagemDia);
+                contagemDia = 0;
+                diaAtual = diaString;
+            }
+
+            contagemDia++;
+
+            adicionarAmostra(registro.getHora());
+        }
+
+        mediaExamesDia = calcularMedia(examesDia);
+    }
+
+    private void transformarDadosDomain(List<? extends br.tcc.glic.domain.core.Registro> registros) {
+        Collections.sort(registros);
+
+        List<Integer> examesDia = new ArrayList<>(registros.size());
+
+        String diaAtual = "";
+        int contagemDia = 0;
+        for (br.tcc.glic.domain.core.Registro registro : registros) {
             String diaString = dateFormat.format(registro.getHora());
             if(contagemDia != 0 && !diaAtual.equals(diaString)){
                 examesDia.add(contagemDia);
