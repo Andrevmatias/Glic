@@ -81,6 +81,18 @@ public class MainActivity extends AppCompatActivity
                 openCharts();
             }
         });
+
+        ImageButton btnTestData = (ImageButton) findViewById(R.id.btn_test_data);
+        btnTestData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addTestData();
+            }
+        });
+    }
+
+    private void addTestData() {
+        new RegistrosService(this).registrarDadosDeTeste();
     }
 
     private void openAddEntry() {

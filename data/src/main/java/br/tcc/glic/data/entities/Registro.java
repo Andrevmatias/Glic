@@ -69,6 +69,12 @@ public class Registro
 
     @Override
     public int compareTo(Registro another) {
+        if(another == null || another.getHora() == null)
+            return 1;
+
+        if(this.getHora() == null)
+            return -1;
+
         long result = another.getHora().getTime() - this.getHora().getTime();
         if(result == 0) return 0;
         return result > 1 ? 1 : -1;

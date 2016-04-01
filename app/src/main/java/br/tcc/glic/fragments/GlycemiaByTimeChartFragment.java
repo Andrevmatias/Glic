@@ -54,7 +54,7 @@ public class GlycemiaByTimeChartFragment extends Fragment {
     }
 
     private void fillData() {
-        List<Glicemia> glycemias = getSortedGlycemias();
+        List<Glicemia> glycemias = getGlycemias();
         LineData data = getChartData(glycemias);
         chart.setData(data);
     }
@@ -69,13 +69,25 @@ public class GlycemiaByTimeChartFragment extends Fragment {
         for(Calendar commonTime : commonTimes)
             xAxisValues.add(dateFormat.format(commonTime.getTime()));
 
+        Collections.sort(glycemias, new Comparator<Glicemia>() {
+            @Override
+            public int compare(Glicemia lhs, Glicemia rhs) {
+                Calendar timeFirst = Calendar.getInstance();
+                Calendar timeSecond = Calendar.getInstance();
+
+                timeFirst.setTime(lhs.getHora());
+                timeSecond.setTime(rhs.getHora());
+
+                return compareTime(timeFirst, timeSecond);
+            }
+        });
 
         int xIndex = 0;
         List<Glicemia> currentList = new ArrayList<>();
         for(Glicemia glycemia : glycemias) {
             Calendar xValue = Calendar.getInstance();
             xValue.setTime(glycemia.getHora());
-            int comparation = compareTime(commonTimes.get(xIndex), xValue);
+            int comparation = compareTime(xValue, commonTimes.get(xIndex));
             if(comparation > 0
                     && commonTimes.size() > xIndex + 1
                     && Math.abs(compareTime(commonTimes.get(xIndex + 1), xValue)) < comparation) {
@@ -123,26 +135,12 @@ public class GlycemiaByTimeChartFragment extends Fragment {
         return acumulador / (float)glicemias.size();
     }
 
-    private List<Glicemia> getSortedGlycemias() {
+    private List<Glicemia> getGlycemias() {
         RegistrosService service = new RegistrosService(getActivity());
 
         Calendar from = Calendar.getInstance();
         from.add(Calendar.DATE, -daysScope);
-        List<Glicemia> glicemias = service.listGlicemias(from.getTime(), new Date());
-        Collections.sort(glicemias, new Comparator<Glicemia>() {
-            @Override
-            public int compare(Glicemia lhs, Glicemia rhs) {
-                Calendar timeFirst = Calendar.getInstance();
-                Calendar timeSecond = Calendar.getInstance();
-
-                timeFirst.setTime(lhs.getHora());
-                timeSecond.setTime(rhs.getHora());
-
-                return compareTime(timeFirst, timeSecond);
-            }
-        });
-
-        return glicemias;
+        return service.listGlicemias(from.getTime(), new Date());
     }
 
     private int compareTime(Calendar timeFirst, Calendar timeSecond) {

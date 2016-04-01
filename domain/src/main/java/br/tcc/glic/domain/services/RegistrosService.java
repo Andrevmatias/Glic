@@ -15,6 +15,7 @@ import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
+import br.tcc.glic.domain.services.testdata.RegistrosDeTeste;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
@@ -27,6 +28,14 @@ public class RegistrosService {
 
     public RegistrosService(Context context) {
         this.context = context;
+    }
+
+    public void registrarDadosDeTeste(){
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        for (Registro registro : RegistrosDeTeste.getAll()) {
+            rep.save(registro);
+        }
     }
 
     public void registrarGlicemia(int valor, Date hora){

@@ -89,6 +89,9 @@ public class AnalizadorRegistros {
             adicionarAmostra(registro.getHora());
         }
 
+        if(contagemDia != 0)
+            examesDia.add(contagemDia);
+
         mediaExamesDia = calcularMedia(examesDia);
     }
 
