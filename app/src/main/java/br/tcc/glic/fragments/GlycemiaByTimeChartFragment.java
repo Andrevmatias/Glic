@@ -65,7 +65,12 @@ public class GlycemiaByTimeChartFragment extends Fragment {
         AnalizadorRegistros analizadorRegistros = AnalizadorRegistros.getInstance(glycemias);
         List<Calendar> commonTimes = analizadorRegistros.identificarHorariosDeRegistroComuns();
         List<String> xAxisValues = new ArrayList<>(commonTimes.size());
-        Collections.sort(commonTimes);
+        Collections.sort(commonTimes, new Comparator<Calendar>() {
+            @Override
+            public int compare(Calendar lhs, Calendar rhs) {
+                return compareTime(lhs, rhs);
+            }
+        });
         for(Calendar commonTime : commonTimes)
             xAxisValues.add(dateFormat.format(commonTime.getTime()));
 

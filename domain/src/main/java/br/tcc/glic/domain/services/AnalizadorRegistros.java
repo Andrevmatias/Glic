@@ -1,10 +1,12 @@
 package br.tcc.glic.domain.services;
 
-import net.sf.javaml.clustering.KMeans;
+import net.sf.javaml.clustering.Clusterer;
+import net.sf.javaml.clustering.DensityBasedSpatialClustering;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.ManhattanDistance;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,8 +130,10 @@ public class AnalizadorRegistros {
         List<Calendar> horariosComuns = new ArrayList<>(mediaExamesDia);
 
         Dataset dataset = new DefaultDataset(amostra);
-        KMeans kMeans = new KMeans(mediaExamesDia);
-        Dataset[] clusters = kMeans.cluster(dataset);
+
+        Clusterer clusterer = new DensityBasedSpatialClustering(60,
+                (int)Math.floor((amostra.size() / mediaExamesDia) * 0.3), new ManhattanDistance());
+        Dataset[] clusters = clusterer.cluster(dataset);
 
         Calendar agora = Calendar.getInstance();
         for (Dataset cluster : clusters) {
@@ -142,6 +146,8 @@ public class AnalizadorRegistros {
             if(naoContem(horariosComuns, lembrete))
                 horariosComuns.add(lembrete);
         }
+
+
 
         return  horariosComuns;
     }
