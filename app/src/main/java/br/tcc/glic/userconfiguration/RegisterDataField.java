@@ -6,6 +6,7 @@ import br.tcc.glic.R;
 import br.tcc.glic.domain.enums.TipoTerapia;
 
 /**
+ * Enumerador de tipos de campos de registro de dados
  * Created by André on 14/02/2016.
  */
 public enum RegisterDataField {
@@ -22,6 +23,17 @@ public enum RegisterDataField {
                 return  new RegisterDataField[]{Glycemia, Carbohydrates, Insulin};
             default:
                 return new RegisterDataField[] {Glycemia};
+        }
+    }
+
+    public int getOrder(){
+        switch (this)
+        {
+            case Glycemia: return 0;
+            case Carbohydrates: return 1;
+            case HbA1c: return 3;
+            case Insulin: return 2;
+            default: return -1;
         }
     }
 

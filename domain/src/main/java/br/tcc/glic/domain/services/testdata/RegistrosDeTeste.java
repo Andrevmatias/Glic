@@ -20,7 +20,7 @@ public final class RegistrosDeTeste {
 
         Calendar hora = Calendar.getInstance();
 
-        long id = Long.MAX_VALUE;
+        long id = Integer.MAX_VALUE;
 
         Registro registro1 = new Registro();
         registro1.setId(id--);
@@ -35,7 +35,7 @@ public final class RegistrosDeTeste {
         registro2.setId(id--);
         registro2.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 18);
-        hora.set(Calendar.MINUTE, 04);
+        hora.set(Calendar.MINUTE, 4);
         registro2.setHora(hora.getTime());
         registro2.setValor(124);
 
@@ -44,7 +44,7 @@ public final class RegistrosDeTeste {
         registro3.setId(id--);
         registro3.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 12);
-        hora.set(Calendar.MINUTE, 03);
+        hora.set(Calendar.MINUTE, 3);
         registro3.setHora(hora.getTime());
         registro3.setValor(125);
 
@@ -74,7 +74,7 @@ public final class RegistrosDeTeste {
         registro6.setId(id--);
         registro6.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 12);
-        hora.set(Calendar.MINUTE, 03);
+        hora.set(Calendar.MINUTE, 3);
         registro6.setHora(hora.getTime());
         registro6.setValor(235);
 
@@ -198,7 +198,7 @@ public final class RegistrosDeTeste {
         registro17.setId(id--);
         registro17.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 18);
-        hora.set(Calendar.MINUTE, 02);
+        hora.set(Calendar.MINUTE, 2);
         registro17.setHora(hora.getTime());
         registro17.setValor(109);
 
@@ -279,7 +279,7 @@ public final class RegistrosDeTeste {
         registro25.setId(id--);
         registro25.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 12);
-        hora.set(Calendar.MINUTE, 03);
+        hora.set(Calendar.MINUTE, 3);
         registro25.setHora(hora.getTime());
         registro25.setValor(140);
 
@@ -850,7 +850,7 @@ public final class RegistrosDeTeste {
 
         hora = (Calendar) hora.clone();
         Registro registro80 = new Registro();
-        registro80.setId(id--);
+        registro80.setId(id);
         registro80.setTipo(TipoRegistro.Glicemia);
         hora.set(Calendar.HOUR_OF_DAY, 7);
         hora.set(Calendar.MINUTE, 19);

@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,10 +65,7 @@ public class RegisterDataActivity extends AppCompatActivity {
         builder
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    FragmentTransaction transaction =
-                            getSupportFragmentManager().beginTransaction();
-                    addField(transaction, models.get(which).getRegisterDataField());
-                    transaction.commit();
+                    addField(models.get(which).getRegisterDataField());
                     dialog.dismiss();
                 }
             })
@@ -85,17 +84,25 @@ public class RegisterDataActivity extends AppCompatActivity {
 
     private void addDefaultFields() {
         List<RegisterDataField> fieldsToShow = ConfigUtils.getFieldsToShow(this);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Collections.sort(fieldsToShow, new Comparator<RegisterDataField>() {
+            @Override
+            public int compare(RegisterDataField lhs, RegisterDataField rhs) {
+                return lhs.getOrder() - rhs.getOrder();
+            }
+        });
+
 
         for (RegisterDataField field :
                 fieldsToShow) {
-            addField(transaction, field);
+            addField(field);
         }
 
-        transaction.commit();
+
     }
 
-    private void addField(FragmentTransaction transaction, RegisterDataField field) {
+    private void addField(RegisterDataField field) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         switch (field){
             case Glycemia:
                 RegisterGlycemiaFragment registerGlycemiaFragment = new RegisterGlycemiaFragment();
@@ -126,6 +133,8 @@ public class RegisterDataActivity extends AppCompatActivity {
 
         if(availableFields.isEmpty())
             btnAddField.setVisibility(View.GONE);
+
+        transaction.commit();
     }
 
     private void saveAll() {

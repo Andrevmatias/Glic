@@ -28,12 +28,8 @@
                 android:layout_weight="1">
                 <TextView
                     android:id="@+id/day_average_glycemia_indicator"
-                    android:textSize="30sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/colorWhite"
-                    android:layout_centerInParent="true"
-                    android:gravity="center" />
+                    style="@style/Indicator"
+                    android:layout_centerInParent="true" />
 
                 <ImageView
                     android:id="@+id/img_day_average_glycemia_indicator_quality"
@@ -50,12 +46,9 @@
 
                 <TextView
                     android:id="@+id/week_average_glycemia_indicator"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentTop="true"
+                    style="@style/Indicator"
                     android:layout_centerInParent="true"
-                    android:textSize="30sp"
-                    android:textColor="@color/colorWhite" />
+                    android:layout_alignParentTop="true" />
 
                 <ImageView
                     android:id="@+id/img_week_average_glycemia_indicator_quality"
@@ -90,12 +83,9 @@
 
                 <TextView
                     android:id="@+id/month_average_glycemia_indicator"
-                    android:textSize="30sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentTop="true"
+                    style="@style/Indicator"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/colorWhite" />
+                    android:layout_alignParentTop="true"  />
 
                 <ImageView
                     android:id="@+id/img_month_average_glycemia_indicator_quality"
@@ -158,15 +148,21 @@
 
             <TextView
                 android:id="@+id/day_average_carbohydrates_indicator"
-                style="@style/Indicator" />
+                style="@style/Indicator"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/week_average_carbohydrates_indicator"
-                style="@style/Indicator" />
+                style="@style/Indicator"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/month_average_carbohydrates_indicator"
-                style="@style/Indicator" />
+                style="@style/Indicator"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
 
         </LinearLayout>
 

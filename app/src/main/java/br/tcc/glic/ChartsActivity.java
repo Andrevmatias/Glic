@@ -3,8 +3,9 @@ package br.tcc.glic;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import br.tcc.glic.fragments.CarbohydratesChartFragment;
 import br.tcc.glic.fragments.ChooseChartFragment;
-import br.tcc.glic.fragments.GlycemiaByTimeChartFragment;
+import br.tcc.glic.fragments.GlycemiaAndCarbohydratesByTimeChartFragment;
 import br.tcc.glic.fragments.GlycemiaChartFragment;
 
 public class ChartsActivity extends AppCompatActivity
@@ -22,6 +23,7 @@ public class ChartsActivity extends AppCompatActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.charts_container, new ChooseChartFragment())
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -42,13 +44,18 @@ public class ChartsActivity extends AppCompatActivity
     }
 
     private void showCarbohydratesChart() {
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.charts_container, new CarbohydratesChartFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showGlycemiaByHouChart() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.charts_container, new GlycemiaByTimeChartFragment())
+                .replace(R.id.charts_container, new GlycemiaAndCarbohydratesByTimeChartFragment())
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -56,6 +63,7 @@ public class ChartsActivity extends AppCompatActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.charts_container, new GlycemiaChartFragment())
+                .addToBackStack(null)
                 .commit();
     }
 }

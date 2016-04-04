@@ -167,4 +167,45 @@ public class RegistrosService {
 
         return retorno;
     }
+
+    public List<CarboidratoIngerido> listCarboidratos(Date de, Date ate) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        List<Registro> registros = rep.find("tipo = ? and hora >= ? and hora <= ?",
+                new String[]{
+                        TipoRegistro.CarboidratoIngerido.toString(),
+                        String.valueOf(de.getTime()),
+                        String.valueOf(ate.getTime())
+                }, null, "hora asc", null);
+
+        List<CarboidratoIngerido> retorno = new ArrayList<>(registros.size());
+
+        for (Registro registro : registros)
+            retorno.add(Conversions.carboidratoIngerido(registro));
+
+        return retorno;
+    }
+
+    public List<br.tcc.glic.domain.core.Registro> listGlicemiasECarboidratos(Date de, Date ate) {
+        Repository<Registro> rep = RepositoryFactory.get(Registro.class);
+
+        List<Registro> registros = rep.find("(tipo = ? or tipo = ?) and hora >= ? and hora <= ?",
+                new String[]{
+                        TipoRegistro.Glicemia.toString(),
+                        TipoRegistro.CarboidratoIngerido.toString(),
+                        String.valueOf(de.getTime()),
+                        String.valueOf(ate.getTime())
+                }, null, "hora asc", null);
+
+        List<br.tcc.glic.domain.core.Registro> retorno = new ArrayList<>(registros.size());
+
+        for (Registro registro : registros) {
+            if(registro.getTipo() == TipoRegistro.Glicemia)
+                retorno.add(Conversions.glicemia(registro, context));
+            else
+                retorno.add(Conversions.carboidratoIngerido(registro));
+        }
+
+        return retorno;
+    }
 }

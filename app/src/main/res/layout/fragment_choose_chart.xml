@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_glycemia"
-        android:text="@string/glycemia_by_hour"
+        android:text="@string/glycemia_and_carbohydrates_by_hour"
         style="@style/ChartTypeListItem" />
 
     <TextView
