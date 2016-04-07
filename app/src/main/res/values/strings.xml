@@ -12,7 +12,7 @@
     <string name="system_config_file_key">br.tcc.glic.SYSTEM_CONFIG_FILE</string>
     <string name="app_configured_config">app_configured_config</string>
     <string name="login_error">Não foi possível fazer login</string>
-    <string name="google_api_connect_error">Não foi possível se conectar ao GoogleAPI</string>
+    <string name="google_api_connect_error">Parece que você está sem internet. As conquistas não serão desbloqueadas até que você se conecte novamente.</string>
     <string name="what_is_your_treatment_type">Qual o seu tipo de tratamento?</string>
     <string name="conventional_treatment">Convencional</string>
     <string name="intensive_treatment">Intensivo</string>

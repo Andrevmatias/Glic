@@ -22,13 +22,23 @@
         android:src="@drawable/ic_settings" />
 
     <ImageButton
-        android:id="@+id/btn_test_data"
+        android:id="@+id/btn_achievements"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/btn_settings"
         android:layout_alignParentTop="true"
         android:background="@null"
-        android:src="@drawable/common_ic_googleplayservices" />
+        android:visibility="gone"
+        android:src="@drawable/ic_achievements" />
+
+    <ImageButton
+        android:id="@+id/btn_test_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_achievements"
+        android:layout_alignParentTop="true"
+        android:background="@null"
+        android:src="@drawable/ic_test" />
 
 
     <LinearLayout
