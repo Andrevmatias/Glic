@@ -2,44 +2,42 @@ package br.tcc.glic;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.achievement.Achievements;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.tcc.glic.adapters.FeedbackListAdapter;
+import br.tcc.glic.domain.core.AplicacaoInsulina;
+import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.Registro;
+import br.tcc.glic.domain.desafios.Desafio;
+import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.SelfEvaluationFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
 
-public class MainActivity extends AppCompatActivity
-        implements SelfEvaluationFragment.SelfEvaluationDismissListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AchievementUnlockerActivity
+        implements SelfEvaluationFragment.SelfEvaluationDismissListener {
 
 
-    private static final int RC_SIGN_IN = 1, RC_DATA_REGISTERED = 2, RC_ACHIEVEMENTS = 3;
+    private static final int RC_DATA_REGISTERED = 2;
 
     private RegisterGlycemiaFragment fragmentGlycemia;
     private IndicatorsFragment fragmentIndicators;
     private RegistrosService registrarDadosService;
-    private GoogleApiClient googleApiClient;
-    private boolean resolvingConnectionFailure;
     private ImageButton btnAchievements;
 
     public MainActivity() {
@@ -56,18 +54,11 @@ public class MainActivity extends AppCompatActivity
         fragmentIndicators = (IndicatorsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_indicators_main);
 
-        initGoogleApi();
+
         initComponents();
     }
 
-    private void initGoogleApi() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
 
-    }
 
     private void initComponents() {
         ImageButton btnSettings = (ImageButton) findViewById(R.id.btn_settings);
@@ -115,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         btnAchievements.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openAchievements();
+                openAchievementsScreen();
             }
         });
 
@@ -146,28 +137,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void openAchievements() {
-        Intent intent = Games.Achievements.getAchievementsIntent(googleApiClient);
-        startActivityForResult(intent, RC_ACHIEVEMENTS);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
         if(fragmentIndicators != null)
             fragmentIndicators.calcIndicators();
-
-        if(googleApiClient != null)
-            googleApiClient.connect();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if(googleApiClient != null)
-            googleApiClient.disconnect();
-    }
 
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
@@ -178,12 +154,50 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Registro> registros =
                         (ArrayList<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_argument));
 
+                checkEntriesToUnlockAchievements(registros);
+
                 if(ConfigUtils.isAutoAvaliationOn(this) && SelfEvaluationFragment.shouldShowFor(registros))
                     askForSelfEvaluation(registros);
                 else if(FeedbackListAdapter.suportsAny(registros))
                     showFeedback(registros);
             }
         }
+    }
+
+    private void checkEntriesToUnlockAchievements(final ArrayList<Registro> registros) {
+        doWhenGoogleApiConnected(new Runnable() {
+            @Override
+            public void run() {
+                for(Registro registro : registros){
+                    if(registro instanceof Glicemia) {
+                        treatGlycemiaAchievements((Glicemia) registro);
+                    } else if(registro instanceof CarboidratoIngerido){
+                        unlockAchievement(Desafio.PRIMEIROS_CARBOIDRATOS);
+                    } else if(registro instanceof AplicacaoInsulina){
+                        unlockAchievement(Desafio.PRIMEIRA_INSULINA);
+                    }
+                }
+            }
+        });
+    }
+
+    private void treatGlycemiaAchievements(Glicemia registro) {
+        unlockAchievement(Desafio.PRIMEIRA_GLICEMIA);
+        incrementAchievementProgress(Desafio.VINTE_GLICEMIAS)
+                .setResultCallback(new ResultCallback<Achievements.UpdateAchievementResult>() {
+                    @Override
+                    public void onResult(Achievements.UpdateAchievementResult updateAchievementResult) {
+                        if (updateAchievementResult.getStatus().getStatusCode()
+                                == GamesStatusCodes.STATUS_ACHIEVEMENT_UNLOCKED)
+                            unlockReminders();
+                    }
+                });
+        if(registro.getQualidade() == QualidadeRegistro.Bom)
+            incrementAchievementProgress(Desafio.DEZ_GLICEMIAS_BOAS);
+    }
+
+    private void unlockReminders() {
+        ConfigUtils.unlockReminders(this);
     }
 
     private void askForSelfEvaluation(ArrayList<Registro> registros) {
@@ -225,6 +239,8 @@ public class MainActivity extends AppCompatActivity
         else
             showFeedback(registros);
 
+        checkEntriesToUnlockAchievements(registros);
+
         Intent intent = new Intent(this, RemindersService.class);
         startService(intent);
 
@@ -251,33 +267,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
+        super.onConnected(bundle);
         if(btnAchievements != null)
             btnAchievements.setVisibility(View.VISIBLE);
 
+        unlockAchievement(Desafio.BEM_VINDO);
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        googleApiClient.connect();
-    }
+    protected void onDisconected() {
+        super.onDisconected();
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        if (resolvingConnectionFailure)
-            return;
-
-        resolvingConnectionFailure = true;
-
-        try {
-            connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-        } catch (IntentSender.SendIntentException e) {
-            if(btnAchievements != null)
-                btnAchievements.setVisibility(View.GONE);
-
-            Toast.makeText(this, R.string.google_api_connect_error, Toast.LENGTH_LONG);
-
-            e.printStackTrace();
-        }
-
+        if(btnAchievements != null)
+            btnAchievements.setVisibility(View.GONE);
     }
 }

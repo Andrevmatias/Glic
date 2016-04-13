@@ -93,6 +93,10 @@ public class SettingsFragment extends PreferenceFragment
         if(prefs.getBoolean(getString(R.string.self_evaluation_config), true))
             getPreferenceScreen().removePreference(selfEvalutionPref);
 
+        Preference remindersPref = findPreference(getString(R.string.activate_notifications_config));
+        if(!ConfigUtils.isRemindersUnlocked(getActivity()))
+            getPreferenceScreen().removePreference(remindersPref);
+
         initListsEntries();
         initSummary(getPreferenceScreen());
     }

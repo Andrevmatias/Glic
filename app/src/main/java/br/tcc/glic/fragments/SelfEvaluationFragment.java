@@ -19,9 +19,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.tcc.glic.AchievementUnlockerActivity;
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.Registro;
+import br.tcc.glic.domain.desafios.Desafio;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.userconfiguration.ConfigUtils;
 
@@ -36,6 +38,7 @@ public class SelfEvaluationFragment extends DialogFragment
     private ArrayList<Registro> registros;
     private SelfEvaluationDismissListener dismissListener;
     private boolean dismiss = false;
+    private AchievementUnlockerActivity achievementUnlocker;
 
     public static boolean shouldShowFor(List<Registro> entriesToEvaluate)
     {
@@ -139,6 +142,9 @@ public class SelfEvaluationFragment extends DialogFragment
 
         if(activity instanceof SelfEvaluationDismissListener)
             this.dismissListener = (SelfEvaluationDismissListener) activity;
+
+        if(activity instanceof AchievementUnlockerActivity)
+            this.achievementUnlocker = (AchievementUnlockerActivity) activity;
     }
 
     private void evaluateAnswer(QualidadeRegistro answer) {
@@ -162,6 +168,7 @@ public class SelfEvaluationFragment extends DialogFragment
                     .setMessage(String.format(getString(R.string.self_evaluation_congrats_text),
                             answer.getDescription(getActivity())));
             ConfigUtils.incrementSelfEvaluationCorrectAnswers(getActivity());
+            achievementUnlocker.incrementAchievementProgress(Desafio.CINCO_AVALIACOES_CORRETAS);
         } else {
             alertDialogBuilder
                     .setTitle(R.string.self_evaluation_wrong_answer_title)

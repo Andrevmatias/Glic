@@ -70,4 +70,24 @@ public final class ConfigUtils {
         if(newValue >= QTD_SELF_EVALUATION_CORRECT_ANSWERS_TO_TURN_OFF)
             turnOffAutoAvaliation(context);
     }
+
+    public static void unlockReminders(Context context) {
+        SharedPreferences sysPref = getSystemConfigurationFile(context);
+        sysPref
+            .edit()
+            .putBoolean(context.getString(R.string.reminders_unlocked_config), true)
+            .apply();
+
+        SharedPreferences userPref = getUserConfigurationFile(context);
+        userPref
+                .edit()
+                .putBoolean(context.getString(R.string.activate_notifications_config), true)
+                .apply();
+
+    }
+
+    public static boolean isRemindersUnlocked(Context context) {
+        SharedPreferences prefs = getSystemConfigurationFile(context);
+        return prefs.getBoolean(context.getString(R.string.reminders_unlocked_config), false);
+    }
 }

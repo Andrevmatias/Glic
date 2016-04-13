@@ -123,4 +123,5 @@
     <string name="variability">Variabilidade</string>
     <string name="chart_glycemia_and_carbohydrate_by_hour_description">Média de Glicemias e Carboidratos Ingeridos por Hora do Dia</string>
     <string name="chart_carbohydrates_description">Média de Carboidratos Ingeridos por Dia</string>
+    <string name="reminders_unlocked_config">reminders_unlocked_config</string>
 </resources>
