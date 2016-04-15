@@ -1,8 +1,6 @@
 package br.tcc.glic.domain.services;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,7 +12,6 @@ import br.tcc.glic.data.entities.Registro;
 import br.tcc.glic.data.entities.TipoRegistro;
 import br.tcc.glic.data.repositories.Repository;
 import br.tcc.glic.data.repositories.RepositoryFactory;
-import br.tcc.glic.domain.R;
 import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.domain.enums.TipoIndicador;
@@ -93,7 +90,7 @@ public class IndicadoresService {
         if(tipo == TipoIndicador.MediaGlicemicaDia
                 || tipo == TipoIndicador.MediaGlicemicaSemana
                 || tipo == TipoIndicador.MediaGlicemicaMes)
-            return getQualidadeGlicemia(indicador.getValor(), context);
+            return QualidadeRegistro.getQualidadeGlicemia((int)Math.round(indicador.getValor()), context);
 
         if(tipo == TipoIndicador.VariabilidadeGlicemiaSemana)
             return getQualidadeVariabilidade(indicador.getValor(),
@@ -108,22 +105,6 @@ public class IndicadoresService {
 
     private QualidadeRegistro getQualidadeVariabilidade(double valor, double mediaCorrespondente) {
         if(valor > (mediaCorrespondente / 3d))
-            return QualidadeRegistro.Alto;
-
-        return QualidadeRegistro.Bom;
-    }
-
-    private static QualidadeRegistro getQualidadeGlicemia(double valor, Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        int min = Integer.parseInt(pref.getString(context.getString(R.string.min_pre_glycemia_config),
-                "0"));
-        int max = Integer.parseInt(pref.getString(context.getString(R.string.max_pre_glycemia_config),
-                String.valueOf(Integer.MAX_VALUE)));
-
-        if(valor < min)
-            return QualidadeRegistro.Baixo;
-
-        if(valor > max)
             return QualidadeRegistro.Alto;
 
         return QualidadeRegistro.Bom;

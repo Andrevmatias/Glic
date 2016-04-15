@@ -180,4 +180,11 @@ public class IndicatorsFragment extends Fragment {
         txtMonthAvgGlycemia = (TextView) view.findViewById(R.id.month_average_glycemia_indicator);
     }
 
+    public int getCurrentMonthAverageGlycemia() {
+        return Integer.parseInt(txtMonthAvgGlycemia.getText().toString());
+    }
+
+    public int getCurrentWeekAverageGlycemia() {
+        return Integer.parseInt(txtWeekAvgGlycemia.getText().toString());
+    }
 }

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.achievement.Achievements;
@@ -34,7 +35,7 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
     private HashMap<String, Desafio> idsAchievements = new HashMap<>();
     private GoogleApiClient googleApiClient;
     private boolean resolvingConnectionFailure;
-    private HashMap<Desafio, Boolean> achievementsStatus;
+    private static HashMap<Desafio, Boolean> achievementsStatus;
     private Queue<Runnable> toRunWhenConnect = new LinkedList<>();
 
 
@@ -52,10 +53,10 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
         achievementIds.put(Desafio.CINCO_AVALIACOES_CORRETAS,    "CgkIkv_fwZELEAIQCA");
         achievementIds.put(Desafio.UM_POR_DIA_EM_UMA_SEMANA,     "CgkIkv_fwZELEAIQCQ");
         achievementIds.put(Desafio.QUATRO_POR_DIA_EM_UMA_SEMANA, "CgkIkv_fwZELEAIQCg");
-        achievementIds.put(Desafio.MELHORAR_MEDIA_SEMANAL,       "CgkIkv_fwZELEAIQCw");
-        achievementIds.put(Desafio.MELHORAR_MEDIA_MENSAL,        "CgkIkv_fwZELEAIQDA");
+        achievementIds.put(Desafio.MELHORAR_MEDIA_SEMANAL,       "CgkIkv_fwZELEAIQEA");
+        achievementIds.put(Desafio.MELHORAR_MEDIA_MENSAL,        "CgkIkv_fwZELEAIQEQ");
         achievementIds.put(Desafio.SEIS_GLICEMIAS_EM_UM_DIA,     "CgkIkv_fwZELEAIQDQ");
-        achievementIds.put(Desafio.VINTE_GLICEMIAS,              "CgkIkv_fwZELEAIQDg");
+        achievementIds.put(Desafio.VINTE_GLICEMIAS,              "CgkIkv_fwZELEAIQDw");
 
         for(Map.Entry<Desafio, String> entry : achievementIds.entrySet()){
             idsAchievements.put(entry.getValue(), entry.getKey());
@@ -75,6 +76,11 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
 
+    }
+
+    protected void reconnectToGoogleApi(){
+        if(googleApiClient != null)
+            googleApiClient.reconnect();
     }
 
     @Override
@@ -136,38 +142,40 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
     }
 
     public void doWhenGoogleApiConnected(Runnable runnable){
-        if(googleApiClient.isConnected())
+        if(googleApiClient.isConnected()) {
             runnable.run();
-        else
+        } else {
+            googleApiClient.reconnect();
             toRunWhenConnect.add(runnable);
+        }
     }
 
     public boolean isAchievementUnlocked(Desafio desafio){
-        if(achievementsStatus == null)
-            achievementsStatus = getAchievementsStatus();
-
         return achievementsStatus.get(desafio);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        configureAchievementsStatus();
+
         while (!toRunWhenConnect.isEmpty())
             toRunWhenConnect.poll().run();
     }
 
-    private HashMap<Desafio, Boolean> getAchievementsStatus() {
-        Achievements.LoadAchievementsResult result =
-                Games.Achievements.load(googleApiClient,false).await();
-
-        HashMap<Desafio, Boolean> status = new HashMap<>(result.getAchievements().getCount());
-        Iterator<Achievement> iterator = result.getAchievements().iterator();
-        Achievement achievement;
-        while (iterator.hasNext()) {
-            achievement = iterator.next();
-            status.put(idsAchievements.get(achievement.getAchievementId()), achievement.getState() == Achievement.STATE_UNLOCKED);
-        }
-
-        return status;
+    private void configureAchievementsStatus() {
+        Games.Achievements.load(googleApiClient,false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
+            @Override
+            public void onResult(Achievements.LoadAchievementsResult result) {
+                achievementsStatus = new HashMap<>(result.getAchievements().getCount());
+                Iterator<Achievement> iterator = result.getAchievements().iterator();
+                Achievement achievement;
+                while (iterator.hasNext()) {
+                    achievement = iterator.next();
+                    achievementsStatus.put(idsAchievements.get(achievement.getAchievementId()),
+                            achievement.getState() == Achievement.STATE_UNLOCKED);
+                }
+            }
+        });
     }
 
     protected void onDisconected() {

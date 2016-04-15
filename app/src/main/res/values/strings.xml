@@ -124,4 +124,6 @@
     <string name="chart_glycemia_and_carbohydrate_by_hour_description">Média de Glicemias e Carboidratos Ingeridos por Hora do Dia</string>
     <string name="chart_carbohydrates_description">Média de Carboidratos Ingeridos por Dia</string>
     <string name="reminders_unlocked_config">reminders_unlocked_config</string>
+    <string name="reminder_notification_activation_title">Ativação de Notificações</string>
+    <string name="reminder_notification_activation_text">Parabéns! Você desbloqueou os \"Lembretes de Registro\".\n\nEu acho que aprendi quais são os horários que você geralmente faz registros e vou tentar te lembrar se você esquecer, OK?\n\nVocê pode desativar este recurso nas configurações.</string>
 </resources>

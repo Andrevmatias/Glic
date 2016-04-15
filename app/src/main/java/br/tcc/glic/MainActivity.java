@@ -14,12 +14,14 @@ import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.achievement.Achievements;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.tcc.glic.adapters.FeedbackListAdapter;
 import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
+import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.desafios.Desafio;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
@@ -34,11 +36,15 @@ public class MainActivity extends AchievementUnlockerActivity
 
 
     private static final int RC_DATA_REGISTERED = 2;
+    private static final String LAST_MONTH_AVERAGE = "LAST_MONTH_AVERAGE";
+    private static final String LAST_WEEK_AVERAGE = "LAST_WEEK_AVERAGE";
 
     private RegisterGlycemiaFragment fragmentGlycemia;
     private IndicatorsFragment fragmentIndicators;
     private RegistrosService registrarDadosService;
     private ImageButton btnAchievements;
+
+    private int lastMonthGlycemiaAverage = 0, lastWeekGlycemiaAverage = 0;
 
     public MainActivity() {
         registrarDadosService = new RegistrosService(this);
@@ -54,11 +60,23 @@ public class MainActivity extends AchievementUnlockerActivity
         fragmentIndicators = (IndicatorsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_indicators_main);
 
+        if(savedInstanceState != null) {
+            lastMonthGlycemiaAverage = savedInstanceState.getInt(LAST_MONTH_AVERAGE, 0);
+            lastWeekGlycemiaAverage = savedInstanceState.getInt(LAST_WEEK_AVERAGE, 0);
+        }
 
         initComponents();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if(fragmentIndicators != null) {
+            savedInstanceState.putInt(LAST_MONTH_AVERAGE, fragmentIndicators.getCurrentMonthAverageGlycemia());
+            savedInstanceState.putInt(LAST_WEEK_AVERAGE, fragmentIndicators.getCurrentWeekAverageGlycemia());
+        }
 
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     private void initComponents() {
         ImageButton btnSettings = (ImageButton) findViewById(R.id.btn_settings);
@@ -140,8 +158,30 @@ public class MainActivity extends AchievementUnlockerActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(fragmentIndicators != null)
+        if(fragmentIndicators != null) {
             fragmentIndicators.calcIndicators();
+
+            verifyAverageImprovement(lastWeekGlycemiaAverage, fragmentIndicators.getCurrentWeekAverageGlycemia(), Desafio.MELHORAR_MEDIA_SEMANAL);
+            verifyAverageImprovement(lastMonthGlycemiaAverage, fragmentIndicators.getCurrentMonthAverageGlycemia(), Desafio.MELHORAR_MEDIA_MENSAL);
+
+            lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
+            lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
+        }
+    }
+
+    private void verifyAverageImprovement(int lastGlycemiaAverage, int currentAverageGlycemia, final Desafio achievement) {
+        if(lastGlycemiaAverage == 0)
+            return;
+
+        if(QualidadeRegistro.getQualidadeGlicemia(lastGlycemiaAverage, this) != QualidadeRegistro.Bom
+                && QualidadeRegistro.getQualidadeGlicemia(currentAverageGlycemia, this) == QualidadeRegistro.Bom){
+            doWhenGoogleApiConnected(new Runnable() {
+                @Override
+                public void run() {
+                    unlockAchievement(achievement);
+                }
+            });
+        }
     }
 
 
@@ -168,6 +208,8 @@ public class MainActivity extends AchievementUnlockerActivity
         doWhenGoogleApiConnected(new Runnable() {
             @Override
             public void run() {
+                boolean anyIsHbA1c = false;
+
                 for(Registro registro : registros){
                     if(registro instanceof Glicemia) {
                         treatGlycemiaAchievements((Glicemia) registro);
@@ -175,7 +217,17 @@ public class MainActivity extends AchievementUnlockerActivity
                         unlockAchievement(Desafio.PRIMEIROS_CARBOIDRATOS);
                     } else if(registro instanceof AplicacaoInsulina){
                         unlockAchievement(Desafio.PRIMEIRA_INSULINA);
+                    } else if(registro instanceof HemoglobinaGlicada) {
+                        anyIsHbA1c = true;
                     }
+                }
+
+                if(anyIsHbA1c
+                        && !isAchievementUnlocked(Desafio.REGISTRANDO_TUDO)
+                        && isAchievementUnlocked(Desafio.PRIMEIRA_GLICEMIA)
+                        && isAchievementUnlocked(Desafio.PRIMEIROS_CARBOIDRATOS)
+                        && isAchievementUnlocked(Desafio.PRIMEIRA_INSULINA)){
+                    unlockAchievement(Desafio.REGISTRANDO_TUDO);
                 }
             }
         });
@@ -183,21 +235,102 @@ public class MainActivity extends AchievementUnlockerActivity
 
     private void treatGlycemiaAchievements(Glicemia registro) {
         unlockAchievement(Desafio.PRIMEIRA_GLICEMIA);
-        incrementAchievementProgress(Desafio.VINTE_GLICEMIAS)
-                .setResultCallback(new ResultCallback<Achievements.UpdateAchievementResult>() {
-                    @Override
-                    public void onResult(Achievements.UpdateAchievementResult updateAchievementResult) {
-                        if (updateAchievementResult.getStatus().getStatusCode()
-                                == GamesStatusCodes.STATUS_ACHIEVEMENT_UNLOCKED)
-                            unlockReminders();
-                    }
-                });
+        if(!isAchievementUnlocked(Desafio.VINTE_GLICEMIAS)) {
+            incrementAchievementProgress(Desafio.VINTE_GLICEMIAS)
+                    .setResultCallback(new ResultCallback<Achievements.UpdateAchievementResult>() {
+                        @Override
+                        public void onResult(final Achievements.UpdateAchievementResult updateAchievementResult) {
+                            if (updateAchievementResult.getStatus().getStatusCode()
+                                    == GamesStatusCodes.STATUS_CLIENT_RECONNECT_REQUIRED)
+                                reconnectToGoogleApi();
+
+                            doWhenGoogleApiConnected(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isAchievementUnlocked(Desafio.VINTE_GLICEMIAS))
+                                        unlockReminders();
+                                }
+                            });
+
+                        }
+                    });
+        }
         if(registro.getQualidade() == QualidadeRegistro.Bom)
             incrementAchievementProgress(Desafio.DEZ_GLICEMIAS_BOAS);
+
+        int todayGlycemiasCount;
+        if(!isAchievementUnlocked(Desafio.SEIS_GLICEMIAS_EM_UM_DIA)
+                && (todayGlycemiasCount = getTodayGlycemiasCount()) != 0)
+            setAchievementProgress(Desafio.SEIS_GLICEMIAS_EM_UM_DIA, todayGlycemiasCount);
+
+        int lastDaysWithAtLeastOne;
+        if(!isAchievementUnlocked(Desafio.UM_POR_DIA_EM_UMA_SEMANA)
+                && (lastDaysWithAtLeastOne = getLastDaysWithAtLeast(1, 7)) != 0)
+            setAchievementProgress(Desafio.UM_POR_DIA_EM_UMA_SEMANA, lastDaysWithAtLeastOne);
+
+        int lastDaysWithAtLeastFour;
+        if(!isAchievementUnlocked(Desafio.QUATRO_POR_DIA_EM_UMA_SEMANA)
+                && (lastDaysWithAtLeastFour = getLastDaysWithAtLeast(4, 7)) != 0)
+            setAchievementProgress(Desafio.QUATRO_POR_DIA_EM_UMA_SEMANA,  lastDaysWithAtLeastFour);
+    }
+
+    private int getLastDaysWithAtLeast(int minimumEntriesPerDay, int maximumCount) {
+        int count = 0;
+
+        RegistrosService service = new RegistrosService(this);
+
+        Calendar dayStart = Calendar.getInstance();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
+
+        Calendar dayEnd = Calendar.getInstance();
+        dayEnd.set(Calendar.HOUR_OF_DAY, 23);
+        dayEnd.set(Calendar.MINUTE, 59);
+        dayEnd.set(Calendar.SECOND, 59);
+        dayEnd.set(Calendar.MILLISECOND, 999);
+
+        while (count < maximumCount){
+            int dayEntries = service.listGlicemias(dayStart.getTime(), dayEnd.getTime()).size();
+            if(dayEntries >= minimumEntriesPerDay)
+                count++;
+            else
+                return count;
+
+            dayStart.add(Calendar.DATE, -1);
+            dayEnd.add(Calendar.DATE, -1);
+        }
+
+        return count;
+    }
+
+    private int getTodayGlycemiasCount() {
+        RegistrosService service = new RegistrosService(this);
+
+        Calendar dayStart = Calendar.getInstance();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
+
+        Calendar dayEnd = Calendar.getInstance();
+        dayEnd.set(Calendar.HOUR_OF_DAY, 23);
+        dayEnd.set(Calendar.MINUTE, 59);
+        dayEnd.set(Calendar.SECOND, 59);
+        dayEnd.set(Calendar.MILLISECOND, 999);
+
+        return service.listGlicemias(dayStart.getTime(), dayEnd.getTime()).size();
     }
 
     private void unlockReminders() {
         ConfigUtils.unlockReminders(this);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.reminder_notification_activation_title)
+                .setMessage(R.string.reminder_notification_activation_text)
+                .create()
+                .show();
     }
 
     private void askForSelfEvaluation(ArrayList<Registro> registros) {
@@ -245,7 +378,12 @@ public class MainActivity extends AchievementUnlockerActivity
         startService(intent);
 
         fragmentGlycemia.reset();
+
         fragmentIndicators.calcIndicators();
+        verifyAverageImprovement(lastWeekGlycemiaAverage, fragmentIndicators.getCurrentWeekAverageGlycemia(), Desafio.MELHORAR_MEDIA_SEMANAL);
+        verifyAverageImprovement(lastMonthGlycemiaAverage, fragmentIndicators.getCurrentMonthAverageGlycemia(), Desafio.MELHORAR_MEDIA_MENSAL);
+        lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
+        lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
     }
 
     @Override

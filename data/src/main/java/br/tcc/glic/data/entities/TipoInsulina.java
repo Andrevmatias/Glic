@@ -3,6 +3,7 @@ package br.tcc.glic.data.entities;
 import com.orm.dsl.Table;
 
 /**
+ * Tipo de insulina
  * Created by André on 19/02/2016.
  */
 @Table
@@ -14,6 +15,8 @@ public class TipoInsulina
     private int inicio;
     private int pico;
     private int duracao;
+
+    public TipoInsulina() { }
 
     public String getNome() {
         return nome;
