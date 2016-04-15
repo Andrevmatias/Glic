@@ -181,10 +181,18 @@ public class IndicatorsFragment extends Fragment {
     }
 
     public int getCurrentMonthAverageGlycemia() {
-        return Integer.parseInt(txtMonthAvgGlycemia.getText().toString());
+        try{
+            return Integer.parseInt(txtMonthAvgGlycemia.getText().toString());
+        }catch (NumberFormatException ex){
+            return 0;
+        }
     }
 
     public int getCurrentWeekAverageGlycemia() {
-        return Integer.parseInt(txtWeekAvgGlycemia.getText().toString());
+        try {
+            return Integer.parseInt(txtWeekAvgGlycemia.getText().toString());
+        }catch (NumberFormatException ex){
+            return 0;
+        }
     }
 }

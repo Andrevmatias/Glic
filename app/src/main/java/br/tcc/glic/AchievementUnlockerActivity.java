@@ -69,6 +69,16 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
         initGoogleApi();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_SIGN_IN) {
+            if(resultCode == RESULT_OK)
+                googleApiClient.connect();
+        }
+    }
+
     private void initGoogleApi() {
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
