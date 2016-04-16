@@ -4,6 +4,7 @@ package br.tcc.glic.fragments.configuration;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +52,17 @@ public class AgeConfigurationFragment extends Fragment {
     }
 
     private void notifySelection() {
-        if(selectionListener != null)
-        {
-            selectionListener.onConfigurationSelected(getString(R.string.age_config),
-                    Integer.parseInt(edtAge.getText().toString()));
+        try {
+            if (selectionListener != null) {
+                selectionListener.onConfigurationSelected(getString(R.string.age_config),
+                        Integer.parseInt(edtAge.getText().toString()));
+            }
+        } catch (NumberFormatException ex) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.mandatory_field_message_title)
+                    .setMessage(R.string.mandatory_age_configuration_message)
+                    .create()
+                    .show();
         }
     }
 

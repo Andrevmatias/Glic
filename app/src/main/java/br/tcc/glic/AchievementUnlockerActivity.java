@@ -53,10 +53,10 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
         achievementIds.put(Desafio.CINCO_AVALIACOES_CORRETAS,    "CgkIkv_fwZELEAIQCA");
         achievementIds.put(Desafio.UM_POR_DIA_EM_UMA_SEMANA,     "CgkIkv_fwZELEAIQCQ");
         achievementIds.put(Desafio.QUATRO_POR_DIA_EM_UMA_SEMANA, "CgkIkv_fwZELEAIQCg");
-        achievementIds.put(Desafio.MELHORAR_MEDIA_SEMANAL,       "CgkIkv_fwZELEAIQEA");
-        achievementIds.put(Desafio.MELHORAR_MEDIA_MENSAL,        "CgkIkv_fwZELEAIQEQ");
+        achievementIds.put(Desafio.MELHORAR_MEDIA_SEMANAL,       "CgkIkv_fwZELEAIQCw");
+        achievementIds.put(Desafio.MELHORAR_MEDIA_MENSAL,        "CgkIkv_fwZELEAIQDA");
         achievementIds.put(Desafio.SEIS_GLICEMIAS_EM_UM_DIA,     "CgkIkv_fwZELEAIQDQ");
-        achievementIds.put(Desafio.VINTE_GLICEMIAS,              "CgkIkv_fwZELEAIQDw");
+        achievementIds.put(Desafio.VINTE_GLICEMIAS,              "CgkIkv_fwZELEAIQDg");
 
         for(Map.Entry<Desafio, String> entry : achievementIds.entrySet()){
             idsAchievements.put(entry.getValue(), entry.getKey());

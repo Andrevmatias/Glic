@@ -391,6 +391,16 @@ public class MainActivity extends AchievementUnlockerActivity
     public void addGlycemia(View view) {
         Glicemia glicemia = fragmentGlycemia.getGlycemia();
 
+        if(glicemia == null) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.mandatory_field_message_title)
+                    .setMessage(R.string.mandatory_glycemia_configuration_message)
+                    .create()
+                    .show();
+
+            return;
+        }
+
         registrarDadosService.registrarGlicemia(glicemia);
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();

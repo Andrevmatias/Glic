@@ -127,4 +127,7 @@
     <string name="reminder_notification_activation_title">Ativação de Notificações</string>
     <string name="reminder_notification_activation_text">Parabéns! Você desbloqueou os \"Lembretes de Registro\".\n\nEu acho que aprendi quais são os horários que você geralmente faz registros e vou tentar te lembrar se você esquecer, OK?\n\nVocê pode desativar este recurso nas configurações.</string>
     <string name="score_config">score_config</string>
+    <string name="mandatory_field_message_title">Campo Obrigatório</string>
+    <string name="mandatory_age_configuration_message">Por favor, informe a sua idade.</string>
+    <string name="mandatory_glycemia_configuration_message">Informe o valor da sua glicemia.</string>
 </resources>
