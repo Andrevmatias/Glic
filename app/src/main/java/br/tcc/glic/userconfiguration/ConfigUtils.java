@@ -90,4 +90,20 @@ public final class ConfigUtils {
         SharedPreferences prefs = getSystemConfigurationFile(context);
         return prefs.getBoolean(context.getString(R.string.reminders_unlocked_config), false);
     }
+
+    public static int getScore(Context context) {
+        return getSystemConfigurationFile(context)
+                .getInt(context.getString(R.string.score_config), 0);
+    }
+
+    public static int incrementScore(Context context, int points) {
+        SharedPreferences prefs = getSystemConfigurationFile(context);
+        int incremented = prefs.getInt(context.getString(R.string.score_config), 0) + points;
+        prefs
+            .edit()
+            .putInt(context.getString(R.string.score_config), incremented)
+            .apply();
+
+        return incremented;
+    }
 }

@@ -3,10 +3,14 @@ package br.tcc.glic;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -16,6 +20,8 @@ import com.google.android.gms.games.achievement.Achievements;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import br.tcc.glic.adapters.FeedbackListAdapter;
 import br.tcc.glic.domain.core.AplicacaoInsulina;
@@ -25,6 +31,7 @@ import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.desafios.Desafio;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.services.PontuacaoService;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
@@ -43,6 +50,11 @@ public class MainActivity extends AchievementUnlockerActivity
     private IndicatorsFragment fragmentIndicators;
     private RegistrosService registrarDadosService;
     private ImageButton btnAchievements;
+    private TextView txtPoints;
+    private TextView txtScoreUp;
+    private Animation scoreUpAnimation;
+
+    private Queue<Runnable> toRunWhenDismissFeedback = new LinkedBlockingQueue<>();
 
     private int lastMonthGlycemiaAverage = 0, lastWeekGlycemiaAverage = 0;
 
@@ -128,7 +140,10 @@ public class MainActivity extends AchievementUnlockerActivity
             }
         });
 
+        txtPoints = (TextView) findViewById(R.id.txt_points);
+        txtScoreUp = (TextView) findViewById(R.id.txt_score_up);
 
+        scoreUpAnimation = AnimationUtils.loadAnimation(this, R.anim.score_up);
     }
 
     private void addTestData() {
@@ -158,16 +173,13 @@ public class MainActivity extends AchievementUnlockerActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if(fragmentIndicators != null) {
-            fragmentIndicators.calcIndicators();
+        recalcIndicators();
 
-            verifyAverageImprovement(lastWeekGlycemiaAverage, fragmentIndicators.getCurrentWeekAverageGlycemia(), Desafio.MELHORAR_MEDIA_SEMANAL);
-            verifyAverageImprovement(lastMonthGlycemiaAverage, fragmentIndicators.getCurrentMonthAverageGlycemia(), Desafio.MELHORAR_MEDIA_MENSAL);
-
-            lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
-            lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
-        }
+        if(txtPoints != null)
+            txtPoints.setText(String.valueOf(ConfigUtils.getScore(this)));
     }
+
+    
 
     private void verifyAverageImprovement(int lastGlycemiaAverage, int currentAverageGlycemia, final Desafio achievement) {
         if(lastGlycemiaAverage == 0)
@@ -191,15 +203,31 @@ public class MainActivity extends AchievementUnlockerActivity
 
         if (requestCode == RC_DATA_REGISTERED) {
             if(resultCode == RESULT_OK) {
-                ArrayList<Registro> registros =
+                final ArrayList<Registro> registros =
                         (ArrayList<Registro>) intent.getSerializableExtra(getString(R.string.registered_entries_argument));
 
-                checkEntriesToUnlockAchievements(registros);
-
-                if(ConfigUtils.isAutoAvaliationOn(this) && SelfEvaluationFragment.shouldShowFor(registros))
+                boolean paused = false;
+                if(ConfigUtils.isAutoAvaliationOn(this) && SelfEvaluationFragment.shouldShowFor(registros)) {
                     askForSelfEvaluation(registros);
-                else if(FeedbackListAdapter.suportsAny(registros))
+                    paused = true;
+                }
+                else if(FeedbackListAdapter.suportsAny(registros)) {
                     showFeedback(registros);
+                    paused = true;
+                }
+
+                Runnable checkEntriesRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        addPoints(registros);
+                        checkEntriesToUnlockAchievements(registros);
+                    }
+                };
+                if(paused)
+                    toRunWhenDismissFeedback.add(checkEntriesRunnable);
+                else
+                    checkEntriesRunnable.run();
+
             }
         }
     }
@@ -348,9 +376,12 @@ public class MainActivity extends AchievementUnlockerActivity
         FeedbackListAdapter adapter =
                 new FeedbackListAdapter(this, registros);
         builder
-            .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-
+            .setAdapter(adapter, null)
+            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    while (!toRunWhenDismissFeedback.isEmpty())
+                        toRunWhenDismissFeedback.poll().run();
                 }
             })
             .create()
@@ -364,7 +395,7 @@ public class MainActivity extends AchievementUnlockerActivity
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
 
-        ArrayList<Registro> registros = new ArrayList<>();
+        final ArrayList<Registro> registros = new ArrayList<>();
         registros.add(glicemia);
 
         if(ConfigUtils.isAutoAvaliationOn(this))
@@ -372,18 +403,56 @@ public class MainActivity extends AchievementUnlockerActivity
         else
             showFeedback(registros);
 
-        checkEntriesToUnlockAchievements(registros);
-
         Intent intent = new Intent(this, RemindersService.class);
         startService(intent);
 
         fragmentGlycemia.reset();
 
-        fragmentIndicators.calcIndicators();
-        verifyAverageImprovement(lastWeekGlycemiaAverage, fragmentIndicators.getCurrentWeekAverageGlycemia(), Desafio.MELHORAR_MEDIA_SEMANAL);
-        verifyAverageImprovement(lastMonthGlycemiaAverage, fragmentIndicators.getCurrentMonthAverageGlycemia(), Desafio.MELHORAR_MEDIA_MENSAL);
-        lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
-        lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
+        recalcIndicators();
+
+        Runnable checkEntriesRunnable = new Runnable() {
+            @Override
+            public void run() {
+                checkEntriesToUnlockAchievements(registros);
+            }
+        };
+
+        toRunWhenDismissFeedback.add(new Runnable() {
+            @Override
+            public void run() {
+                addPoints(registros);
+                checkEntriesToUnlockAchievements(registros);
+            }
+        });
+    }
+
+    private void addPoints(List<Registro> registros) {
+        int pontuacao = new PontuacaoService().calcularPontuacao(registros);
+        int newScore = ConfigUtils.incrementScore(this, pontuacao);
+
+        txtScoreUp.setVisibility(View.VISIBLE);
+        txtScoreUp.setText("+" + String.valueOf(pontuacao));
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                txtScoreUp.clearAnimation();
+                txtScoreUp.setVisibility(View.GONE);
+            }
+        }, scoreUpAnimation.getDuration());
+
+        txtPoints.setText(String.valueOf(newScore));
+        txtScoreUp.startAnimation(scoreUpAnimation);
+    }
+
+    private void recalcIndicators() {
+        if(fragmentIndicators != null) {
+            fragmentIndicators.calcIndicators();
+
+            verifyAverageImprovement(lastWeekGlycemiaAverage, fragmentIndicators.getCurrentWeekAverageGlycemia(), Desafio.MELHORAR_MEDIA_SEMANAL);
+            verifyAverageImprovement(lastMonthGlycemiaAverage, fragmentIndicators.getCurrentMonthAverageGlycemia(), Desafio.MELHORAR_MEDIA_MENSAL);
+
+            lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
+            lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
+        }
     }
 
     @Override
@@ -402,7 +471,7 @@ public class MainActivity extends AchievementUnlockerActivity
         else
             showFeedback(evaluatedEntries);
     }
-
+    
     @Override
     public void onConnected(Bundle bundle) {
         super.onConnected(bundle);
