@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SpriteView">
+        <attr name="sprite" format="reference" />
+        <attr name="frameHeight" format="dimension" />
+        <attr name="frameWidth" format="dimension" />
+        <attr name="framesCount" format="integer" />
+        <attr name="animationSpeed" format="integer" />
+        <attr name="autoplay" format="boolean" />
+    </declare-styleable>
+</resources>
