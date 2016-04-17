@@ -9,4 +9,7 @@
     <color name="colorLow">#448AA8</color>
     <color name="colorHigh">#FF7E5F</color>
     <color name="colorGood">#47BD76</color>
+    <color name="colorAlpha">#8db5e7</color>
+    <color name="colorBeta">#ffcc00</color>
+    <color name="colorGama">#f19cb7</color>
 </resources>

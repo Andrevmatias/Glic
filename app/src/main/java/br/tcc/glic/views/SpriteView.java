@@ -15,13 +15,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import br.tcc.glic.R;
+import br.tcc.glic.utils.BitmapUtils;
 
 /**
  * View que comporta uma animação com spritesheet
  * Created by André on 16/04/2016.
  * Baseado em http://gamecodeschool.com/android/coding-android-sprite-sheet-animations/
  */
-class SpriteView extends SurfaceView implements Runnable {
+public class SpriteView extends SurfaceView implements Runnable {
 
     private Thread spriteThread;
     private SurfaceHolder holder;
@@ -34,6 +35,7 @@ class SpriteView extends SurfaceView implements Runnable {
     private int frameHeight = 100;
     private int framesCount = 5;
     private int animationSpeed = 100;
+    private boolean grayscaleWhenPaused = true;
     private boolean autoplay = true;
 
     private int currentFrame = 0;
@@ -53,6 +55,47 @@ class SpriteView extends SurfaceView implements Runnable {
         setSprite(spriteId);
 
         initComponents();
+        if(autoplay)
+            resume();
+        else
+            drawFirstFrame();
+    }
+
+    private void drawFirstFrame() {
+        Thread drawFirstFrameThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (holder == null || !holder.getSurface().isValid()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                canvas = holder.lockCanvas();
+
+                canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+
+                whereToDraw.set(
+                        0,
+                        0,
+                        frameWidth,
+                        frameHeight);
+
+                if(grayscaleWhenPaused)
+                    canvas.drawBitmap(BitmapUtils.toGrayscale(spriteBitmap),
+                            frameToDraw,
+                            whereToDraw, paint);
+                else
+                    canvas.drawBitmap(spriteBitmap,
+                            frameToDraw,
+                            whereToDraw, paint);
+
+                holder.unlockCanvasAndPost(canvas);
+            }
+        });
+
+        drawFirstFrameThread.start();
     }
 
     public SpriteView(Context context, AttributeSet attrs) {
@@ -64,12 +107,17 @@ class SpriteView extends SurfaceView implements Runnable {
             setFramesCount(ta.getInt(R.styleable.SpriteView_framesCount, framesCount));
             setAnimationSpeed(ta.getInt(R.styleable.SpriteView_animationSpeed, animationSpeed));
             setSprite(ta.getResourceId(R.styleable.SpriteView_sprite, 0));
+            grayscaleWhenPaused = ta.getBoolean(R.styleable.SpriteView_grayscaleWhenPaused, grayscaleWhenPaused);
             autoplay = ta.getBoolean(R.styleable.SpriteView_autoplay, autoplay);
         } finally {
             ta.recycle();
         }
 
         initComponents();
+        if(autoplay)
+            resume();
+        else
+            drawFirstFrame();
     }
 
     @Override
@@ -106,7 +154,7 @@ class SpriteView extends SurfaceView implements Runnable {
         this.animationSpeed = animationSpeed;
     }
 
-    public void setSprite(@DrawableRes int spriteId)
+    private void setSprite(@DrawableRes int spriteId)
     {
         spriteBitmap = BitmapFactory.decodeResource(this.getResources(), spriteId);
         spriteBitmap = Bitmap.createScaledBitmap(spriteBitmap,
@@ -138,9 +186,6 @@ class SpriteView extends SurfaceView implements Runnable {
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
-
-        if(autoplay)
-            resume();
     }
 
     @Override
@@ -151,7 +196,7 @@ class SpriteView extends SurfaceView implements Runnable {
                 draw();
             } catch (Exception ex) { }
         }
-
+        draw();
     }
 
     public void update() {
@@ -180,9 +225,14 @@ class SpriteView extends SurfaceView implements Runnable {
                     frameWidth,
                     frameHeight);
 
-            canvas.drawBitmap(spriteBitmap,
-                    frameToDraw,
-                    whereToDraw, paint);
+            if(!playing && grayscaleWhenPaused)
+                canvas.drawBitmap(BitmapUtils.toGrayscale(spriteBitmap),
+                        frameToDraw,
+                        whereToDraw, paint);
+            else
+                canvas.drawBitmap(spriteBitmap,
+                        frameToDraw,
+                        whereToDraw, paint);
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -190,19 +240,22 @@ class SpriteView extends SurfaceView implements Runnable {
     }
 
     public void pause() {
-        playing = false;
-        try {
-            spriteThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(playing) {
+            playing = false;
+            try {
+                spriteThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void resume() {
-        playing = true;
-        spriteThread = new Thread(this);
-        spriteThread.start();
+        if(!playing) {
+            playing = true;
+            spriteThread = new Thread(this);
+            spriteThread.start();
+        }
     }
 }
 

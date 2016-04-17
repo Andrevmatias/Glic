@@ -41,7 +41,7 @@ public class AgeConfigurationFragment extends Fragment {
     private void initComponents(View fragment) {
         edtAge = (EditText) fragment.findViewById(R.id.edt_age_configuration);
 
-        Button btnSave = (Button) fragment.findViewById(R.id.btn_age_configuration_save);
+        Button btnSave = (Button) fragment.findViewById(R.id.btn_age_configuration_continue);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override

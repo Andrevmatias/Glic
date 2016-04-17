@@ -23,7 +23,6 @@ public class ChartsActivity extends AppCompatActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.charts_container, new ChooseChartFragment())
-                .addToBackStack(null)
                 .commit();
     }
 

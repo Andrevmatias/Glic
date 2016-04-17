@@ -32,11 +32,11 @@
         android:layout_centerVertical="true"
         android:text="@string/years_old"/>
 
-    <Button android:id="@+id/btn_age_configuration_save"
+    <Button android:id="@+id/btn_age_configuration_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="@string/save" />
+        android:text="@string/continue_configuration" />
 
 </RelativeLayout>

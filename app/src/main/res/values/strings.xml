@@ -131,4 +131,9 @@
     <string name="mandatory_age_configuration_message">Por favor, informe a sua idade.</string>
     <string name="mandatory_glycemia_configuration_message">Informe o valor da sua glicemia.</string>
     <string name="character_config">character_config</string>
+    <string name="select_your_glic">Escolha o seu Glic</string>
+    <string name="character_type_config">character_type_config</string>
+    <string name="alpha_character_name">Alfa</string>
+    <string name="beta_character_name">Beta</string>
+    <string name="gama_character_name">Gama</string>
 </resources>

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import br.tcc.glic.R;
+import br.tcc.glic.domain.personagem.TipoPersonagem;
+import br.tcc.glic.views.SpriteView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +18,8 @@ import br.tcc.glic.R;
 public class CharacterConfigurationFragment extends Fragment {
 
     private OnConfigurationSelectedListener selectionListener;
+    private TipoPersonagem characterType = TipoPersonagem.Alpha;
+
 
     public CharacterConfigurationFragment() {
         // Required empty public constructor
@@ -33,12 +37,46 @@ public class CharacterConfigurationFragment extends Fragment {
         return fragment;
     }
 
-    private void initComponents(View fragment) {
-        Button btnContinue = (Button) fragment.findViewById(R.id.btn_treatment_type_configuration_continue);
+    private void initComponents(final View fragment) {
+        Button btnContinue = (Button) fragment.findViewById(R.id.btn_character_configuration_save);
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifySelection();
+            }
+        });
+
+        final SpriteView btnSelectAlpha = (SpriteView) fragment.findViewById(R.id.btn_select_alpha);
+        final SpriteView btnSelectBeta = (SpriteView) fragment.findViewById(R.id.btn_select_beta);
+        final SpriteView btnSelectGama = (SpriteView) fragment.findViewById(R.id.btn_select_gama);
+
+        btnSelectAlpha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSelectAlpha.resume();
+                btnSelectBeta.pause();
+                btnSelectGama.pause();
+                characterType = TipoPersonagem.Alpha;
+            }
+        });
+
+        btnSelectBeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSelectAlpha.pause();
+                btnSelectBeta.resume();
+                btnSelectGama.pause();
+                characterType = TipoPersonagem.Beta;
+            }
+        });
+
+        btnSelectGama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSelectAlpha.pause();
+                btnSelectBeta.pause();
+                btnSelectGama.resume();
+                characterType = TipoPersonagem.Gama;
             }
         });
     }
@@ -46,7 +84,7 @@ public class CharacterConfigurationFragment extends Fragment {
     private void notifySelection() {
         if(selectionListener != null)
         {
-            //selectionListener.onConfigurationSelected(getString(R.string.character_config), tipoTerapia);
+            selectionListener.onConfigurationSelected(getString(R.string.character_config), characterType);
         }
     }
 

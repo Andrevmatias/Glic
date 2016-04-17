@@ -16,8 +16,10 @@ import java.util.Set;
 import br.tcc.glic.domain.core.IntervaloGlicemia;
 import br.tcc.glic.domain.enums.TipoGlicemia;
 import br.tcc.glic.domain.enums.TipoTerapia;
+import br.tcc.glic.domain.personagem.TipoPersonagem;
 import br.tcc.glic.domain.services.TipoInsulinaService;
 import br.tcc.glic.fragments.configuration.AgeConfigurationFragment;
+import br.tcc.glic.fragments.configuration.CharacterConfigurationFragment;
 import br.tcc.glic.fragments.configuration.OnConfigurationSelectedListener;
 import br.tcc.glic.fragments.configuration.TreatmentTypeConfigurationFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
@@ -37,6 +39,7 @@ public class FirstConfigurationActivity extends AppCompatActivity
         configFragments = new LinkedList<>();
         configFragments.add(new TreatmentTypeConfigurationFragment());
         configFragments.add(new AgeConfigurationFragment());
+        configFragments.add(new CharacterConfigurationFragment());
     }
 
     @Override
@@ -81,6 +84,7 @@ public class FirstConfigurationActivity extends AppCompatActivity
 
         saveAgeConfigurations(sharedPreferencesEditor);
         saveTreatmentConfigurations(sharedPreferencesEditor);
+        saveCharacterConfigurations(sharedPreferencesEditor);
 
         sharedPreferencesEditor.apply();
 
@@ -90,6 +94,14 @@ public class FirstConfigurationActivity extends AppCompatActivity
                 .edit()
                 .putBoolean(getString(R.string.app_configured_config), true)
                 .apply();
+    }
+
+    private void saveCharacterConfigurations(SharedPreferences.Editor sharedPreferencesEditor) {
+        String key = getString(R.string.character_config);
+        TipoPersonagem value = (TipoPersonagem) configurations.get(key);
+
+        sharedPreferencesEditor
+                .putString(getString(R.string.character_type_config), value.toString());
     }
 
     private void saveTreatmentConfigurations(SharedPreferences.Editor sharedPreferencesEditor) {
