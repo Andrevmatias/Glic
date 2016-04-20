@@ -124,13 +124,10 @@
         android:src="@drawable/ic_chart" />
 
     <br.tcc.glic.views.SpriteView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sprite_character"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:framesCount="4"
-        app:animationSpeed="400"
-        app:frameHeight="120dp"
-        app:frameWidth="90dp"
-        app:sprite="@drawable/sprite_blue_stand_happy"/>
+        app:animationSpeed="300" />
 </RelativeLayout>

@@ -28,15 +28,19 @@ import br.tcc.glic.domain.core.AplicacaoInsulina;
 import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
+import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.desafios.Desafio;
+import br.tcc.glic.domain.enums.EstadoPersonagem;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.services.EstadoPersonagemService;
 import br.tcc.glic.domain.services.PontuacaoService;
 import br.tcc.glic.domain.services.RegistrosService;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.SelfEvaluationFragment;
 import br.tcc.glic.userconfiguration.ConfigUtils;
+import br.tcc.glic.views.SpriteView;
 
 public class MainActivity extends AchievementUnlockerActivity
         implements SelfEvaluationFragment.SelfEvaluationDismissListener {
@@ -53,10 +57,12 @@ public class MainActivity extends AchievementUnlockerActivity
     private TextView txtPoints;
     private TextView txtScoreUp;
     private Animation scoreUpAnimation;
+    private SpriteView spriteCharacter;
 
     private Queue<Runnable> toRunWhenDismissFeedback = new LinkedBlockingQueue<>();
 
     private int lastMonthGlycemiaAverage = 0, lastWeekGlycemiaAverage = 0;
+    private EstadoPersonagem characterState = EstadoPersonagem.Bem;
 
     public MainActivity() {
         registrarDadosService = new RegistrosService(this);
@@ -144,6 +150,11 @@ public class MainActivity extends AchievementUnlockerActivity
         txtScoreUp = (TextView) findViewById(R.id.txt_score_up);
 
         scoreUpAnimation = AnimationUtils.loadAnimation(this, R.anim.score_up);
+
+        spriteCharacter = (SpriteView) findViewById(R.id.sprite_character);
+        spriteCharacter
+                .setSprite(ConfigUtils.getCharacterType(this)
+                        .getSpriteSheet(this, characterState));
     }
 
     private void addTestData() {
@@ -420,13 +431,6 @@ public class MainActivity extends AchievementUnlockerActivity
 
         recalcIndicators();
 
-        Runnable checkEntriesRunnable = new Runnable() {
-            @Override
-            public void run() {
-                checkEntriesToUnlockAchievements(registros);
-            }
-        };
-
         toRunWhenDismissFeedback.add(new Runnable() {
             @Override
             public void run() {
@@ -462,6 +466,15 @@ public class MainActivity extends AchievementUnlockerActivity
 
             lastWeekGlycemiaAverage = fragmentIndicators.getCurrentWeekAverageGlycemia();
             lastMonthGlycemiaAverage = fragmentIndicators.getCurrentMonthAverageGlycemia();
+
+            List<Indicador> indicators = fragmentIndicators.getIndicators();
+
+            characterState = new EstadoPersonagemService().getEstadoPersonagem(indicators);
+            spriteCharacter.pause();
+            spriteCharacter
+                    .setSprite(ConfigUtils.getCharacterType(this)
+                            .getSpriteSheet(this, characterState));
+            spriteCharacter.resume();
         }
     }
 

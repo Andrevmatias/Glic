@@ -11,10 +11,12 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import br.tcc.glic.R;
+import br.tcc.glic.domain.utils.SpriteSheet;
 import br.tcc.glic.utils.BitmapUtils;
 
 /**
@@ -106,7 +108,8 @@ public class SpriteView extends SurfaceView implements Runnable {
             setFrameWidth(ta.getDimensionPixelSize(R.styleable.SpriteView_frameWidth, frameWidth));
             setFramesCount(ta.getInt(R.styleable.SpriteView_framesCount, framesCount));
             setAnimationSpeed(ta.getInt(R.styleable.SpriteView_animationSpeed, animationSpeed));
-            setSprite(ta.getResourceId(R.styleable.SpriteView_sprite, 0));
+            if(ta.hasValue(R.styleable.SpriteView_sprite))
+                setSprite(ta.getResourceId(R.styleable.SpriteView_sprite, 0));
             grayscaleWhenPaused = ta.getBoolean(R.styleable.SpriteView_grayscaleWhenPaused, grayscaleWhenPaused);
             autoplay = ta.getBoolean(R.styleable.SpriteView_autoplay, autoplay);
         } finally {
@@ -154,26 +157,65 @@ public class SpriteView extends SurfaceView implements Runnable {
         this.animationSpeed = animationSpeed;
     }
 
-    private void setSprite(@DrawableRes int spriteId)
+    private void setSprite(Bitmap spriteBitmap)
     {
-        spriteBitmap = BitmapFactory.decodeResource(this.getResources(), spriteId);
-        spriteBitmap = Bitmap.createScaledBitmap(spriteBitmap,
+        this.spriteBitmap = Bitmap.createScaledBitmap(spriteBitmap,
                 frameWidth * framesCount,
                 frameHeight,
                 false);
     }
 
+    private void setSprite(@DrawableRes int spriteId)
+    {
+        spriteBitmap = BitmapFactory.decodeResource(this.getResources(), spriteId);
+        setSprite(spriteBitmap);
+    }
+
     public void setSprite(@DrawableRes int spriteId,
                           int frameWidth,
                           int frameHeight,
-                          int framesCount,
-                          int speedInMilliseconds){
+                          int framesCount){
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
-        this.animationSpeed = speedInMilliseconds;
         this.framesCount = framesCount;
 
+        frameToDraw = new Rect(
+                0,
+                0,
+                frameWidth,
+                frameHeight);
+
         setSprite(spriteId);
+    }
+
+    public void setSprite(Bitmap spriteBitmap,
+                          int frameWidth,
+                          int frameHeight,
+                          int framesCount){
+        this.frameWidth = frameWidth;
+        this.frameHeight = frameHeight;
+        this.framesCount = framesCount;
+
+        frameToDraw = new Rect(
+                0,
+                0,
+                frameWidth,
+                frameHeight);
+
+        setSprite(spriteBitmap);
+    }
+
+    public void setSprite(SpriteSheet spriteSheet) {
+        setSprite(spriteSheet.getBitmap(),
+                dpToPx(spriteSheet.getLarguraFrame()),
+                dpToPx(spriteSheet.getAlturaFrame()),
+                spriteSheet.getNumeroFrames());
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     private void initComponents() {

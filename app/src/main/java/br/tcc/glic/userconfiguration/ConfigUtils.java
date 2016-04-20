@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import br.tcc.glic.R;
+import br.tcc.glic.domain.personagem.TipoPersonagem;
 
 /**
  * Classe para acesso às configurações do sistema e do usuário
@@ -105,5 +106,13 @@ public final class ConfigUtils {
             .apply();
 
         return incremented;
+    }
+
+    public static TipoPersonagem getCharacterType(Context context) {
+        SharedPreferences prefs = getUserConfigurationFile(context);
+
+        String charType = prefs.getString(context.getString(R.string.character_type_config), "");
+
+        return TipoPersonagem.valueOf(charType);
     }
 }

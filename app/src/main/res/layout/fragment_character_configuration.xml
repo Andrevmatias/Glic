@@ -37,7 +37,7 @@
                 app:animationSpeed="200"
                 app:frameHeight="120dp"
                 app:frameWidth="90dp"
-                app:sprite="@drawable/sprite_blue_stand" />
+                app:sprite="@drawable/sprite_alpha_stand_normal" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 app:animationSpeed="200"
                 app:frameHeight="115dp"
                 app:frameWidth="90dp"
-                app:sprite="@drawable/sprite_yellow_stand" />
+                app:sprite="@drawable/sprite_beta_stand_normal" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                 app:animationSpeed="200"
                 app:frameHeight="100dp"
                 app:frameWidth="90dp"
-                app:sprite="@drawable/sprite_red_stand" />
+                app:sprite="@drawable/sprite_gama_stand_normal" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

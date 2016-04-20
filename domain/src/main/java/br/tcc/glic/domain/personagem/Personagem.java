@@ -12,6 +12,9 @@ public class Personagem {
     private int nivel;
     private TipoPersonagem tipo;
 
+    private Personagem() {
+    }
+
     public EstadoPersonagem getEstado() {
         return estado;
     }

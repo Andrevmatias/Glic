@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
@@ -41,6 +44,7 @@ public class IndicatorsFragment extends Fragment {
 
 
     private View containerCarbohydrateIndicators;
+    private List<Indicador> indicators = new ArrayList<>();
 
     public IndicatorsFragment() {
         // Required empty public constructor
@@ -70,6 +74,18 @@ public class IndicatorsFragment extends Fragment {
         Indicador avgDayCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosDia);
         Indicador avgWeekCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosSemana);
         Indicador avgMonthCarbohydrates = service.getIndicador(TipoIndicador.MediaCarboidratosMes);
+
+        indicators = new ArrayList<>();
+        if(!Double.isNaN(avgDayGlycemia.getValor()))
+            indicators.add(avgDayGlycemia);
+        if(!Double.isNaN(avgWeekGlycemia.getValor()))
+            indicators.add(avgWeekGlycemia);
+        if(!Double.isNaN(avgMonthGlycemia.getValor()))
+            indicators.add(avgMonthGlycemia);
+        if(!Double.isNaN(varWeekGlycemia.getValor()))
+            indicators.add(varWeekGlycemia);
+        if(!Double.isNaN(varMonthGlycemia.getValor()))
+            indicators.add(varMonthGlycemia);
 
         txtDayAvgGlycemia
                 .setText(Double.isNaN(avgDayGlycemia.getValor()) ? "-"
@@ -194,5 +210,9 @@ public class IndicatorsFragment extends Fragment {
         }catch (NumberFormatException ex){
             return 0;
         }
+    }
+
+    public List<Indicador> getIndicators() {
+        return indicators;
     }
 }
