@@ -15,7 +15,7 @@ public class EstadoPersonagemService {
         if(indicadores.size() == 0)
             return EstadoPersonagem.Normal;
 
-        int countBons = 0;
+        float countBons = 0;
 
         for (Indicador indicador :
                 indicadores) {
@@ -23,7 +23,7 @@ public class EstadoPersonagemService {
                 countBons++;
         }
 
-        float proporcao  = countBons / indicadores.size();
+        float proporcao  = countBons / (float) indicadores.size();
 
         if(proporcao == 0)
             return EstadoPersonagem.MuitoMal;
