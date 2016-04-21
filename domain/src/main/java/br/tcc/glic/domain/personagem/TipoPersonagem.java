@@ -50,16 +50,16 @@ public enum TipoPersonagem {
             case Mal:
                 return new SpriteSheet(
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_stand_sad),
-                        4, 100, 90);
+                        4, 95, 90);
             case Normal:
                 return new SpriteSheet(
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_stand_normal),
-                        4, 120, 90);
+                        4, 110, 90);
             case Bem:
             case MuitoBem:
                 return new SpriteSheet(
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_stand_happy),
-                        4, 120, 90);
+                        4, 110, 90);
             default:
                 throw new RuntimeException("Estado de personagem não reconhecido");
         }
@@ -111,11 +111,11 @@ public enum TipoPersonagem {
         if (!feliz)
             return new SpriteSheet(
                     BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_talking_serious),
-                    2, 120, 90);
+                    2, 110, 90);
         else
             return new SpriteSheet(
                     BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_talking_happy),
-                    2, 120, 90);
+                    2, 110, 90);
     }
 
     private SpriteSheet getSpriteSheetBetaFalando(Context context, boolean feliz) {
