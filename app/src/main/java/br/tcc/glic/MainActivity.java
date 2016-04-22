@@ -36,6 +36,7 @@ import br.tcc.glic.domain.enums.QualidadeRegistro;
 import br.tcc.glic.domain.services.EstadoPersonagemService;
 import br.tcc.glic.domain.services.PontuacaoService;
 import br.tcc.glic.domain.services.RegistrosService;
+import br.tcc.glic.fragments.CharacterStateFragment;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.SelfEvaluationFragment;
@@ -155,6 +156,27 @@ public class MainActivity extends AchievementUnlockerActivity
         spriteCharacter
                 .setSprite(ConfigUtils.getCharacterType(this)
                         .getSpriteSheet(this, characterState));
+        spriteCharacter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCharacterStateDialog();
+            }
+        });
+    }
+
+    private void showCharacterStateDialog() {
+        DialogFragment dialog = new CharacterStateFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(getString(R.string.indicators_argument), fragmentIndicators.getIndicators());
+        args.putSerializable(getString(R.string.character_state_argument), characterState);
+        dialog.setArguments(args);
+
+        showAsCharacterSpeechBubble(dialog);
+    }
+
+    private void showAsCharacterSpeechBubble(DialogFragment dialog) {
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     private void addTestData() {

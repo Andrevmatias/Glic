@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Indicador;
@@ -44,7 +43,7 @@ public class IndicatorsFragment extends Fragment {
 
 
     private View containerCarbohydrateIndicators;
-    private List<Indicador> indicators = new ArrayList<>();
+    private ArrayList<Indicador> indicators = new ArrayList<>();
 
     public IndicatorsFragment() {
         // Required empty public constructor
@@ -212,7 +211,7 @@ public class IndicatorsFragment extends Fragment {
         }
     }
 
-    public List<Indicador> getIndicators() {
+    public ArrayList<Indicador> getIndicators() {
         return indicators;
     }
 }

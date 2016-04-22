@@ -8,4 +8,20 @@
     <string name="low">Baixo</string>
     <string name="good">Bom</string>
     <string name="high">Alto</string>
+    <string name="low_fem">Baixa</string>
+    <string name="good_fem">Boa</string>
+    <string name="high_fem">Alta</string>
+    <string name="very_bad">Muito Mal</string>
+    <string name="bad">Mal</string>
+    <string name="normal">Normal</string>
+    <string name="well">Bem</string>
+    <string name="very_well">Muito Bem</string>
+    <string name="week_glycemia_variability">Variabilidade Glicêmica da Semana</string>
+    <string name="month_glycemia_variability">Variabilidade Glicêmica do Mês</string>
+    <string name="month_glycemia_average">Média Glicêmica do Mês</string>
+    <string name="day_glycemia_average">Média Glicêmica de Hoje</string>
+    <string name="week_glycemia_average">Média Glicêmica da Semana</string>
+    <string name="day_carbohydrates_average">Média de Carboidratos de Hoje</string>
+    <string name="week_carbohydrates_average">Média de Carboidratos da Semana</string>
+    <string name="month_carbohydrates_average">Média de Carboidratos do Mês</string>
 </resources>

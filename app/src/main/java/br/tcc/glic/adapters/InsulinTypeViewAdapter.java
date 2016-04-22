@@ -1,4 +1,4 @@
-package br.tcc.glic.fragments;
+package br.tcc.glic.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import java.util.List;
 
 import br.tcc.glic.R;
 import br.tcc.glic.domain.core.TipoInsulina;
+import br.tcc.glic.fragments.InsulinTypeListFragment;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link TipoInsulina} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * ViewAdapter para listar tipos de insulina
  */
 public class InsulinTypeViewAdapter extends RecyclerView.Adapter<InsulinTypeViewAdapter.ViewHolder> {
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.tcc.glic.R;
+import br.tcc.glic.adapters.InsulinTypeViewAdapter;
 import br.tcc.glic.domain.core.TipoInsulina;
 import br.tcc.glic.domain.services.TipoInsulinaService;
 

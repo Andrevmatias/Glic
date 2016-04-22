@@ -136,4 +136,9 @@
     <string name="alpha_character_name">Alfa</string>
     <string name="beta_character_name">Beta</string>
     <string name="gama_character_name">Gama</string>
+    <string name="indicators_argument">indicators_argument</string>
+    <string name="character_state_argument">character_state_argument</string>
+    <string name="character_state_title">Eu estou %s pois...</string>
+    <string name="but">Mas...</string>
+    <string name="character_state_indication">Sua %1$s está %2$s</string>
 </resources>

@@ -1,8 +1,6 @@
 package br.tcc.glic.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
-import br.tcc.glic.domain.enums.QualidadeRegistro;
 
 /**
  * Adaptador para feedbacks após registro
@@ -91,24 +88,10 @@ public class FeedbackListAdapter extends BaseAdapter {
         TextView txtFeedback = (TextView) view.findViewById(R.id.txt_feedback);
 
         feedbackValue.setText(String.valueOf(glicemia.getValor()));
-        imageQuality.setImageDrawable(getQualityDrawable(glicemia.getQualidade()));
-        txtFeedback.setText(glicemia.getQualidade().getDescription(context));
+        imageQuality.setImageDrawable(glicemia.getQualidade().getDrawable(context));
+        txtFeedback.setText(glicemia.getQualidade().toString(context));
 
         return view;
-    }
-
-    private Drawable getQualityDrawable(QualidadeRegistro qualidade) {
-        switch (qualidade)
-        {
-            case Baixo:
-                return ContextCompat.getDrawable(context, R.drawable.ic_low);
-            case Bom:
-                return ContextCompat.getDrawable(context, R.drawable.ic_good);
-            case Alto:
-                return ContextCompat.getDrawable(context, R.drawable.ic_high);
-        }
-
-        throw new RuntimeException("QualidadeRegistro not recognized");
     }
 
     private View getView(LayoutInflater inflater, HemoglobinaGlicada hba1c) {
@@ -120,8 +103,8 @@ public class FeedbackListAdapter extends BaseAdapter {
 
         feedbackValue.setText(String.valueOf(hba1c.getValor()));
         glycemiaValue.setText(String.valueOf(hba1c.getGme()));
-        imageQuality.setImageDrawable(getQualityDrawable(hba1c.getQualidade()));
-        txtFeedback.setText(hba1c.getQualidade().getDescription(context));
+        imageQuality.setImageDrawable(hba1c.getQualidade().getDrawable(context));
+        txtFeedback.setText(hba1c.getQualidade().toString(context));
 
         return view;
     }

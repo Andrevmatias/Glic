@@ -2,7 +2,9 @@ package br.tcc.glic.domain.enums;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 
 import br.tcc.glic.domain.R;
 
@@ -15,15 +17,29 @@ public enum QualidadeRegistro {
     Bom,
     Alto;
 
-    public String getDescription(Context context) {
+    public String toString(Context context) {
         switch (this)
         {
             case Baixo:
-                return context.getString(R.string.low);
+                return context.getString(R.string.low_fem);
             case Bom:
-                return context.getString(R.string.good);
+                return context.getString(R.string.good_fem);
             case Alto:
-                return context.getString(R.string.high);
+                return context.getString(R.string.high_fem);
+        }
+
+        throw new RuntimeException("QualidadeRegistro not recognized");
+    }
+
+    public Drawable getDrawable(Context context) {
+        switch (this)
+        {
+            case Baixo:
+                return ContextCompat.getDrawable(context, R.drawable.ic_low);
+            case Bom:
+                return ContextCompat.getDrawable(context, R.drawable.ic_good);
+            case Alto:
+                return ContextCompat.getDrawable(context, R.drawable.ic_high);
         }
 
         throw new RuntimeException("QualidadeRegistro not recognized");

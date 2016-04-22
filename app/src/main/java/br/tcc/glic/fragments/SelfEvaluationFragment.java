@@ -166,7 +166,7 @@ public class SelfEvaluationFragment extends DialogFragment
                     .setTitle(R.string.self_evaluation_congrats_title)
                     .setIcon(R.drawable.ic_ok)
                     .setMessage(String.format(getString(R.string.self_evaluation_congrats_text),
-                            answer.getDescription(getActivity())));
+                            answer.toString(getActivity())));
             ConfigUtils.incrementSelfEvaluationCorrectAnswers(getActivity());
             achievementUnlocker.incrementAchievementProgress(Desafio.CINCO_AVALIACOES_CORRETAS);
         } else {
@@ -174,7 +174,7 @@ public class SelfEvaluationFragment extends DialogFragment
                     .setTitle(R.string.self_evaluation_wrong_answer_title)
                     .setIcon(R.drawable.ic_no)
                     .setMessage(String.format(getString(R.string.self_evaluation_wrong_answer_text),
-                            correctAnswer.getDescription(getActivity()), answer.getDescription(getActivity()),
+                            correctAnswer.toString(getActivity()), answer.toString(getActivity()),
                             min, max));
         }
         alertDialogBuilder.create().show();

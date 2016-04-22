@@ -1,8 +1,5 @@
-package br.tcc.glic.fragments;
+package br.tcc.glic.adapters;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +18,7 @@ import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
+import br.tcc.glic.fragments.EntriesListFragment;
 
 public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -103,7 +101,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.item = glicemia;
         holder.contentView.setText(String.valueOf(glicemia.getValor()));
         holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(glicemia.getHora()));
-        holder.qualityImage.setImageDrawable(getQualityDrawable(glicemia, holder.view.getContext()));
+        holder.qualityImage.setImageDrawable(glicemia.getQualidade().getDrawable(holder.view.getContext()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,20 +111,6 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             }
         });
-    }
-
-    private Drawable getQualityDrawable(Glicemia glicemia, Context context) {
-        switch (glicemia.getQualidade())
-        {
-            case Baixo:
-                return ContextCompat.getDrawable(context, R.drawable.ic_low);
-            case Bom:
-                return ContextCompat.getDrawable(context, R.drawable.ic_good);
-            case Alto:
-                return ContextCompat.getDrawable(context, R.drawable.ic_high);
-        }
-
-        throw new RuntimeException("QualidadeRegistro not recognized");
     }
 
     private void configureCarboidratoIngeridoViewHolder(final CarboidratoIngeridoViewHolder holder,
