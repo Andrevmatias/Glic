@@ -19,6 +19,7 @@ import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.EstadoPersonagem;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.services.EstadoPersonagemService;
 
 /**
  * Created by André on 21/04/2016.
@@ -27,8 +28,10 @@ public class CharacterStateFragment extends DialogFragment {
 
     private ViewGroup firstContainer, secondContainer;
     private TextView txtHowToImprove, txtBut;
+    private EstadoPersonagemService estadoPersonagemService;
 
-    public CharacterStateFragment(){}
+    public CharacterStateFragment(){
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +44,8 @@ public class CharacterStateFragment extends DialogFragment {
     }
 
     public void initComponents(View view){
+        estadoPersonagemService = new EstadoPersonagemService();
+
         firstContainer = (ViewGroup) view.findViewById(R.id.first_container);
         secondContainer = (ViewGroup) view.findViewById(R.id.second_container);
 
@@ -54,7 +59,18 @@ public class CharacterStateFragment extends DialogFragment {
                     (EstadoPersonagem) getArguments().getSerializable(getString(R.string.character_state_argument));
 
             configureIndications(characterState, indicadores);
+            setHowToImproveState(indicadores);
         }
+    }
+
+    private void setHowToImproveState(List<Indicador> indicators) {
+        int numIndicatorsToImprove = estadoPersonagemService.getNumeroIndicadoresParaMelhorar(indicators);
+
+        if(numIndicatorsToImprove == 0)
+            txtHowToImprove.setText(R.string.perfect_character_state_improvement);
+        else
+            txtHowToImprove.setText(String.format(getString(R.string.how_to_improve_character_state),
+                    numIndicatorsToImprove));
     }
 
     private void configureIndications(EstadoPersonagem characterState, List<Indicador> indicators) {
@@ -76,6 +92,8 @@ public class CharacterStateFragment extends DialogFragment {
 
         if(negativeContainer.getChildCount() == 0 || positiveContainer.getChildCount() == 0)
             txtBut.setVisibility(View.GONE);
+
+
     }
 
     private void addIndication(ViewGroup container, Indicador indicator) {

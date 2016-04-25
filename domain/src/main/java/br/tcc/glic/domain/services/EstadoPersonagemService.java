@@ -37,4 +37,31 @@ public class EstadoPersonagemService {
             return EstadoPersonagem.Normal;
 
     }
+
+    public int getNumeroIndicadoresParaMelhorar(List<Indicador> indicadores) {
+        if(indicadores.size() == 0)
+            return 0;
+
+        float countBons = 0;
+
+        for (Indicador indicador :
+                indicadores) {
+            if (indicador.getQualidade() == QualidadeRegistro.Bom)
+                countBons++;
+        }
+
+        float proporcao = countBons / (float) indicadores.size();
+
+        if(proporcao == 0)
+            return 1;
+        else if(proporcao < 0.25)
+            return (int)Math.ceil((countBons / 4f / proporcao) - countBons);
+        else if(proporcao > 0.75)
+            return (int)Math.ceil((countBons / proporcao) - countBons);
+        else if(proporcao == 1)
+            return 0;
+        else
+            return (int)Math.ceil((countBons * 0.75 / proporcao) - countBons);
+
+    }
 }

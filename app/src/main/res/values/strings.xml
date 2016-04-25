@@ -141,4 +141,6 @@
     <string name="character_state_title">Eu estou %s pois...</string>
     <string name="but">Mas...</string>
     <string name="character_state_indication">Sua %1$s está %2$s</string>
+    <string name="perfect_character_state_improvement">Parabéns! Todos os seus indicadores estão bons, continue assim!</string>
+    <string name="how_to_improve_character_state">Melhore pelo menos %s indicador(es) para que eu fique melhor.</string>
 </resources>
