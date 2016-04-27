@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.achievement.Achievements;
@@ -64,6 +66,9 @@ public class MainActivity extends AchievementUnlockerActivity
 
     private int lastMonthGlycemiaAverage = 0, lastWeekGlycemiaAverage = 0;
     private EstadoPersonagem characterState = EstadoPersonagem.Bem;
+    private RoundCornerProgressBar pbrCharacterPoints;
+    private TextView txtLevel;
+    private TextView txtLvlUp;
 
     public MainActivity() {
         registrarDadosService = new RegistrosService(this);
@@ -162,6 +167,39 @@ public class MainActivity extends AchievementUnlockerActivity
                 showCharacterStateDialog();
             }
         });
+
+        pbrCharacterPoints = (RoundCornerProgressBar) findViewById(R.id.pbr_character_points);
+        int characterColor = getCharacterColor();
+        pbrCharacterPoints.setProgressColor(characterColor);
+        pbrCharacterPoints.setMax(getPointsToNextLevel(ConfigUtils.getLevel(this)));
+        pbrCharacterPoints.setProgress(ConfigUtils.getScore(this));
+
+        txtLevel = (TextView) findViewById(R.id.txt_level_number);
+        txtLevel.setText(String.valueOf(ConfigUtils.getLevel(this)));
+        txtLevel.setTextColor(characterColor);
+        ((TextView) findViewById(R.id.txt_level)).setTextColor(characterColor);
+        txtLvlUp = (TextView) findViewById(R.id.txt_lvl_up);
+        txtLvlUp.setTextColor(characterColor);
+    }
+
+    private float getPointsToNextLevel(int lvl) {
+        if(lvl == 1)
+            return 20;
+
+        return lvl * 20 + getPointsToNextLevel(lvl - 1);
+    }
+
+    private int getCharacterColor() {
+        switch (ConfigUtils.getCharacterType(this)){
+            case Alpha:
+                return ContextCompat.getColor(this, R.color.colorAlpha);
+            case Beta:
+                return ContextCompat.getColor(this, R.color.colorBeta);
+            case Gama:
+                return ContextCompat.getColor(this, R.color.colorGama);
+        }
+
+        throw new RuntimeException("Character type not identified.");
     }
 
     private void showCharacterStateDialog() {
@@ -477,6 +515,49 @@ public class MainActivity extends AchievementUnlockerActivity
 
         txtPoints.setText(String.valueOf(newScore));
         txtScoreUp.startAnimation(scoreUpAnimation);
+
+        pbrCharacterPoints.setProgress(newScore);
+
+        if(newScore >= getPointsToNextLevel(ConfigUtils.getLevel(this))) {
+            addLevel();
+        }
+    }
+
+    private void addLevel() {
+        int newLevel = ConfigUtils.incrementLevel(this);
+
+        txtLvlUp.setVisibility(View.VISIBLE);
+        txtLvlUp.setText("+1");
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                txtLvlUp.clearAnimation();
+                txtLvlUp.setVisibility(View.GONE);
+            }
+        }, scoreUpAnimation.getDuration());
+
+        txtLevel.setText(String.valueOf(newLevel));
+        txtLvlUp.startAnimation(scoreUpAnimation);
+
+        pbrCharacterPoints.setMax(getPointsToNextLevel(newLevel));
+
+        spriteCharacter.pause();
+        spriteCharacter
+                .setSprite(ConfigUtils.getCharacterType(this)
+                        .getSpriteSheet(this, EstadoPersonagem.MuitoBem));
+        spriteCharacter.resume();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.lvl_up_title)
+                .setMessage(R.string.lvl_up_text)
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        spriteCharacter
+                                .setSprite(ConfigUtils.getCharacterType(getBaseContext())
+                                        .getSpriteSheet(getBaseContext(), characterState));
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void recalcIndicators() {
@@ -491,12 +572,17 @@ public class MainActivity extends AchievementUnlockerActivity
 
             List<Indicador> indicators = fragmentIndicators.getIndicators();
 
-            characterState = new EstadoPersonagemService().getEstadoPersonagem(indicators);
-            spriteCharacter.pause();
-            spriteCharacter
-                    .setSprite(ConfigUtils.getCharacterType(this)
-                            .getSpriteSheet(this, characterState));
-            spriteCharacter.resume();
+            EstadoPersonagem newCharacterState = new EstadoPersonagemService().getEstadoPersonagem(indicators);
+
+            if(newCharacterState != characterState) {
+                spriteCharacter.pause();
+                spriteCharacter
+                        .setSprite(ConfigUtils.getCharacterType(this)
+                                .getSpriteSheet(this, newCharacterState));
+                spriteCharacter.resume();
+            }
+
+            characterState = newCharacterState;
         }
     }
 

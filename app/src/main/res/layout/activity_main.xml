@@ -15,21 +15,6 @@
         android:id="@+id/main_top_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/txt_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            style="@style/Score"/>
-
-        <TextView
-            android:id="@+id/txt_score_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/txt_points"
-            style="@style/Score"/>
 
 
         <ImageButton
@@ -123,11 +108,74 @@
         android:background="@null"
         android:src="@drawable/ic_chart" />
 
-    <br.tcc.glic.views.SpriteView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sprite_character"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        app:animationSpeed="300" />
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp">
+
+
+            <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                android:id="@+id/pbr_character_points"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:id="@+id/txt_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                style="@style/Score"/>
+
+            <TextView
+                android:id="@+id/txt_score_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/txt_points"
+                style="@style/Score"/>
+
+            <TextView
+                android:id="@+id/txt_level_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/pbr_character_points"
+                android:layout_alignParentRight="true"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/txt_lvl_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/txt_level_number"
+                android:textSize="25sp"
+                android:layout_toLeftOf="@id/txt_level_number" />
+
+            <TextView
+                android:id="@+id/txt_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/txt_level_number"
+                android:layout_above="@id/pbr_character_points"
+                android:layout_alignBaseline="@id/txt_level_number"
+                android:layout_marginRight="5dp"
+                android:text="@string/level"/>
+        </RelativeLayout>
+
+        <br.tcc.glic.views.SpriteView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/sprite_character"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            app:animationSpeed="300" />
+
+    </LinearLayout>
+
 </RelativeLayout>

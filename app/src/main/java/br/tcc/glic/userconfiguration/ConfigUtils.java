@@ -108,11 +108,27 @@ public final class ConfigUtils {
         return incremented;
     }
 
+    public static int incrementLevel(Context context) {
+        SharedPreferences prefs = getSystemConfigurationFile(context);
+        int incremented = prefs.getInt(context.getString(R.string.lvl_config), 0) + 1;
+        prefs
+                .edit()
+                .putInt(context.getString(R.string.lvl_config), incremented)
+                .apply();
+
+        return incremented;
+    }
+
     public static TipoPersonagem getCharacterType(Context context) {
         SharedPreferences prefs = getUserConfigurationFile(context);
 
         String charType = prefs.getString(context.getString(R.string.character_type_config), "");
 
         return TipoPersonagem.valueOf(charType);
+    }
+
+    public static int getLevel(Context context) {
+        return getSystemConfigurationFile(context)
+                .getInt(context.getString(R.string.lvl_config), 0);
     }
 }
