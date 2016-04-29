@@ -16,7 +16,28 @@ public enum TipoPersonagem {
     Beta,
     Gama;
 
-    public SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado){
+    public SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado, boolean baby){
+        if(baby)
+            return getSpriteSheetBaby(context, estado);
+        else
+            return getSpriteSheet(context, estado);
+    }
+
+    private SpriteSheet getSpriteSheetBaby(Context context, EstadoPersonagem estado) {
+        switch (this)
+        {
+            case Alpha:
+                return getSpriteSheetBabyAlpha(context, estado);
+            case Beta:
+                return getSpriteSheetBabyBeta(context, estado);
+            case Gama:
+                return getSpriteSheetBabyGama(context, estado);
+            default:
+                throw new RuntimeException("Tipo não reconhecido");
+        }
+    }
+
+    private SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado){
         switch (this)
         {
             case Alpha:
@@ -30,7 +51,14 @@ public enum TipoPersonagem {
         }
     }
 
-    public SpriteSheet getSpriteSheetFalando(Context context, boolean feliz){
+    public SpriteSheet getSpriteSheetFalando(Context context, boolean feliz, boolean baby){
+        if(baby)
+            return getSpriteSheetBabyFalando(context, feliz);
+        else
+            return getSpriteSheetFalando(context, feliz);
+    }
+
+    private SpriteSheet getSpriteSheetFalando(Context context, boolean feliz){
         switch (this)
         {
             case Alpha:
@@ -39,6 +67,20 @@ public enum TipoPersonagem {
                 return getSpriteSheetBetaFalando(context, feliz);
             case Gama:
                 return getSpriteSheetGamaFalando(context, feliz);
+            default:
+                throw new RuntimeException("Tipo não reconhecido");
+        }
+    }
+
+    private SpriteSheet getSpriteSheetBabyFalando(Context context, boolean feliz){
+        switch (this)
+        {
+            case Alpha:
+                return getSpriteSheetBabyAlphaFalando(context, feliz);
+            case Beta:
+                return getSpriteSheetBabyBetaFalando(context, feliz);
+            case Gama:
+                return getSpriteSheetBabyGamaFalando(context, feliz);
             default:
                 throw new RuntimeException("Tipo não reconhecido");
         }
@@ -65,6 +107,27 @@ public enum TipoPersonagem {
         }
     }
 
+    private SpriteSheet getSpriteSheetBabyGama(Context context, EstadoPersonagem estado) {
+        switch (estado){
+            case MuitoMal:
+            case Mal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_gama_stand_sad),
+                        4, 95, 90);
+            case Normal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_gama_stand_normal),
+                        4, 95, 90);
+            case Bem:
+            case MuitoBem:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_gama_stand_happy),
+                        4, 95, 90);
+            default:
+                throw new RuntimeException("Estado de personagem não reconhecido");
+        }
+    }
+
     private SpriteSheet getSpriteSheetBeta(Context context, EstadoPersonagem estado) {
         switch (estado){
             case MuitoMal:
@@ -81,6 +144,27 @@ public enum TipoPersonagem {
                 return new SpriteSheet(
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_beta_stand_happy),
                         4, 120, 90);
+            default:
+                throw new RuntimeException("Estado de personagem não reconhecido");
+        }
+    }
+
+    private SpriteSheet getSpriteSheetBabyBeta(Context context, EstadoPersonagem estado) {
+        switch (estado){
+            case MuitoMal:
+            case Mal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_beta_stand_sad),
+                        4, 95, 90);
+            case Normal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_beta_stand_normal),
+                        4, 95, 90);
+            case Bem:
+            case MuitoBem:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_beta_stand_happy),
+                        4, 95, 90);
             default:
                 throw new RuntimeException("Estado de personagem não reconhecido");
         }
@@ -107,6 +191,27 @@ public enum TipoPersonagem {
         }
     }
 
+    private SpriteSheet getSpriteSheetBabyAlpha(Context context, EstadoPersonagem estado) {
+        switch (estado){
+            case MuitoMal:
+            case Mal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_alpha_stand_sad),
+                        4, 95, 90);
+            case Normal:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_alpha_stand_normal),
+                        4, 95, 90);
+            case Bem:
+            case MuitoBem:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_alpha_stand_happy),
+                        4, 95, 90);
+            default:
+                throw new RuntimeException("Estado de personagem não reconhecido");
+        }
+    }
+
     private SpriteSheet getSpriteSheetGamaFalando(Context context, boolean feliz) {
         if (!feliz)
             return new SpriteSheet(
@@ -116,6 +221,17 @@ public enum TipoPersonagem {
             return new SpriteSheet(
                     BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_talking_happy),
                     2, 110, 90);
+    }
+
+    private SpriteSheet getSpriteSheetBabyGamaFalando(Context context, boolean feliz) {
+        if (!feliz)
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_gama_talking_serious),
+                    2, 95, 90);
+        else
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_gama_talking_happy),
+                    2, 95, 90);
     }
 
     private SpriteSheet getSpriteSheetBetaFalando(Context context, boolean feliz) {
@@ -129,6 +245,17 @@ public enum TipoPersonagem {
                     2, 120, 90);
     }
 
+    private SpriteSheet getSpriteSheetBabyBetaFalando(Context context, boolean feliz) {
+        if (!feliz)
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_beta_talking_serious),
+                    2, 95, 90);
+        else
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_beta_talking_happy),
+                    2, 95, 90);
+    }
+
     private SpriteSheet getSpriteSheetAlphaFalando(Context context, boolean feliz) {
         if (!feliz)
             return new SpriteSheet(
@@ -138,5 +265,16 @@ public enum TipoPersonagem {
             return new SpriteSheet(
                     BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_alpha_talking_happy),
                     2, 120, 90);
+    }
+
+    private SpriteSheet getSpriteSheetBabyAlphaFalando(Context context, boolean feliz) {
+        if (!feliz)
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_alpha_talking_serious),
+                    2, 95, 90);
+        else
+            return new SpriteSheet(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_baby_alpha_talking_happy),
+                    2, 95, 90);
     }
 }

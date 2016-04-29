@@ -52,6 +52,7 @@ public class MainActivity extends AchievementUnlockerActivity
     private static final int RC_DATA_REGISTERED = 2;
     private static final String LAST_MONTH_AVERAGE = "LAST_MONTH_AVERAGE";
     private static final String LAST_WEEK_AVERAGE = "LAST_WEEK_AVERAGE";
+    public static final int MAX_BABY_CHAR_LEVEL = 6;
 
     private RegisterGlycemiaFragment fragmentGlycemia;
     private IndicatorsFragment fragmentIndicators;
@@ -160,7 +161,7 @@ public class MainActivity extends AchievementUnlockerActivity
         spriteCharacter = (SpriteView) findViewById(R.id.sprite_character);
         spriteCharacter
                 .setSprite(ConfigUtils.getCharacterType(this)
-                        .getSpriteSheet(this, characterState));
+                        .getSpriteSheet(this, characterState, ConfigUtils.getLevel(this) <= MAX_BABY_CHAR_LEVEL));
         spriteCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -543,7 +544,7 @@ public class MainActivity extends AchievementUnlockerActivity
         spriteCharacter.pause();
         spriteCharacter
                 .setSprite(ConfigUtils.getCharacterType(this)
-                        .getSpriteSheet(this, EstadoPersonagem.MuitoBem));
+                        .getSpriteSheet(this, EstadoPersonagem.MuitoBem, ConfigUtils.getLevel(this) <= MAX_BABY_CHAR_LEVEL));
         spriteCharacter.resume();
         new AlertDialog.Builder(this)
                 .setTitle(R.string.lvl_up_title)
@@ -553,7 +554,8 @@ public class MainActivity extends AchievementUnlockerActivity
                     public void onDismiss(DialogInterface dialog) {
                         spriteCharacter
                                 .setSprite(ConfigUtils.getCharacterType(getBaseContext())
-                                        .getSpriteSheet(getBaseContext(), characterState));
+                                        .getSpriteSheet(getBaseContext(), characterState,
+                                                ConfigUtils.getLevel(getBaseContext()) <= MAX_BABY_CHAR_LEVEL));
                     }
                 })
                 .create()
@@ -578,7 +580,7 @@ public class MainActivity extends AchievementUnlockerActivity
                 spriteCharacter.pause();
                 spriteCharacter
                         .setSprite(ConfigUtils.getCharacterType(this)
-                                .getSpriteSheet(this, newCharacterState));
+                                .getSpriteSheet(this, newCharacterState, ConfigUtils.getLevel(this) <= MAX_BABY_CHAR_LEVEL));
                 spriteCharacter.resume();
             }
 
