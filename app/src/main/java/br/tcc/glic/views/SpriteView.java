@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -45,6 +46,8 @@ public class SpriteView extends SurfaceView implements Runnable {
     private Rect frameToDraw;
 
     private RectF whereToDraw = new RectF(0, 0, frameWidth, frameHeight);
+    private boolean loop = true;
+    private AnimationFinishedListener animationFinishedListener;
 
     public SpriteView(Context context, @DrawableRes int spriteId) {
         this(context, spriteId, false);
@@ -137,6 +140,8 @@ public class SpriteView extends SurfaceView implements Runnable {
                 0,
                 frameWidth,
                 frameHeight);
+
+        whereToDraw = new RectF(0, 0, frameWidth, frameHeight);
     }
 
     public void setFrameWidth(int frameWidth) {
@@ -147,6 +152,8 @@ public class SpriteView extends SurfaceView implements Runnable {
                 0,
                 frameWidth,
                 frameHeight);
+
+        whereToDraw = new RectF(0, 0, frameWidth, frameHeight);
     }
 
     public void setFramesCount(int framesCount) {
@@ -163,6 +170,8 @@ public class SpriteView extends SurfaceView implements Runnable {
                 frameWidth * framesCount,
                 frameHeight,
                 false);
+
+        invalidate();
     }
 
     private void setSprite(@DrawableRes int spriteId)
@@ -185,6 +194,8 @@ public class SpriteView extends SurfaceView implements Runnable {
                 frameWidth,
                 frameHeight);
 
+        whereToDraw = new RectF(0, 0, frameWidth, frameHeight);
+
         setSprite(spriteId);
     }
 
@@ -202,6 +213,8 @@ public class SpriteView extends SurfaceView implements Runnable {
                 frameWidth,
                 frameHeight);
 
+        whereToDraw = new RectF(0, 0, frameWidth, frameHeight);
+
         setSprite(spriteBitmap);
     }
 
@@ -210,6 +223,16 @@ public class SpriteView extends SurfaceView implements Runnable {
                 dpToPx(spriteSheet.getLarguraFrame()),
                 dpToPx(spriteSheet.getAlturaFrame()),
                 spriteSheet.getNumeroFrames());
+
+        measure(dpToPx(spriteSheet.getLarguraFrame()), dpToPx(spriteSheet.getAlturaFrame()));
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
+    }
+
+    public boolean isLoop() {
+        return loop;
     }
 
     public int dpToPx(int dp) {
@@ -247,8 +270,12 @@ public class SpriteView extends SurfaceView implements Runnable {
         if (time > lastFrameChangeTime + animationSpeed) {
             lastFrameChangeTime = time;
             currentFrame++;
-            if (currentFrame >= framesCount)
-                currentFrame = 0;
+            if (currentFrame >= framesCount){
+                if(loop)
+                    currentFrame = 0;
+                else
+                    playing = false;
+            }
         }
 
         frameToDraw.left = currentFrame * frameWidth;
@@ -296,8 +323,22 @@ public class SpriteView extends SurfaceView implements Runnable {
         if(!playing) {
             playing = true;
             spriteThread = new Thread(this);
+            if(animationFinishedListener != null)
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        animationFinishedListener.onAnimationFinished();
+                    }
+                }, animationSpeed * framesCount);
             spriteThread.start();
         }
+    }
+
+    public void setAnimationFinishedListener(AnimationFinishedListener animationFinishedListener) {
+        this.animationFinishedListener = animationFinishedListener;
+    }
+
+    public interface AnimationFinishedListener {
+        void onAnimationFinished();
     }
 }
 

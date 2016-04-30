@@ -147,4 +147,8 @@
     <string name="lvl_config">lvl_config</string>
     <string name="lvl_up_title">Você subiu de nível!</string>
     <string name="lvl_up_text">Parabéns! Parece que você esta registrando tudo certinho!</string>
+    <string name="evolution_title">Seu Glic está evoluindo...</string>
+    <string name="ok">OK</string>
+    <string name="character_evolved_title">Seu Glic evoluiu!</string>
+    <string name="lvl_up_text_with_evolution_indication">Parabéns! Parece que você esta registrando tudo certinho!\n\nChegue ao nível %s para que seu personagem evolua.</string>
 </resources>

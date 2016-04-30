@@ -9,7 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main_container">
 
     <RelativeLayout
         android:id="@+id/main_top_menu"
@@ -111,7 +112,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:id="@+id/character_container">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -173,8 +175,8 @@
             android:id="@+id/sprite_character"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            app:animationSpeed="300" />
+            app:animationSpeed="300"
+            app:grayscaleWhenPaused="false"/>
 
     </LinearLayout>
 

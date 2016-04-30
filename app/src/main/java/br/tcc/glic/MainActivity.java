@@ -1,5 +1,6 @@
 package br.tcc.glic;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.domain.desafios.Desafio;
 import br.tcc.glic.domain.enums.EstadoPersonagem;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.personagem.TipoPersonagem;
 import br.tcc.glic.domain.services.EstadoPersonagemService;
 import br.tcc.glic.domain.services.PontuacaoService;
 import br.tcc.glic.domain.services.RegistrosService;
@@ -139,8 +143,12 @@ public class MainActivity extends AchievementUnlockerActivity
         btnTestData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 addTestData();
                 Toast.makeText(view.getContext(), "Dados de teste adicionados", Toast.LENGTH_SHORT).show();
+                */
+                goToEvolutionActivity();
+
             }
         });
 
@@ -158,15 +166,14 @@ public class MainActivity extends AchievementUnlockerActivity
         scoreUpAnimation = AnimationUtils.loadAnimation(this, R.anim.score_up);
 
         spriteCharacter = (SpriteView) findViewById(R.id.sprite_character);
-        spriteCharacter
-                .setSprite(ConfigUtils.getCharacterType(this)
-                        .getSpriteSheet(this, characterState, ConfigUtils.getLevel(this)));
         spriteCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCharacterStateDialog();
             }
         });
+
+        reloadCharacterSprite(this);
 
         pbrCharacterPoints = (RoundCornerProgressBar) findViewById(R.id.pbr_character_points);
         int characterColor = getCharacterColor();
@@ -183,7 +190,7 @@ public class MainActivity extends AchievementUnlockerActivity
     }
 
     private float getPointsToNextLevel(int lvl) {
-        if(lvl == 1)
+        if(lvl == 0)
             return 20;
 
         return lvl * 20 + getPointsToNextLevel(lvl - 1);
@@ -248,6 +255,9 @@ public class MainActivity extends AchievementUnlockerActivity
 
         if(txtPoints != null)
             txtPoints.setText(String.valueOf(ConfigUtils.getScore(this)));
+
+        if(spriteCharacter != null)
+            reloadCharacterSprite(this);
     }
 
     
@@ -472,6 +482,9 @@ public class MainActivity extends AchievementUnlockerActivity
             return;
         }
 
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
         registrarDadosService.registrarGlicemia(glicemia);
 
         Toast.makeText(this, getString(R.string.result_saved), Toast.LENGTH_LONG).show();
@@ -540,25 +553,56 @@ public class MainActivity extends AchievementUnlockerActivity
 
         pbrCharacterPoints.setMax(getPointsToNextLevel(newLevel));
 
+        if(newLevel == TipoPersonagem.MAX_BABY_CHAR_LEVEL + 1)
+            goToEvolutionActivity();
+        else
+            showLevelUpMessage();
+    }
+
+    private void goToEvolutionActivity() {
+        Intent intent = new Intent(this, EvolutionActivity.class);
+        startActivity(intent);
+    }
+
+    private void showLevelUpMessage() {
+        final Context context = this;
+
         spriteCharacter.pause();
         spriteCharacter
                 .setSprite(ConfigUtils.getCharacterType(this)
                         .getSpriteSheet(this, EstadoPersonagem.MuitoBem, ConfigUtils.getLevel(this)));
         spriteCharacter.resume();
+
+        String message = ConfigUtils.getLevel(this) <= TipoPersonagem.MAX_BABY_CHAR_LEVEL ?
+                String.format(getString(R.string.lvl_up_text_with_evolution_indication), TipoPersonagem.MAX_BABY_CHAR_LEVEL + 1)
+                : getString(R.string.lvl_up_text);
+
         new AlertDialog.Builder(this)
                 .setTitle(R.string.lvl_up_title)
-                .setMessage(R.string.lvl_up_text)
+                .setMessage(message)
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        spriteCharacter
-                                .setSprite(ConfigUtils.getCharacterType(getBaseContext())
-                                        .getSpriteSheet(getBaseContext(), characterState,
-                                                ConfigUtils.getLevel(getBaseContext())));
+                        reloadCharacterSprite(context);
                     }
                 })
                 .create()
                 .show();
+    }
+
+    private void reloadCharacterSprite(Context context) {
+        spriteCharacter.pause();
+        spriteCharacter
+                .setSprite(ConfigUtils.getCharacterType(context)
+                        .getSpriteSheet(context, characterState,
+                                ConfigUtils.getLevel(context)));
+        spriteCharacter.resume();
+
+        LinearLayout charContainer = (LinearLayout) findViewById(R.id.character_container);
+        if(charContainer != null) {
+            charContainer.removeView(spriteCharacter);
+            charContainer.addView(spriteCharacter);
+        }
     }
 
     private void recalcIndicators() {

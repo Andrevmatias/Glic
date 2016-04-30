@@ -98,6 +98,7 @@ public class RegisterGlycemiaFragment extends EditEntryDialogFragment
             glicemia.setHora(fragmentDateTime.getDateTime().getTime());
         else
             glicemia.setHora(new Date());
+
         return glicemia;
     }
 
