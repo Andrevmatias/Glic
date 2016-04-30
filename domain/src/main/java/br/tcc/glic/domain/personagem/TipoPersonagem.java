@@ -16,11 +16,32 @@ public enum TipoPersonagem {
     Beta,
     Gama;
 
-    public SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado, boolean baby){
-        if(baby)
+    public static final int MAX_BABY_CHAR_LEVEL = 6;
+
+    public SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado, int charLevel){
+        if(charLevel <= MAX_BABY_CHAR_LEVEL)
             return getSpriteSheetBaby(context, estado);
         else
             return getSpriteSheet(context, estado);
+    }
+
+    public SpriteSheet getEvolutionSpriteSheet(Context context){
+        switch (this){
+            case Alpha:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_alpha_evolution),
+                        20, 120, 90);
+            case Beta:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_beta_evolution),
+                        20, 120, 90);
+            case Gama:
+                return new SpriteSheet(
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_gama_evolution),
+                        20, 110, 90);
+            default:
+                throw new RuntimeException("Tipo não reconhecido");
+        }
     }
 
     private SpriteSheet getSpriteSheetBaby(Context context, EstadoPersonagem estado) {
