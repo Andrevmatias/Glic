@@ -12,12 +12,14 @@
             android:id="@+id/edt_insulin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:inputType="numberDecimal"
-            android:textAlignment="center"
+            android:gravity="center"
             android:textSize="50sp"
             android:drawableLeft="@drawable/ic_insulin"
-            android:drawablePadding="5dp"/>
+            android:drawablePadding="5dp"
+            android:backgroundTint="@color/colorLightBlue"
+            android:textCursorDrawable="@drawable/text_cursor_light_blue"/>
 
         <Spinner
             android:id="@+id/spn_insulin_type"
@@ -30,8 +32,9 @@
         android:id="@+id/container_date_time_insulin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/insulin_values_container"/>
+        android:layout_below="@id/insulin_values_container" />
 
     <include
         android:layout_height="wrap_content"

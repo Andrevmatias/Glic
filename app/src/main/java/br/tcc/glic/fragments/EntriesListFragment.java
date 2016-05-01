@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import br.tcc.glic.R;
 import br.tcc.glic.adapters.RegistroViewAdapter;
 import br.tcc.glic.domain.core.Registro;
@@ -50,11 +52,15 @@ public class EntriesListFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            viewAdapter = new RegistroViewAdapter(new RegistrosService(getActivity()).listRegistros(), listener);
+            List<Registro> items = new RegistrosService(getActivity()).listRegistros();
+            viewAdapter = new RegistroViewAdapter(items, listener);
+
             recyclerView.setAdapter(viewAdapter);
         }
         return view;
     }
+
+
 
 
     public void notifyItemRemoved(Registro item){

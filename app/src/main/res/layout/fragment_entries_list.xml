@@ -9,5 +9,4 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="br.tcc.glic.fragments.EntriesListFragment"
-    tools:listitem="@layout/fragment_list_item_glicemia" />
+    tools:context="br.tcc.glic.fragments.EntriesListFragment" />

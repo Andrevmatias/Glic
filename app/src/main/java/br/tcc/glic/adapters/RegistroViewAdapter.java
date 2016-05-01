@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,19 +24,46 @@ import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
 import br.tcc.glic.fragments.EntriesListFragment;
 
-public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerView.ViewHolder> {
 
-    private final int GLYCEMIA = 0, CARBOHYDRATE = 1, INSULIN = 2, HBA1C = 3;
+    private final int GLYCEMIA = 1, CARBOHYDRATE = 2, INSULIN = 3, HBA1C = 4;
 
     private final List<Registro> items;
+    private final List<String> sections;
+    private final List<Integer> sectionCounts;
     private final Map<Long, Integer> idPositionMapping;
     private final EntriesListFragment.OnListFragmentInteractionListener listener;
+    private static final DateFormat sectionDateFormat = new SimpleDateFormat("dd/MM/yy (EEE)");
+    private final SimpleDateFormat itemDateFormat = new SimpleDateFormat("HH:mm");
 
     public RegistroViewAdapter(List<Registro> items, EntriesListFragment.OnListFragmentInteractionListener listener) {
         this.idPositionMapping = new HashMap<>();
         this.items = items;
         this.listener = listener;
+        this.sections = new ArrayList<>();
+        this.sectionCounts = new ArrayList<>();
+
+        int count = 0;
+        String currentDate = null;
+        for(Registro entry : items) {
+            String date = sectionDateFormat.format(entry.getHora());
+            if(currentDate == null)
+                currentDate = date;
+
+            if(!date.equals(currentDate)) {
+                sections.add(currentDate);
+                sectionCounts.add(count);
+                count = 0;
+                currentDate = date;
+            }
+
+            count++;
+        }
+
+        sections.add(currentDate);
+        sectionCounts.add(count);
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,10 +85,16 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(viewType == HBA1C)
             return new HemoglobinaGlicadaViewHolder(view);
 
+        if(viewType == VIEW_TYPE_HEADER)
+            return new HeaderViewHolder(view);
+
         throw new IllegalArgumentException("Entry type not found.");
     }
 
     private int getLayout(int viewType) {
+        if(viewType == VIEW_TYPE_HEADER)
+            return R.layout.list_section_header;
+
         if(viewType == GLYCEMIA)
             return R.layout.fragment_list_item_glicemia;
 
@@ -74,9 +111,9 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        Registro registro = items.get(position);
-        idPositionMapping.put(registro.getCodigo(), position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int section, int relativePosition, int absolutePosition) {
+        Registro registro = items.get(absolutePosition);
+        idPositionMapping.put(registro.getCodigo(), absolutePosition);
 
         switch (holder.getItemViewType()){
             case GLYCEMIA:
@@ -100,7 +137,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void configureGlicemiaViewHolder(final GlicemiaViewHolder holder, Glicemia glicemia) {
         holder.item = glicemia;
         holder.contentView.setText(String.valueOf(glicemia.getValor()));
-        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(glicemia.getHora()));
+        holder.timeView.setText(itemDateFormat.format(glicemia.getHora()));
         holder.qualityImage.setImageDrawable(glicemia.getQualidade().getDrawable(holder.view.getContext()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +154,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                                         CarboidratoIngerido carboidrato) {
         holder.item = carboidrato;
         holder.contentView.setText(String.valueOf(carboidrato.getQuantidade()));
-        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(carboidrato.getHora()));
+        holder.timeView.setText(itemDateFormat.format(carboidrato.getHora()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +170,7 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                                        AplicacaoInsulina aplicacaoInsulina) {
         holder.item = aplicacaoInsulina;
         holder.contentView.setText(String.valueOf(aplicacaoInsulina.getQuantidade()));
-        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy HH:mm").format(aplicacaoInsulina.getHora()));
+        holder.timeView.setText(itemDateFormat.format(aplicacaoInsulina.getHora()));
         holder.typeView.setText(aplicacaoInsulina.getTipo().getNome());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +187,6 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                                        HemoglobinaGlicada hbA1c) {
         holder.item = hbA1c;
         holder.contentView.setText(String.valueOf(hbA1c.getValor()));
-        holder.timeView.setText(new SimpleDateFormat("dd/MM/yy").format(hbA1c.getHora()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,25 +199,37 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public int getItemCount() {
-        return items.size();
+    public int getSectionCount() {
+        return sections.size();
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (items.get(position) instanceof Glicemia)
+    public int getItemCount(int section) {
+        return sectionCounts.get(section);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder viewHolder, int section) {
+        TextView txtTitle = ((HeaderViewHolder)viewHolder).titleView;
+
+        txtTitle.setText(sections.get(section));
+    }
+
+    @Override
+    public int getItemViewType(int section, int relativePosition, int absolutePosition) {
+        if (items.get(absolutePosition) instanceof Glicemia)
             return GLYCEMIA;
 
-        if(items.get(position) instanceof CarboidratoIngerido)
+        if(items.get(absolutePosition) instanceof CarboidratoIngerido)
             return CARBOHYDRATE;
 
-        if(items.get(position) instanceof AplicacaoInsulina)
+        if(items.get(absolutePosition) instanceof AplicacaoInsulina)
             return INSULIN;
 
-        if(items.get(position) instanceof HemoglobinaGlicada)
+        if(items.get(absolutePosition) instanceof HemoglobinaGlicada)
             return HBA1C;
 
-        return -1;
+        return 0;
     }
 
     public void notifyItemChanged(Registro item) {
@@ -260,7 +308,6 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class HemoglobinaGlicadaViewHolder extends RecyclerView.ViewHolder {
         private final View view;
         private final TextView contentView;
-        private final TextView timeView;
         private HemoglobinaGlicada item;
 
 
@@ -268,12 +315,27 @@ public class RegistroViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
             this.view = view;
             contentView = (TextView) view.findViewById(R.id.valor_hemoglobina);
-            timeView = (TextView) view.findViewById(R.id.hora_hemoglobina);
         }
 
         @Override
         public String toString() {
             return super.toString() + " '" + contentView.getText() + "'";
+        }
+    }
+
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final View view;
+        private final TextView titleView;
+
+        public HeaderViewHolder(View view) {
+            super(view);
+            this.view = view;
+            titleView = (TextView) view.findViewById(R.id.section_text);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + titleView.getText() + "'";
         }
     }
 }

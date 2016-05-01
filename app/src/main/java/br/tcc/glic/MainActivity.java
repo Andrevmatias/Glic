@@ -143,11 +143,11 @@ public class MainActivity extends AchievementUnlockerActivity
         btnTestData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
+
                 addTestData();
                 Toast.makeText(view.getContext(), "Dados de teste adicionados", Toast.LENGTH_SHORT).show();
-                */
-                goToEvolutionActivity();
+                /*
+                goToEvolutionActivity();*/
 
             }
         });

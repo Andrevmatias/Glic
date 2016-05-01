@@ -104,7 +104,8 @@
         android:id="@+id/btn_charts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_list"
+        android:layout_toRightOf="@id/btn_add_entry"
+        android:layout_below="@id/fragment_indicators_main"
         android:layout_margin="@dimen/fab_margin"
         android:background="@null"
         android:src="@drawable/ic_chart" />

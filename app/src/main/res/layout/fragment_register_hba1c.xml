@@ -8,17 +8,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textSize="50sp"
         android:drawableLeft="@drawable/ic_hba1c"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:backgroundTint="@color/colorPurple"
+        android:textCursorDrawable="@drawable/text_cursor_purple"/>
 
     <FrameLayout
         android:id="@+id/container_date_time_hba1c"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/edt_hba1c"/>
+        android:layout_below="@id/edt_hba1c" />
 
     <include
         android:layout_height="wrap_content"

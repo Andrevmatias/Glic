@@ -4,8 +4,10 @@
     <color name="colorPrimaryDark">#B52300</color>
     <color name="colorAccent">#03A043</color>
     <color name="colorBlue">#09658C</color>
+    <color name="colorPurple">#9c27b0</color>
     <color name="colorWhite">#FFFF</color>
     <color name="colorBlack">#333333</color>
+    <color name="colorLightBlue">#00b4ff</color>
     <color name="colorLow">#448AA8</color>
     <color name="colorHigh">#FF7E5F</color>
     <color name="colorGood">#47BD76</color>
