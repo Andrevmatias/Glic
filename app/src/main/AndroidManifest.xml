@@ -61,7 +61,7 @@
         </receiver>
 
         <activity android:name=".ChartsActivity" />
-        <activity android:name=".EvolutionActivity"></activity>
+        <activity android:name=".EvolutionActivity"/>
     </application>
 
 </manifest>

@@ -22,6 +22,8 @@ public class LoginActivity extends AppCompatActivity {
                         MainActivity.class : FirstConfigurationActivity.class;
         Intent nextIntent = new Intent(this, activity);
         startActivity(nextIntent);
+
+        finish();
     }
 }
 
