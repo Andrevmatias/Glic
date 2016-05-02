@@ -44,7 +44,8 @@
             android:layout_toLeftOf="@+id/btn_achievements"
             android:layout_alignParentTop="true"
             android:background="@null"
-            android:src="@drawable/ic_test" />
+            android:src="@drawable/ic_test"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 
