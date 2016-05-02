@@ -28,6 +28,8 @@ public abstract class Registro implements Serializable, Comparable<Registro> {
         this.hora = hora;
     }
 
+    public abstract boolean isValid();
+
     @Override
     public int compareTo(Registro another) {
         long result = another.getHora().getTime() - this.getHora().getTime();

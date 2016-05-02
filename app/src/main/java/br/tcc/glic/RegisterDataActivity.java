@@ -28,6 +28,7 @@ import br.tcc.glic.domain.core.CarboidratoIngerido;
 import br.tcc.glic.domain.core.Glicemia;
 import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.services.RegistrosService;
+import br.tcc.glic.exceptions.InvalidValueException;
 import br.tcc.glic.fragments.RegisterCarbohydratesFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.RegisterHbA1cFragment;
@@ -179,7 +180,11 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
                 (RegisterInsulinFragment) dataFieldFragments.get(RegisterDataField.Insulin);
 
         AplicacaoInsulina aplicacaoInsulina = fragmentInsulin.getInsulin();
+
         if(aplicacaoInsulina != null) {
+            if (!aplicacaoInsulina.isValid())
+                throw new InvalidValueException(getString(R.string.invalid_insulin_value_message));
+
             new RegistrosService(this).registrarAplicacaoInsulina(aplicacaoInsulina);
             fragmentInsulin.reset();
             return aplicacaoInsulina;
@@ -193,7 +198,11 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
                 (RegisterHbA1cFragment) dataFieldFragments.get(RegisterDataField.HbA1c);
 
         HemoglobinaGlicada hbA1c = fragmentHbA1c.getHbA1c();
+
         if(hbA1c != null){
+            if (!hbA1c.isValid())
+                throw new InvalidValueException(getString(R.string.invalid_hba1c_value_message));
+
             new RegistrosService(this).registrarHemoglobinaGlicada(hbA1c);
             fragmentHbA1c.reset();
             return hbA1c;
@@ -207,7 +216,11 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
                 (RegisterGlycemiaFragment) dataFieldFragments.get(RegisterDataField.Glycemia);
 
         Glicemia glycemia = fragmentGycemia.getGlycemia();
+
         if(glycemia != null) {
+            if (!glycemia.isValid())
+                throw new InvalidValueException(getString(R.string.invalid_glycemia_value_message));
+
             new RegistrosService(this).registrarGlicemia(glycemia);
             fragmentGycemia.reset();
             return glycemia;
@@ -221,7 +234,11 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
                 (RegisterCarbohydratesFragment) dataFieldFragments.get(RegisterDataField.Carbohydrates);
 
         CarboidratoIngerido carboidratoIngerido = fragmentCarbohydrates.getCarbohydrate();
+
         if (carboidratoIngerido != null) {
+            if (!carboidratoIngerido.isValid())
+                throw new InvalidValueException(getString(R.string.invalid_carbohydrate_value_message));
+
             new RegistrosService(this).registrarCarboidratosIngeridos(carboidratoIngerido);
             fragmentCarbohydrates.reset();
             return carboidratoIngerido;
@@ -256,8 +273,16 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
 
     @Override
     public void finish() {
-        saveAll();
-        super.finish();
+        try {
+            saveAll();
+            super.finish();
+        } catch (InvalidValueException ex) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.invalid_field_value_message_title)
+                    .setMessage(ex.getMessage())
+                    .create()
+                    .show();
+        }
     }
 
     private class RegisterDataFieldListAdapterModel {

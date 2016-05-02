@@ -26,4 +26,9 @@ public class Glicemia extends Registro {
     public QualidadeRegistro getQualidade() {
         return qualidade;
     }
+
+    @Override
+    public boolean isValid() {
+        return this.getValor() >= 20 && this.getValor() <= 900;
+    }
 }

@@ -129,7 +129,7 @@
     <string name="score_config">score_config</string>
     <string name="mandatory_field_message_title">Campo Obrigatório</string>
     <string name="mandatory_age_configuration_message">Por favor, informe a sua idade.</string>
-    <string name="mandatory_glycemia_configuration_message">Informe o valor da sua glicemia.</string>
+    <string name="mandatory_glycemia_message">Informe o valor da sua glicemia.</string>
     <string name="character_config">character_config</string>
     <string name="select_your_glic">Escolha o seu Glic</string>
     <string name="character_type_config">character_type_config</string>
@@ -151,4 +151,9 @@
     <string name="ok">OK</string>
     <string name="character_evolved_title">Seu Glic evoluiu!</string>
     <string name="lvl_up_text_with_evolution_indication">Parabéns! Parece que você esta registrando tudo certinho!\n\nChegue ao nível %s para que seu personagem evolua.</string>
+    <string name="invalid_field_value_message_title">Valor Inválido</string>
+    <string name="invalid_glycemia_value_message">O valor da glicemia deve estar entre 20 e 900.</string>
+    <string name="invalid_carbohydrate_value_message">A quantidade de carboidratos ingeridos deve estar entre 1 e 999.</string>
+    <string name="invalid_hba1c_value_message">O valor da hemoglobina glicada deve estar entre 0.1 e 99.</string>
+    <string name="invalid_insulin_value_message">A dose de insulina deve estar entre 0.1 e 999.</string>
 </resources>

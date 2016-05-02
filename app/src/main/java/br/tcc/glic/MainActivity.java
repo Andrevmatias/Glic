@@ -475,7 +475,15 @@ public class MainActivity extends AchievementUnlockerActivity
         if(glicemia == null) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.mandatory_field_message_title)
-                    .setMessage(R.string.mandatory_glycemia_configuration_message)
+                    .setMessage(R.string.mandatory_glycemia_message)
+                    .create()
+                    .show();
+
+            return;
+        } else if (!glicemia.isValid()){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.invalid_field_value_message_title)
+                    .setMessage(R.string.invalid_glycemia_value_message)
                     .create()
                     .show();
 

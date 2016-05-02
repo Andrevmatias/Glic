@@ -26,4 +26,10 @@ public class PraticaExercicio extends Registro {
     public void setDuracao(int duracao) {
         this.duracao = duracao;
     }
+
+
+    @Override
+    public boolean isValid() {
+        return this.getDuracao() > 1 && this.getDuracao() < 999;
+    }
 }

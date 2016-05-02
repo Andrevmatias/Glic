@@ -26,42 +26,63 @@ import br.tcc.glic.fragments.EntriesListFragment;
 
 public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerView.ViewHolder> {
 
-    private final int GLYCEMIA = 1, CARBOHYDRATE = 2, INSULIN = 3, HBA1C = 4;
+    private final int GLYCEMIA = 1, CARBOHYDRATE = 2, INSULIN = 3, HBA1C = 4, NONE = 5;
 
     private final List<Registro> items;
     private final List<String> sections;
     private final List<Integer> sectionCounts;
-    private final Map<Long, Integer> idPositionMapping;
+    private final Map<Long, Integer> ids;
+    private final Map<Long, Integer> idsToSectionMap;
     private final EntriesListFragment.OnListFragmentInteractionListener listener;
     private static final DateFormat sectionDateFormat = new SimpleDateFormat("dd/MM/yy (EEE)");
     private final SimpleDateFormat itemDateFormat = new SimpleDateFormat("HH:mm");
 
     public RegistroViewAdapter(List<Registro> items, EntriesListFragment.OnListFragmentInteractionListener listener) {
-        this.idPositionMapping = new HashMap<>();
         this.items = items;
+        this.ids = getIdsMapping(items);
         this.listener = listener;
         this.sections = new ArrayList<>();
         this.sectionCounts = new ArrayList<>();
+        this.idsToSectionMap = new HashMap<>();
 
         int count = 0;
         String currentDate = null;
+        List<Long> idsOfThisSection = new ArrayList<>();
         for(Registro entry : items) {
             String date = sectionDateFormat.format(entry.getHora());
             if(currentDate == null)
                 currentDate = date;
 
             if(!date.equals(currentDate)) {
+                for(Long id : idsOfThisSection)
+                    idsToSectionMap.put(id, sections.size());
+
                 sections.add(currentDate);
                 sectionCounts.add(count);
+
+                idsOfThisSection.clear();
                 count = 0;
                 currentDate = date;
             }
 
+            idsOfThisSection.add(entry.getCodigo());
             count++;
         }
 
+        for(Long id : idsOfThisSection)
+            idsToSectionMap.put(id, sections.size());
         sections.add(currentDate);
         sectionCounts.add(count);
+    }
+
+    private Map<Long, Integer> getIdsMapping(List<Registro> items) {
+        Map<Long, Integer> idsMap = new HashMap<>();
+
+        for(int i = 0; i < items.size(); i++)
+            idsMap.put(items.get(i).getCodigo(), i);
+
+
+        return idsMap;
     }
 
 
@@ -88,6 +109,14 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
         if(viewType == VIEW_TYPE_HEADER)
             return new HeaderViewHolder(view);
 
+        if(viewType == NONE)
+            return new RecyclerView.ViewHolder(view) {
+                @Override
+                public String toString() {
+                    return super.toString();
+                }
+            };
+
         throw new IllegalArgumentException("Entry type not found.");
     }
 
@@ -107,13 +136,19 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
         if(viewType == HBA1C)
             return R.layout.fragment_list_item_hemoglobina_glicada;
 
+        if(viewType == NONE)
+            return R.layout.list_section_header;
+
         throw new IllegalArgumentException("Entry type not found.");
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int section, int relativePosition, int absolutePosition) {
+        if(absolutePosition >= items.size())
+            return;
+
         Registro registro = items.get(absolutePosition);
-        idPositionMapping.put(registro.getCodigo(), absolutePosition);
+        ids.put(registro.getCodigo(), absolutePosition);
 
         switch (holder.getItemViewType()){
             case GLYCEMIA:
@@ -144,7 +179,7 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.item);
+                    listener.onListFragmentInteraction(holder.item, holder.getAdapterPosition());
                 }
             }
         });
@@ -160,7 +195,7 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.item);
+                    listener.onListFragmentInteraction(holder.item, holder.getAdapterPosition());
                 }
             }
         });
@@ -177,7 +212,7 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.item);
+                    listener.onListFragmentInteraction(holder.item, holder.getAdapterPosition());
                 }
             }
         });
@@ -192,7 +227,7 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onListFragmentInteraction(holder.item);
+                    listener.onListFragmentInteraction(holder.item, holder.getAdapterPosition());
                 }
             }
         });
@@ -217,6 +252,9 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
 
     @Override
     public int getItemViewType(int section, int relativePosition, int absolutePosition) {
+        if(items.size() <= absolutePosition || absolutePosition < 0)
+            return NONE;
+
         if (items.get(absolutePosition) instanceof Glicemia)
             return GLYCEMIA;
 
@@ -232,16 +270,31 @@ public class RegistroViewAdapter extends SectionedRecyclerViewAdapter<RecyclerVi
         return 0;
     }
 
-    public void notifyItemChanged(Registro item) {
-        int position = idPositionMapping.get(item.getCodigo());
+    public void notifyItemChanged(Registro item, int adapterPosition ) {
+        int position = ids.get(item.getCodigo());
         this.items.set(position, item);
-        this.notifyItemChanged(position, item);
+        this.notifyItemChanged(adapterPosition, item);
     }
 
-    public void notifyItemRemoved(Registro item) {
-        int position = idPositionMapping.get(item.getCodigo());
+    public void notifyItemRemoved(Registro item, int adapterPosition) {
+        int position = ids.get(item.getCodigo());
         this.items.remove(position);
-        this.notifyItemRemoved(position);
+        ids.remove(position);
+
+        int sectionIndex = idsToSectionMap.get(item.getCodigo());
+        idsToSectionMap.remove(item.getCodigo());
+        int sectionCount = sectionCounts.get(sectionIndex);
+        sectionCount--;
+
+        if(sectionCount == 0) {
+            sections.remove(sectionIndex);
+            sectionCounts.remove(sectionIndex);
+        } else {
+            sectionCounts.set(sectionIndex, sectionCount);
+        }
+
+        notifyItemRemoved(adapterPosition);
+        notifyItemRangeChanged(adapterPosition - 1, items.size());
     }
 
     public class GlicemiaViewHolder extends RecyclerView.ViewHolder {

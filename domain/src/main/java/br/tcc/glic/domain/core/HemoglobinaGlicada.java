@@ -35,4 +35,9 @@ public class HemoglobinaGlicada extends Registro {
     public void setQualidade(QualidadeRegistro qualidade) {
         this.qualidade = qualidade;
     }
+
+    @Override
+    public boolean isValid() {
+        return this.getValor() >= 0.1 && this.getValor() <= 99;
+    }
 }

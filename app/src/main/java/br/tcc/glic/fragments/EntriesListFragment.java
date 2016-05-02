@@ -63,12 +63,12 @@ public class EntriesListFragment extends Fragment {
 
 
 
-    public void notifyItemRemoved(Registro item){
-        viewAdapter.notifyItemRemoved(item);
+    public void notifyItemRemoved(Registro item, int position){
+        viewAdapter.notifyItemRemoved(item, position);
     }
 
-    public void notifyItemChanged(Registro item){
-        viewAdapter.notifyItemChanged(item);
+    public void notifyItemChanged(Registro item, int position){
+        viewAdapter.notifyItemChanged(item, position);
     }
 
     @Override
@@ -89,6 +89,6 @@ public class EntriesListFragment extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Registro item);
+        void onListFragmentInteraction(Registro item, int position);
     }
 }

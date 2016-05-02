@@ -2,6 +2,7 @@ package br.tcc.glic;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import br.tcc.glic.dialogs.EditEntryDialogListener;
@@ -21,8 +22,8 @@ public class EntriesListActivity extends AppCompatActivity
     implements EntriesListFragment.OnListFragmentInteractionListener,
         EditEntryDialogListener
 {
-
     private EntriesListFragment fragmentList;
+    private static int currentPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class EntriesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Registro item) {
+    public void onListFragmentInteraction(Registro item, int position) {
         DialogFragment dialog;
 
         Bundle bundle = new Bundle();
@@ -58,18 +59,43 @@ public class EntriesListActivity extends AppCompatActivity
         }
 
         dialog.setArguments(bundle);
+
+        currentPosition = position;
         dialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
     public void onApply(Registro registro) {
-        new RegistrosService(this).update(registro);
-        fragmentList.notifyItemChanged(registro);
+        if (!registro.isValid()){
+            showInvalidValueMessage(registro);
+        } else {
+            registro = new RegistrosService(this).update(registro);
+            fragmentList.notifyItemChanged(registro, currentPosition);
+        }
+    }
+
+    private void showInvalidValueMessage(Registro registro) {
+        String message = "";
+
+        if(registro instanceof Glicemia)
+            message = getString(R.string.invalid_glycemia_value_message);
+        else if(registro instanceof CarboidratoIngerido)
+            message = getString(R.string.invalid_carbohydrate_value_message);
+        else if(registro instanceof AplicacaoInsulina)
+            message = getString(R.string.invalid_insulin_value_message);
+        else if(registro instanceof HemoglobinaGlicada)
+            message = getString(R.string.invalid_hba1c_value_message);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.invalid_field_value_message_title)
+                .setMessage(message)
+                .create()
+                .show();
     }
 
     @Override
     public void onDelete(Registro registro) {
         new RegistrosService(this).delete(registro);
-        fragmentList.notifyItemRemoved(registro);
+        fragmentList.notifyItemRemoved(registro, currentPosition);
     }
 }

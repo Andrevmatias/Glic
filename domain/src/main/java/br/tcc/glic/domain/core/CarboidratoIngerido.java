@@ -14,4 +14,9 @@ public class CarboidratoIngerido extends Registro{
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
+
+    @Override
+    public boolean isValid() {
+        return this.getQuantidade() >= 1 && this.getQuantidade() <= 999;
+    }
 }

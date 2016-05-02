@@ -24,4 +24,9 @@ public class AplicacaoInsulina extends Registro {
     public void setTipo(TipoInsulina tipo) {
         this.tipo = tipo;
     }
+
+    @Override
+    public boolean isValid() {
+        return this.getQuantidade() >= 0.1 && this.getQuantidade() <= 999;
+    }
 }

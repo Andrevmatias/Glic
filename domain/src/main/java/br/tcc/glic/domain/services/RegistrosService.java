@@ -100,27 +100,25 @@ public class RegistrosService {
         List<br.tcc.glic.domain.core.Registro> registrosRet = new ArrayList<>();
         for (Registro registro :
                 registros) {
-            switch (registro.getTipo()) {
-                case Glicemia:
-                    Glicemia glicemia = Conversions.glicemia(registro, context);
-                    registrosRet.add(glicemia);
-                    break;
-                case HemoglobinaGlicada:
-                    HemoglobinaGlicada hemoglobinaGlicada = Conversions.hemoglobinaGlicada(registro, context);
-                    registrosRet.add(hemoglobinaGlicada);
-                    break;
-                case CarboidratoIngerido:
-                    CarboidratoIngerido carboidratoIngerido = Conversions.carboidratoIngerido(registro);
-                    registrosRet.add(carboidratoIngerido);
-                    break;
-                case AplicacaoInsulina:
-                    AplicacaoInsulina aplicacaoInsulina = Conversions.aplicacaoInsulina(registro);
-                    registrosRet.add(aplicacaoInsulina);
-                    break;
-            }
+            registrosRet.add(convertRegistro(registro));
         }
 
         return  registrosRet;
+    }
+
+    private br.tcc.glic.domain.core.Registro convertRegistro(Registro registro) {
+        switch (registro.getTipo()) {
+            case Glicemia:
+                return Conversions.glicemia(registro, context);
+            case HemoglobinaGlicada:
+                return Conversions.hemoglobinaGlicada(registro, context);
+            case CarboidratoIngerido:
+                return Conversions.carboidratoIngerido(registro);
+            case AplicacaoInsulina:
+                return Conversions.aplicacaoInsulina(registro);
+            default:
+                return null;
+        }
     }
 
     public void delete(br.tcc.glic.domain.core.Registro registro) {
@@ -129,10 +127,11 @@ public class RegistrosService {
         rep.delete(registroBd);
     }
 
-    public void update(br.tcc.glic.domain.core.Registro registro) {
+    public br.tcc.glic.domain.core.Registro update(br.tcc.glic.domain.core.Registro registro) {
         Repository<Registro> rep = RepositoryFactory.get(Registro.class);
         Registro registroBd = convertRegistro(registro);
         rep.save(registroBd);
+        return convertRegistro(registroBd);
     }
 
     private Registro convertRegistro(br.tcc.glic.domain.core.Registro registro) {
