@@ -4,6 +4,7 @@ package br.tcc.glic.fragments;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class IndicatorsFragment extends Fragment {
 
 
     private View containerCarbohydrateIndicators;
+    private View containerGlycemiaIndicators;
     private ArrayList<Indicador> indicators = new ArrayList<>();
 
     public IndicatorsFragment() {
@@ -171,6 +173,13 @@ public class IndicatorsFragment extends Fragment {
 
     private void initComponents(View view) {
         containerCarbohydrateIndicators = view.findViewById(R.id.carbohydrates_indicators_container);
+        containerGlycemiaIndicators = view.findViewById(R.id.glycemia_indicators_container);
+        containerGlycemiaIndicators.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showIndicatorsExplanationDialog();
+            }
+        });
 
         txtDayAvgGlycemia = (TextView) view.findViewById(R.id.day_average_glycemia_indicator);
         txtWeekAvgGlycemia = (TextView) view.findViewById(R.id.week_average_glycemia_indicator);
@@ -193,6 +202,16 @@ public class IndicatorsFragment extends Fragment {
         txtDayAvgGlycemia = (TextView) view.findViewById(R.id.day_average_glycemia_indicator);
         txtWeekAvgGlycemia = (TextView) view.findViewById(R.id.week_average_glycemia_indicator);
         txtMonthAvgGlycemia = (TextView) view.findViewById(R.id.month_average_glycemia_indicator);
+    }
+
+    private void showIndicatorsExplanationDialog() {
+        DialogFragment dialog = new IndicatorsExplanationDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(getString(R.string.indicators_explanation_argument), IndicatorsExplanationDialogFragment.IndicatorsExplanationMode.Complete);
+        dialog.setArguments(args);
+
+        dialog.show(getFragmentManager(), null);
     }
 
     public int getCurrentMonthAverageGlycemia() {

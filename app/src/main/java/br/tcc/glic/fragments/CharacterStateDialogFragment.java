@@ -19,18 +19,19 @@ import br.tcc.glic.R;
 import br.tcc.glic.domain.core.Indicador;
 import br.tcc.glic.domain.enums.EstadoPersonagem;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
+import br.tcc.glic.domain.enums.TipoIndicador;
 import br.tcc.glic.domain.services.EstadoPersonagemService;
 
 /**
  * Created by André on 21/04/2016.
  */
-public class CharacterStateFragment extends DialogFragment {
+public class CharacterStateDialogFragment extends DialogFragment {
 
     private ViewGroup firstContainer, secondContainer;
     private TextView txtHowToImprove, txtBut;
     private EstadoPersonagemService estadoPersonagemService;
 
-    public CharacterStateFragment(){
+    public CharacterStateDialogFragment(){
     }
 
     @Override
@@ -119,6 +120,45 @@ public class CharacterStateFragment extends DialogFragment {
         indicationContainer.addView(txtIndication, txtIndicatorLayoutParams);
 
         container.addView(indicationContainer);
+
+        if(indicator.getTipo() == TipoIndicador.MediaGlicemicaDia
+                || indicator.getTipo() == TipoIndicador.MediaGlicemicaMes
+                || indicator.getTipo() == TipoIndicador.MediaGlicemicaSemana)
+        indicationContainer.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAverageExplanationDialog();
+            }
+        });
+
+        if(indicator.getTipo() == TipoIndicador.VariabilidadeGlicemiaMes
+                || indicator.getTipo() == TipoIndicador.VariabilidadeGlicemiaSemana)
+            indicationContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showVariabilityExplanationDialog();
+                }
+            });
+    }
+
+    private void showAverageExplanationDialog() {
+        DialogFragment dialog = new IndicatorsExplanationDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(getString(R.string.indicators_explanation_argument), IndicatorsExplanationDialogFragment.IndicatorsExplanationMode.Average);
+        dialog.setArguments(args);
+
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private void showVariabilityExplanationDialog() {
+        DialogFragment dialog = new IndicatorsExplanationDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(getString(R.string.indicators_explanation_argument), IndicatorsExplanationDialogFragment.IndicatorsExplanationMode.Variability);
+        dialog.setArguments(args);
+
+        dialog.show(getFragmentManager(), null);
     }
 
     @NonNull

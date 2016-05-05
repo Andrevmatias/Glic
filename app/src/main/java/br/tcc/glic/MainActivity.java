@@ -42,7 +42,7 @@ import br.tcc.glic.domain.personagem.TipoPersonagem;
 import br.tcc.glic.domain.services.EstadoPersonagemService;
 import br.tcc.glic.domain.services.PontuacaoService;
 import br.tcc.glic.domain.services.RegistrosService;
-import br.tcc.glic.fragments.CharacterStateFragment;
+import br.tcc.glic.fragments.CharacterStateDialogFragment;
 import br.tcc.glic.fragments.IndicatorsFragment;
 import br.tcc.glic.fragments.RegisterGlycemiaFragment;
 import br.tcc.glic.fragments.SelfEvaluationFragment;
@@ -210,7 +210,7 @@ public class MainActivity extends AchievementUnlockerActivity
     }
 
     private void showCharacterStateDialog() {
-        DialogFragment dialog = new CharacterStateFragment();
+        DialogFragment dialog = new CharacterStateDialogFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(getString(R.string.indicators_argument), fragmentIndicators.getIndicators());
