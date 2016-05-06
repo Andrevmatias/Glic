@@ -42,7 +42,7 @@ public class IndicatorsExplanationDialogFragment extends DialogFragment {
         imgExplanation = (ImageView) view.findViewById(R.id.img_indicators_explanation);
         txtAverage = (TextView) view.findViewById(R.id.txt_average_explanation);
         txtVariability = (TextView) view.findViewById(R.id.txt_variability_explanation);
-        btnDispose = (Button) view.findViewById(R.id.btn_dispose);
+        btnDispose = (Button) view.findViewById(R.id.btn_dismiss);
         btnDispose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

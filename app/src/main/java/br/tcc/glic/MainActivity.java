@@ -454,6 +454,12 @@ public class MainActivity extends AchievementUnlockerActivity
         new AlertDialog.Builder(this)
                 .setTitle(R.string.reminder_notification_activation_title)
                 .setMessage(R.string.reminder_notification_activation_text)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .create()
                 .show();
     }
@@ -491,6 +497,12 @@ public class MainActivity extends AchievementUnlockerActivity
         if(glicemia == null) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.mandatory_field_message_title)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .setMessage(R.string.mandatory_glycemia_message)
                     .create()
                     .show();
@@ -500,6 +512,12 @@ public class MainActivity extends AchievementUnlockerActivity
             new AlertDialog.Builder(this)
                     .setTitle(R.string.invalid_field_value_message_title)
                     .setMessage(R.string.invalid_glycemia_value_message)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .create()
                     .show();
 
@@ -608,6 +626,12 @@ public class MainActivity extends AchievementUnlockerActivity
         new AlertDialog.Builder(this)
                 .setTitle(R.string.lvl_up_title)
                 .setMessage(message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -664,6 +688,12 @@ public class MainActivity extends AchievementUnlockerActivity
         if(!ConfigUtils.isAutoAvaliationOn(this))
             new AlertDialog.Builder(this)
                     .setMessage(R.string.self_evaluation_desactivation)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {

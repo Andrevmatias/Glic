@@ -53,6 +53,14 @@ public class CharacterStateDialogFragment extends DialogFragment {
         txtHowToImprove = (TextView) view.findViewById(R.id.txt_how_to_improve);
         txtBut = (TextView) view.findViewById(R.id.txt_but);
 
+        view.findViewById(R.id.btn_dismiss_character_state)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismiss();
+                    }
+                });
+
         if(getArguments() != null) {
             List<Indicador> indicadores =
                     (ArrayList<Indicador>) getArguments().getSerializable(getString(R.string.indicators_argument));

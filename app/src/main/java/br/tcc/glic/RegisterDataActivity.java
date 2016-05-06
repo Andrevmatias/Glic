@@ -280,6 +280,12 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.invalid_field_value_message_title)
                     .setMessage(ex.getMessage())
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .create()
                     .show();
         }

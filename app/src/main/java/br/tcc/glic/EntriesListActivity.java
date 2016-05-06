@@ -1,5 +1,6 @@
 package br.tcc.glic;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -89,6 +90,12 @@ public class EntriesListActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setTitle(R.string.invalid_field_value_message_title)
                 .setMessage(message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .create()
                 .show();
     }
