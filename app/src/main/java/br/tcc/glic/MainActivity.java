@@ -178,11 +178,13 @@ public class MainActivity extends AchievementUnlockerActivity
         pbrCharacterPoints = (RoundCornerProgressBar) findViewById(R.id.pbr_character_points);
         int characterColor = getCharacterColor();
         pbrCharacterPoints.setProgressColor(characterColor);
-        pbrCharacterPoints.setMax(getPointsToNextLevel(ConfigUtils.getLevel(this)));
-        pbrCharacterPoints.setProgress(ConfigUtils.getScore(this));
+        int currentLevel = ConfigUtils.getLevel(this);
+        float pointsToPreviousLevel = getPointsToNextLevel(currentLevel - 1);
+        pbrCharacterPoints.setMax(getPointsToNextLevel(currentLevel) - pointsToPreviousLevel);
+        pbrCharacterPoints.setProgress(ConfigUtils.getScore(this) - pointsToPreviousLevel);
 
         txtLevel = (TextView) findViewById(R.id.txt_level_number);
-        txtLevel.setText(String.valueOf(ConfigUtils.getLevel(this)));
+        txtLevel.setText(String.valueOf(currentLevel));
         txtLevel.setTextColor(characterColor);
         ((TextView) findViewById(R.id.txt_level)).setTextColor(characterColor);
         txtLvlUp = (TextView) findViewById(R.id.txt_lvl_up);
@@ -192,6 +194,9 @@ public class MainActivity extends AchievementUnlockerActivity
     private float getPointsToNextLevel(int lvl) {
         if(lvl == 0)
             return 20;
+
+        if(lvl < 0)
+            return 0;
 
         return lvl * 20 + getPointsToNextLevel(lvl - 1);
     }
@@ -254,13 +259,24 @@ public class MainActivity extends AchievementUnlockerActivity
         recalcIndicators();
 
         if(txtPoints != null)
-            txtPoints.setText(String.valueOf(ConfigUtils.getScore(this)));
+            txtPoints.setText(getPointsText());
 
         if(spriteCharacter != null)
             reloadCharacterSprite(this);
     }
 
-    
+    private String getPointsText() {
+        float currentScore = ConfigUtils.getScore(this);
+        int currentLevel = ConfigUtils.getLevel(this);
+        float toNext = getPointsToNextLevel(currentLevel);
+        float toPrevious = getPointsToNextLevel(currentLevel - 1);
+
+        String currentScoreToShow = String.valueOf((int)(currentScore - toPrevious));
+        String toNextToShow = String.valueOf((int)(toNext - toPrevious));
+
+        return currentScoreToShow + "/" + toNextToShow;
+    }
+
 
     private void verifyAverageImprovement(int lastGlycemiaAverage, int currentAverageGlycemia, final Desafio achievement) {
         if(lastGlycemiaAverage == 0)
@@ -534,13 +550,14 @@ public class MainActivity extends AchievementUnlockerActivity
             }
         }, scoreUpAnimation.getDuration());
 
-        txtPoints.setText(String.valueOf(newScore));
+        txtPoints.setText(getPointsText());
         txtScoreUp.startAnimation(scoreUpAnimation);
 
-        pbrCharacterPoints.setProgress(newScore);
-
-        if(newScore >= getPointsToNextLevel(ConfigUtils.getLevel(this))) {
+        int currentLevel = ConfigUtils.getLevel(this);
+        if(newScore >= getPointsToNextLevel(currentLevel)) {
             addLevel();
+        } else {
+            pbrCharacterPoints.setProgress(newScore - getPointsToNextLevel(currentLevel - 1));
         }
     }
 
@@ -559,7 +576,10 @@ public class MainActivity extends AchievementUnlockerActivity
         txtLevel.setText(String.valueOf(newLevel));
         txtLvlUp.startAnimation(scoreUpAnimation);
 
-        pbrCharacterPoints.setMax(getPointsToNextLevel(newLevel));
+        pbrCharacterPoints.setMax(getPointsToNextLevel(newLevel) - getPointsToNextLevel(newLevel - 1));
+        pbrCharacterPoints.setProgress(0);
+
+        txtPoints.setText(getPointsText());
 
         if(newLevel == TipoPersonagem.MAX_BABY_CHAR_LEVEL + 1)
             goToEvolutionActivity();
