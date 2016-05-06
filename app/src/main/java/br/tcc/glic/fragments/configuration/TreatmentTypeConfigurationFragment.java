@@ -46,6 +46,7 @@ public class TreatmentTypeConfigurationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 btnConventional.setChecked(false);
+                btnIntensive.setChecked(true);
             }
         });
 
@@ -53,6 +54,7 @@ public class TreatmentTypeConfigurationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 btnIntensive.setChecked(false);
+                btnConventional.setChecked(true);
             }
         });
 
