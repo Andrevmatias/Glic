@@ -63,7 +63,6 @@ public class FirstConfigurationActivity extends AppCompatActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.first_config_container, fragment)
-                .addToBackStack(null)
                 .commit();
     }
 
