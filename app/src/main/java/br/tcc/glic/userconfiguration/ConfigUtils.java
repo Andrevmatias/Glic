@@ -108,9 +108,9 @@ public final class ConfigUtils {
         return incremented;
     }
 
-    public static int incrementLevel(Context context) {
+    public static int incrementLevel(Context context, int numLevels) {
         SharedPreferences prefs = getSystemConfigurationFile(context);
-        int incremented = prefs.getInt(context.getString(R.string.lvl_config), 0) + 1;
+        int incremented = prefs.getInt(context.getString(R.string.lvl_config), 0) + numLevels;
         prefs
                 .edit()
                 .putInt(context.getString(R.string.lvl_config), incremented)

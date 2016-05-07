@@ -572,18 +572,22 @@ public class MainActivity extends AchievementUnlockerActivity
         txtScoreUp.startAnimation(scoreUpAnimation);
 
         int currentLevel = ConfigUtils.getLevel(this);
-        if(newScore >= getPointsToNextLevel(currentLevel)) {
-            addLevel();
+        int levelsUp = 0;
+        while (newScore >= getPointsToNextLevel(currentLevel + levelsUp))
+            levelsUp++;
+
+        if(levelsUp != 0) {
+            addLevel(levelsUp);
         } else {
             pbrCharacterPoints.setProgress(newScore - getPointsToNextLevel(currentLevel - 1));
         }
     }
 
-    private void addLevel() {
-        int newLevel = ConfigUtils.incrementLevel(this);
+    private void addLevel(int numLevels) {
+        int newLevel = ConfigUtils.incrementLevel(this, numLevels);
 
         txtLvlUp.setVisibility(View.VISIBLE);
-        txtLvlUp.setText("+1");
+        txtLvlUp.setText("+" + numLevels);
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 txtLvlUp.clearAnimation();
@@ -599,7 +603,7 @@ public class MainActivity extends AchievementUnlockerActivity
 
         txtPoints.setText(getPointsText());
 
-        if(newLevel == TipoPersonagem.MAX_BABY_CHAR_LEVEL + 1)
+        if(newLevel > TipoPersonagem.MAX_BABY_CHAR_LEVEL)
             goToEvolutionActivity();
         else
             showLevelUpMessage();

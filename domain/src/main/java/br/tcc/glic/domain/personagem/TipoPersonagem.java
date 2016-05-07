@@ -16,7 +16,7 @@ public enum TipoPersonagem {
     Beta,
     Gama;
 
-    public static final int MAX_BABY_CHAR_LEVEL = 6;
+    public static final int MAX_BABY_CHAR_LEVEL = 4;
 
     public SpriteSheet getSpriteSheet(Context context, EstadoPersonagem estado, int charLevel){
         if(charLevel <= MAX_BABY_CHAR_LEVEL)
