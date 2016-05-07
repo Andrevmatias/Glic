@@ -18,13 +18,10 @@ import android.support.v4.app.Fragment;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import java.util.Arrays;
 import java.util.List;
 
-import br.tcc.glic.LoginActivity;
 import br.tcc.glic.NotificationsBroadcastReceiver;
 import br.tcc.glic.R;
 import br.tcc.glic.RemindersService;
@@ -72,22 +69,6 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void initComponents() {
-        prefLogout = findPreference(getString(R.string.logout_key));
-        prefLogout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        handleSignOut();
-                    }
-                });
-
-                return true;
-            }
-        });
-
         Preference selfEvalutionPref = findPreference(getString(R.string.self_evaluation_user_config));
         SharedPreferences prefs = ConfigUtils.getUserConfigurationFile(getActivity());
         if(prefs.getBoolean(getString(R.string.self_evaluation_config), true))
@@ -124,11 +105,6 @@ public class SettingsFragment extends PreferenceFragment
         super.onStop();
 
         mGoogleApiClient.disconnect();
-    }
-
-    private void handleSignOut() {
-        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(loginIntent);
     }
 
     private void initListsEntries() {

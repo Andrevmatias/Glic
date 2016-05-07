@@ -67,7 +67,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="fields_to_show_by_default">Campos a serem mostrados por padrão</string>
-    <string name="glycemic_objectives_premeal">Objetivos Glicêmicos - Pré Prandial</string>
+    <string name="glycemic_objectives_premeal">Objetivos Glicêmicos</string>
     <string name="glycemic_objectives_pos_prandial">Objetivos Glicêmicos - Pós Prandial</string>
     <string name="Maximum">Máximo</string>
     <string name="Minimum">Mínimo</string>
@@ -78,8 +78,6 @@
     <string name="now">Agora</string>
     <string name="result_saved">Salvo</string>
     <string name="calendar_bundle_argument">calendar_bundle_argument</string>
-    <string name="logout_title">Sair</string>
-    <string name="logout_key">logout_key</string>
     <string name="insulin_types">Tipos de Insulina</string>
     <string name="date_time_picker_type_argument">date_time_picker_type_argument</string>
     <string name="show_date_bundle_argument">show_date_bundle_argument</string>

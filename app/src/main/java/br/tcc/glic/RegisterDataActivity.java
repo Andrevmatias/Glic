@@ -43,6 +43,7 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
             new ArrayList<>(Arrays.asList(RegisterDataField.values()));
     private Toolbar toolbar;
     private View btnAddField;
+    private boolean dontSaveOnFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,9 +261,39 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
             //Os dados são salvos no finish
             finish();
             return true;
+        } else if (item.getItemId() == R.id.action_cancel) {
+            dontSaveOnFinish = true;
+            finish();
+            return true;
         }
 
+
         return false;
+    }
+
+    public void clearAll() {
+        for (RegisterDataField fieldKey :
+                dataFieldFragments.keySet()) {
+            switch (fieldKey)
+            {
+                case Glycemia:
+                    ((RegisterGlycemiaFragment) dataFieldFragments.get(fieldKey))
+                            .reset();
+                    break;
+                case Carbohydrates:
+                    ((RegisterCarbohydratesFragment) dataFieldFragments.get(fieldKey))
+                            .reset();
+                    break;
+                case Insulin:
+                    ((RegisterInsulinFragment) dataFieldFragments.get(fieldKey))
+                            .reset();
+                    break;
+                case HbA1c:
+                    ((RegisterHbA1cFragment) dataFieldFragments.get(fieldKey))
+                            .reset();
+                    break;
+            }
+        }
     }
 
     @Override
@@ -274,7 +305,8 @@ public class RegisterDataActivity extends AchievementUnlockerActivity {
     @Override
     public void finish() {
         try {
-            saveAll();
+            if(!dontSaveOnFinish)
+                saveAll();
             super.finish();
         } catch (InvalidValueException ex) {
             new AlertDialog.Builder(this)
