@@ -150,7 +150,7 @@
     <string name="evolution_title">Seu Glic está evoluindo...</string>
     <string name="ok">OK</string>
     <string name="character_evolved_title">Seu Glic evoluiu!</string>
-    <string name="lvl_up_text_with_evolution_indication">Parabéns! Parece que você esta registrando tudo certinho!\n\nChegue ao nível %s para que seu personagem evolua.</string>
+    <string name="lvl_up_text_with_evolution_indication">Parabéns! Parece que você esta registrando tudo certinho!\n\nChegue ao nível %s para que seu personagem evolua.\n\nDica: Registre carboidratos ingeridos, insulina aplicada e exames de hemoglobina glicada para ganhar mais pontos.</string>
     <string name="invalid_field_value_message_title">Valor Inválido</string>
     <string name="invalid_glycemia_value_message">O valor da glicemia deve estar entre 20 e 900.</string>
     <string name="invalid_carbohydrate_value_message">A quantidade de carboidratos ingeridos deve estar entre 1 e 999.</string>
