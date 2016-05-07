@@ -27,12 +27,12 @@ public class EstadoPersonagemService {
 
         if(proporcao == 0)
             return EstadoPersonagem.MuitoMal;
+        else if(proporcao == 1)
+            return EstadoPersonagem.MuitoBem;
         else if(proporcao < 0.25)
             return EstadoPersonagem.Mal;
         else if(proporcao > 0.75)
             return EstadoPersonagem.Bem;
-        else if(proporcao == 1)
-            return EstadoPersonagem.MuitoBem;
         else
             return EstadoPersonagem.Normal;
 
@@ -54,12 +54,12 @@ public class EstadoPersonagemService {
 
         if(proporcao == 0)
             return 1;
+        else if(proporcao == 1)
+            return 0;
         else if(proporcao < 0.25)
             return (int)Math.ceil((countBons / 4f / proporcao) - countBons);
         else if(proporcao > 0.75)
             return (int)Math.ceil((countBons / proporcao) - countBons);
-        else if(proporcao == 1)
-            return 0;
         else
             return (int)Math.ceil((countBons * 0.75 / proporcao) - countBons);
 
