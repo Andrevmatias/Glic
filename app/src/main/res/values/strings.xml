@@ -26,8 +26,6 @@
     <string name="years_old">anos</string>
     <string name="min_pre_glycemia_config">min_pre_glycemia_config</string>
     <string name="max_pre_glycemia_config">max_pre_glycemia_config</string>
-    <string name="min_pos_glycemia_config">min_pos_glycemia_config</string>
-    <string name="max_pos_glycemia_config">max_pos_glycemia_config</string>
     <string name="fields_to_show_config">fields_to_show_config</string>
     <string name="title_activity_settings">Configurações</string>
 

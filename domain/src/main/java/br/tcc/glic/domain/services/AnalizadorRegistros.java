@@ -131,7 +131,7 @@ public class AnalizadorRegistros {
 
         Dataset dataset = new DefaultDataset(amostra);
 
-        Clusterer clusterer = new DensityBasedSpatialClustering(60,
+        Clusterer clusterer = new DensityBasedSpatialClustering(60, mediaExamesDia == 0 ? 0 :
                 (int)Math.floor((amostra.size() / mediaExamesDia) * 0.3), new ManhattanDistance());
         Dataset[] clusters = clusterer.cluster(dataset);
 
