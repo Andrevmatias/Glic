@@ -44,6 +44,13 @@ public enum TipoPersonagem {
         }
     }
 
+    public SpriteSheet getSpriteSheetFalando(Context context, boolean feliz, int charLevel){
+        if(charLevel <= MAX_BABY_CHAR_LEVEL)
+            return getSpriteSheetBabyFalando(context, feliz);
+        else
+            return getSpriteSheetFalando(context, feliz);
+    }
+
     private SpriteSheet getSpriteSheetBaby(Context context, EstadoPersonagem estado) {
         switch (this)
         {
@@ -70,13 +77,6 @@ public enum TipoPersonagem {
             default:
                 throw new RuntimeException("Tipo não reconhecido");
         }
-    }
-
-    public SpriteSheet getSpriteSheetFalando(Context context, boolean feliz, boolean baby){
-        if(baby)
-            return getSpriteSheetBabyFalando(context, feliz);
-        else
-            return getSpriteSheetFalando(context, feliz);
     }
 
     private SpriteSheet getSpriteSheetFalando(Context context, boolean feliz){

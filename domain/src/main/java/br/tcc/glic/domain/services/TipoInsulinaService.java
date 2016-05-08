@@ -10,6 +10,7 @@ import br.tcc.glic.domain.services.defaultdata.TiposInsulinaPadrao;
 import br.tcc.glic.domain.utils.Conversions;
 
 /**
+ * Serviço de listagem e registro de tipos de insulina
  * Created by André on 19/02/2016.
  */
 public class TipoInsulinaService {

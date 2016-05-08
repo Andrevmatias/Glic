@@ -23,31 +23,15 @@ public class SpriteSheet {
         return bitmap;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
     public int getNumeroFrames() {
         return numeroFrames;
-    }
-
-    public void setNumeroFrames(int numeroFrames) {
-        this.numeroFrames = numeroFrames;
     }
 
     public int getAlturaFrame() {
         return alturaFrame;
     }
 
-    public void setAlturaFrame(int alturaFrame) {
-        this.alturaFrame = alturaFrame;
-    }
-
     public int getLarguraFrame() {
         return larguraFrame;
-    }
-
-    public void setLarguraFrame(int larguraFrame) {
-        this.larguraFrame = larguraFrame;
     }
 }

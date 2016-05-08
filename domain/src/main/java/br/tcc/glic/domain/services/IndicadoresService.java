@@ -85,6 +85,10 @@ public class IndicadoresService {
         return  indicador;
     }
 
+    public static int calcularGME(double valor) {
+        return (int)Math.round((28.7 * valor) - 46.7);
+    }
+
     private QualidadeRegistro getQualidadeIndicador(Indicador indicador) {
         TipoIndicador tipo = indicador.getTipo();
         if(tipo == TipoIndicador.MediaGlicemicaDia
@@ -131,10 +135,6 @@ public class IndicadoresService {
         }
 
         throw new UnsupportedOperationException("Tipo de indicador não suportado.");
-    }
-
-    public static int calcularGME(double valor) {
-        return (int)Math.round((28.7 * valor) - 46.7);
     }
 
     private double calcularMediaCarboidratosMes() {

@@ -64,7 +64,6 @@ public class RegistrosService {
         this.registrarCarboidratosIngeridos(carboidratoIngerido.getQuantidade(), carboidratoIngerido.getHora());
     }
 
-
     public void registrarHemoglobinaGlicada(double valor, Date hora){
         Repository<Registro> rep = RepositoryFactory.get(Registro.class);
         Registro registro = new Registro(TipoRegistro.HemoglobinaGlicada);
@@ -106,21 +105,6 @@ public class RegistrosService {
         return  registrosRet;
     }
 
-    private br.tcc.glic.domain.core.Registro convertRegistro(Registro registro) {
-        switch (registro.getTipo()) {
-            case Glicemia:
-                return Conversions.glicemia(registro, context);
-            case HemoglobinaGlicada:
-                return Conversions.hemoglobinaGlicada(registro, context);
-            case CarboidratoIngerido:
-                return Conversions.carboidratoIngerido(registro);
-            case AplicacaoInsulina:
-                return Conversions.aplicacaoInsulina(registro);
-            default:
-                return null;
-        }
-    }
-
     public void delete(br.tcc.glic.domain.core.Registro registro) {
         Repository<Registro> rep = RepositoryFactory.get(Registro.class);
         Registro registroBd = convertRegistro(registro);
@@ -132,22 +116,6 @@ public class RegistrosService {
         Registro registroBd = convertRegistro(registro);
         rep.save(registroBd);
         return convertRegistro(registroBd);
-    }
-
-    private Registro convertRegistro(br.tcc.glic.domain.core.Registro registro) {
-        if(registro instanceof Glicemia)
-            return Conversions.registro((Glicemia) registro);
-
-        if(registro instanceof CarboidratoIngerido)
-            return Conversions.registro((CarboidratoIngerido) registro);
-
-        if(registro instanceof AplicacaoInsulina)
-            return Conversions.registro((AplicacaoInsulina) registro);
-
-        if(registro instanceof HemoglobinaGlicada)
-            return Conversions.registro((HemoglobinaGlicada) registro);
-
-        return null;
     }
 
     public List<Glicemia> listGlicemias(Date de, Date ate) {
@@ -207,5 +175,36 @@ public class RegistrosService {
         }
 
         return retorno;
+    }
+
+    private br.tcc.glic.domain.core.Registro convertRegistro(Registro registro) {
+        switch (registro.getTipo()) {
+            case Glicemia:
+                return Conversions.glicemia(registro, context);
+            case HemoglobinaGlicada:
+                return Conversions.hemoglobinaGlicada(registro, context);
+            case CarboidratoIngerido:
+                return Conversions.carboidratoIngerido(registro);
+            case AplicacaoInsulina:
+                return Conversions.aplicacaoInsulina(registro);
+            default:
+                return null;
+        }
+    }
+
+    private Registro convertRegistro(br.tcc.glic.domain.core.Registro registro) {
+        if(registro instanceof Glicemia)
+            return Conversions.registro((Glicemia) registro);
+
+        if(registro instanceof CarboidratoIngerido)
+            return Conversions.registro((CarboidratoIngerido) registro);
+
+        if(registro instanceof AplicacaoInsulina)
+            return Conversions.registro((AplicacaoInsulina) registro);
+
+        if(registro instanceof HemoglobinaGlicada)
+            return Conversions.registro((HemoglobinaGlicada) registro);
+
+        return null;
     }
 }

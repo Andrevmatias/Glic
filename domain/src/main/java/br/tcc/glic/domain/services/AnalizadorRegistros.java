@@ -47,6 +47,31 @@ public class AnalizadorRegistros {
         return  analizador;
     }
 
+    public List<Calendar> identificarHorariosDeRegistroComuns() {
+        List<Calendar> horariosComuns = new ArrayList<>(mediaExamesDia);
+
+        Dataset dataset = new DefaultDataset(amostra);
+
+        Clusterer clusterer = new DensityBasedSpatialClustering(60, mediaExamesDia == 0 ? 0 :
+                (int)Math.floor((amostra.size() / mediaExamesDia) * 0.3), new ManhattanDistance());
+        Dataset[] clusters = clusterer.cluster(dataset);
+
+        Calendar agora = Calendar.getInstance();
+        for (Dataset cluster : clusters) {
+            int media = calcularMedia(cluster);
+            Calendar lembrete = Calendar.getInstance();
+            setHoraMinuto(lembrete, media);
+            while(agora.compareTo(lembrete) > 0)
+                lembrete.add(Calendar.DATE, 1);
+
+            if(naoContem(horariosComuns, lembrete))
+                horariosComuns.add(lembrete);
+        }
+
+
+
+        return  horariosComuns;
+    }
 
     private void transformarDados(List<Registro> registros) {
         Collections.sort(registros);
@@ -124,32 +149,6 @@ public class AnalizadorRegistros {
 
     private double getComparavelHoraMinuto(Calendar horaCalendar) {
         return horaCalendar.get(Calendar.HOUR_OF_DAY) * 60d + horaCalendar.get(Calendar.MINUTE);
-    }
-
-    public List<Calendar> identificarHorariosDeRegistroComuns() {
-        List<Calendar> horariosComuns = new ArrayList<>(mediaExamesDia);
-
-        Dataset dataset = new DefaultDataset(amostra);
-
-        Clusterer clusterer = new DensityBasedSpatialClustering(60, mediaExamesDia == 0 ? 0 :
-                (int)Math.floor((amostra.size() / mediaExamesDia) * 0.3), new ManhattanDistance());
-        Dataset[] clusters = clusterer.cluster(dataset);
-
-        Calendar agora = Calendar.getInstance();
-        for (Dataset cluster : clusters) {
-            int media = calcularMedia(cluster);
-            Calendar lembrete = Calendar.getInstance();
-            setHoraMinuto(lembrete, media);
-            while(agora.compareTo(lembrete) > 0)
-                lembrete.add(Calendar.DATE, 1);
-
-            if(naoContem(horariosComuns, lembrete))
-                horariosComuns.add(lembrete);
-        }
-
-
-
-        return  horariosComuns;
     }
 
     private boolean naoContem(List<Calendar> horariosComuns, Calendar lembrete) {

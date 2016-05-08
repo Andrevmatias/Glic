@@ -7,6 +7,7 @@ import br.tcc.glic.domain.enums.EstadoPersonagem;
 import br.tcc.glic.domain.enums.QualidadeRegistro;
 
 /**
+ * Serviço de identificação de estado do personagem
  * Created by André on 19/04/2016.
  */
 public class EstadoPersonagemService {

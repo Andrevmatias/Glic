@@ -7,6 +7,7 @@ import br.tcc.glic.domain.core.HemoglobinaGlicada;
 import br.tcc.glic.domain.core.Registro;
 
 /**
+ * Classe para cálculo de pontuação obtida ao realizar registros
  * Created by André on 16/04/2016.
  */
 public class PontuacaoService {

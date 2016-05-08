@@ -46,18 +46,6 @@ public class LembretesService {
         return gerarLembretes(horariosComuns);
     }
 
-    private List<Lembrete> gerarLembretes(List<Calendar> horariosComuns) {
-        List<Lembrete> lembretes = new ArrayList<>();
-
-        for (Calendar horario : horariosComuns) {
-            Date horaRegistro = horario.getTime();
-            horario.add(Calendar.MILLISECOND, TOLERANCIA);
-            lembretes.add(new Lembrete(horaRegistro, horario.getTime()));
-        }
-
-        return lembretes;
-    }
-
     public boolean deveDispararParaHorarioComum(Calendar horaComumDeRegistro) {
         List<Registro> registros = repository.find("hora < ?",
                 new String[]{String.valueOf(Calendar.getInstance().getTimeInMillis())},
@@ -68,10 +56,22 @@ public class LembretesService {
 
         Registro registroMaisProximo = registros.get(0);
         Long distanciaHorarios = Math.abs(
-            horaComumDeRegistro.getTimeInMillis()
-            - registroMaisProximo.getHora().getTime()
+                horaComumDeRegistro.getTimeInMillis()
+                        - registroMaisProximo.getHora().getTime()
         );
 
         return distanciaHorarios > TOLERANCIA;
+    }
+
+    private List<Lembrete> gerarLembretes(List<Calendar> horariosComuns) {
+        List<Lembrete> lembretes = new ArrayList<>();
+
+        for (Calendar horario : horariosComuns) {
+            Date horaRegistro = horario.getTime();
+            horario.add(Calendar.MILLISECOND, TOLERANCIA);
+            lembretes.add(new Lembrete(horaRegistro, horario.getTime()));
+        }
+
+        return lembretes;
     }
 }

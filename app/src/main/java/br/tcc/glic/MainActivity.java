@@ -584,6 +584,7 @@ public class MainActivity extends AchievementUnlockerActivity
     }
 
     private void addLevel(int numLevels) {
+        int oldLevel = ConfigUtils.getLevel(this);
         int newLevel = ConfigUtils.incrementLevel(this, numLevels);
 
         txtLvlUp.setVisibility(View.VISIBLE);
@@ -603,7 +604,7 @@ public class MainActivity extends AchievementUnlockerActivity
 
         txtPoints.setText(getPointsText());
 
-        if(newLevel > TipoPersonagem.MAX_BABY_CHAR_LEVEL)
+        if(oldLevel <= TipoPersonagem.MAX_BABY_CHAR_LEVEL && newLevel > TipoPersonagem.MAX_BABY_CHAR_LEVEL)
             goToEvolutionActivity();
         else
             showLevelUpMessage();
