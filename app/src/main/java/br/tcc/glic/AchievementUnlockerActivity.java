@@ -152,11 +152,16 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
     }
 
     public void doWhenGoogleApiConnected(Runnable runnable){
-        if(googleApiClient.isConnected()) {
-            runnable.run();
-        } else {
-            googleApiClient.reconnect();
-            toRunWhenConnect.add(runnable);
+        try {
+            if (googleApiClient.isConnected()) {
+                runnable.run();
+            } else {
+                googleApiClient.reconnect();
+                toRunWhenConnect.add(runnable);
+            }
+        } catch (IllegalStateException ex) {
+            reconnectToGoogleApi();
+            doWhenGoogleApiConnected(runnable);
         }
     }
 
@@ -168,8 +173,14 @@ public abstract class AchievementUnlockerActivity extends AppCompatActivity impl
     public void onConnected(Bundle bundle) {
         configureAchievementsStatus();
 
-        while (!toRunWhenConnect.isEmpty())
-            toRunWhenConnect.poll().run();
+        try {
+            while (!toRunWhenConnect.isEmpty()) {
+                toRunWhenConnect.element().run();
+                toRunWhenConnect.poll();
+            }
+        } catch (IllegalStateException ex) {
+            reconnectToGoogleApi();
+        }
     }
 
     private void configureAchievementsStatus() {

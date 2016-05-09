@@ -9,8 +9,8 @@ android {
         applicationId "br.tcc.glic"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 13
-        versionName "5.27"
+        versionCode 14
+        versionName "5.28"
     }
     buildTypes {
         release {
